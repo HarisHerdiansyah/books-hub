@@ -1,0 +1,14 @@
+Referensi UI : Github
+Big idea : Bookshelf apps dengan improvisasi
+Rencana stack : React JS, Redux & Redux Toolkit, RTK Query, Firebase, & Data-data dari external API
+
+- /, sementara dikosongkan
+- /profile, referensi seperti github, sebelah kiri foto profile, username, dan bio, sebelah kanan daftar buku yang difavoritkan dan statistik data buku user
+- /books, referensi seperti menu repo github, buat menu seperti yg sudah ada, beri tab untuk filter sudah dibaca, belum selesai dibaca, dan wishlist
+- /books, untuk buku yg sudah selesai dibaca tampilkan link "Tulis deskripsi dan review",
+- /article, untuk menulis artikel
+- pada navbar, buat komponen search bar untuk mencari deskripsi dan review buku dari user lain, mirip seperti mencari repo dari orang lain
+- tampilkan hasil di url /search?book=[value] atau cari by user /search?user=[value]
+- /user/[id], untuk menampilkan profile orang lain
+- /user/[id]/books, untuk menampilkan data buku yang dipublish
+- /user/[id]/books/[id] untuk menampilkan detail buku dari user lain
