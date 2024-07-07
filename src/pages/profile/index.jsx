@@ -1,4 +1,4 @@
-import ProfileLayout from './ProfileLayout';
+import ProfileLayout from './layout/ProfileLayout';
 import Overview from './overview/Overview';
 import ListBook from './list-book/ListBook';
 import Article from './article/Article';
@@ -10,7 +10,7 @@ export const path = {
   article: '/profile/article',
   settings: '/profile/settings',
   books: '/profile/list-book'
-}
+};
 
 const profileRoutes = {
   path: path.profile,
