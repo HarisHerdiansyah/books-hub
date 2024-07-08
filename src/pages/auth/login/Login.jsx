@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { mockAuth } from '../../../helper/mockAsync';
+import { mockAuth } from '../../../constants/functions';
 import { PATH } from '../../../constants/routes';
 import {
   Container,
@@ -21,6 +21,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
+    console.log('first');
     e.preventDefault();
     try {
       const path = await mockAuth.login({
@@ -66,7 +67,7 @@ export default function Login() {
                 <Button colorScheme='red' variant='link' onClick={toResetPass}>
                   Lupa password
                 </Button>
-                <Button colorScheme='blue'>Masuk</Button>
+                <Button colorScheme='blue' type='submit'>Masuk</Button>
               </Flex>
             </form>
           </Box>

@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { listBookDropdown } from '../../../constants/utils';
 import {
   Button,
   Flex,
@@ -33,11 +34,11 @@ export default function ListBook() {
               Filter:
             </FormLabel>
             <Select placeholder='Select option'>
-              <option value='option1'>Selesai dibaca</option>
-              <option value='option2'>Belum selesai dibaca</option>
-              <option value='option3'>Wishlist</option>
-              <option value='option3'>Favorit</option>
-              <option value='option3'>Publik</option>
+              {listBookDropdown.map((list) => (
+                <option value={list.value} key={list.label}>
+                  {list.label}
+                </option>
+              ))}
             </Select>
           </Flex>
         </Flex>

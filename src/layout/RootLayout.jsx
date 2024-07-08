@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { mockAuth } from '../helper/mockAsync';
+import { mockAuth } from '../constants/functions';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';

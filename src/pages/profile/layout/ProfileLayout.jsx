@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from '../../../components/profile';
 import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { profileNavLink, showcaseNavLink } from '../../../constants';
+import { profileNavLink, showcaseNavLink } from '../../../constants/utils';
 
 export default function ProfileLayout() {
   const { pathname } = useLocation();
