@@ -3,36 +3,31 @@ import Overview from './overview/Overview';
 import ListBook from './list-book/ListBook';
 import Article from './article/Article';
 import Settings from './settings/Settings';
+import { PATH } from '../../constants/routes';
 
-export const path = {
-  profile: '/profile',
-  overview: '/profile/overview',
-  article: '/profile/article',
-  settings: '/profile/settings',
-  books: '/profile/list-book'
-};
-
-const profileRoutes = {
-  path: path.profile,
-  element: <ProfileLayout />,
-  children: [
-    {
-      path: path.overview,
-      element: <Overview />
-    },
-    {
-      path: path.books,
-      element: <ListBook />
-    },
-    {
-      path: path.article,
-      element: <Article />
-    },
-    {
-      path: path.settings,
-      element: <Settings />
-    }
-  ]
-};
+const profileRoutes = [
+  {
+    path: PATH.profile.profile,
+    element: <ProfileLayout />,
+    children: [
+      {
+        path: PATH.profile.overview,
+        element: <Overview />
+      },
+      {
+        path: PATH.profile.books,
+        element: <ListBook />
+      },
+      {
+        path: PATH.profile.article,
+        element: <Article />
+      },
+      {
+        path: PATH.profile.settings,
+        element: <Settings />
+      }
+    ]
+  }
+];
 
 export default profileRoutes;

@@ -1,23 +1,33 @@
+import { PATH } from './routes';
+
 export const profileNavLink = [
   {
     id: '/profile/overview-Overview',
-    text: 'Overview',
-    path: '/profile/overview'
+    text: 'Beranda',
+    path: PATH.profile.overview
   },
   {
     id: '/profile/list-book-Books',
-    text: 'Books',
-    path: '/profile/list-book'
-  },
-  {
-    id: '/profile/article-Article',
-    text: 'Article',
-    path: '/profile/article'
+    text: 'Buku',
+    path: PATH.profile.books
   },
   {
     id: '/profile/settings-Settings',
-    text: 'Settings',
-    path: '/profile/settings'
+    text: 'Pengaturan',
+    path: PATH.profile.settings
+  }
+];
+
+export const showcaseNavLink = [
+  {
+    id: '/showcase/overview-Overview',
+    text: 'Beranda',
+    path: PATH.showcase.overview
+  },
+  {
+    id: '/showcase/list-book-Books',
+    text: 'Buku',
+    path: PATH.showcase.books
   }
 ];
 
@@ -93,4 +103,3 @@ export const books = [
     isDone: true
   }
 ];
-
