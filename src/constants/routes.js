@@ -19,7 +19,9 @@ export const PATH = {
     books: '/showcase/list-book'
   },
   auth: {
-    login: '/auth/login'
+    login: '/auth/login',
+    register: '/auth/register',
+    resetPass: '/auth/reset-password'
   },
   root: '/'
 };

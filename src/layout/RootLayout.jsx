@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
           <Flex align='center' gap={3}>
             <FontAwesomeIcon icon={faBook} color='white' size='xl' />
             <Text color='white' fontSize='2xl'>
-              Book Hub / {'<Display Name>'}
+              Books Hub
             </Text>
           </Flex>
           {isLogin !== null && (

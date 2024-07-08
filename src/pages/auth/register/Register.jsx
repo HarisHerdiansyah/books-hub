@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { mockAuth } from '../../../helper/mockAsync';
 import { PATH } from '../../../constants/routes';
 import {
   Container,
@@ -17,26 +16,15 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    try {
-      const path = await mockAuth.login({
-        username: 'Admin#1234',
-        password: 'Admin#1234'
-      });
-      navigate(path);
-      window.location.reload();
-    } catch (error) {
-      console.error('GAGAL LOGIN', error);
-    }
+    console.log('wkwk');
   };
 
-  const toRegister = () => navigate(PATH.auth.register);
-
-  const toResetPass = () => navigate(PATH.auth.resetPass);
+  const toLogin = () => navigate(PATH.auth.login);
 
   return (
     <Container maxW={600} my={6}>
@@ -44,12 +32,12 @@ export default function Login() {
         <CardHeader>
           <Flex align='center' justify='center' gap={3}>
             <FontAwesomeIcon icon={faBook} size='xl' />
-            <Text fontSize='3xl'>Login</Text>
+            <Text fontSize='3xl'>Register</Text>
           </Flex>
         </CardHeader>
         <CardBody>
           <Box px={4}>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleRegister}>
               <FormControl my={10} isRequired>
                 <FormLabel fontSize='xl' htmlFor='username'>
                   Username
@@ -57,24 +45,27 @@ export default function Login() {
                 <Input type='text' id='username' />
               </FormControl>
               <FormControl my={10} isRequired>
+                <FormLabel fontSize='xl' htmlFor='email'>
+                  Email
+                </FormLabel>
+                <Input type='email' id='email' />
+              </FormControl>
+              <FormControl my={10} isRequired>
                 <FormLabel fontSize='xl' htmlFor='password'>
                   Password
                 </FormLabel>
                 <Input type='password' id='password' />
               </FormControl>
-              <Flex align='center' justify='space-between'>
-                <Button colorScheme='red' variant='link' onClick={toResetPass}>
-                  Lupa password
-                </Button>
-                <Button colorScheme='blue'>Masuk</Button>
+              <Flex align='center' justify='flex-end'>
+                <Button colorScheme='purple'>Daftar</Button>
               </Flex>
             </form>
           </Box>
         </CardBody>
         <Flex align='center' justify='center' gap={1} my={10}>
-          <Text>Belum punya akun?</Text>
-          <Button variant='link' colorScheme='purple' onClick={toRegister}>
-            Daftar di sini!
+          <Text>Sudah mendaftar?</Text>
+          <Button variant='link' colorScheme='blue' onClick={toLogin}>
+            Masuk di sini!
           </Button>
         </Flex>
       </Card>
