@@ -1,18 +1,18 @@
 import BookDetail from './detail/BookDetail';
 import BookForm from './form/BookForm';
-import { bookPath } from '../../constants/routes';
+import { PATH } from '../../constants/routes';
 
 const bookRoutes = [
   {
-    path: bookPath.add,
+    path: PATH.book.add,
     element: <BookForm />
   },
   {
-    path: bookPath.edit,
+    path: PATH.book.edit,
     element: <BookForm />
   },
   {
-    path: bookPath.detail,
+    path: PATH.book.detail,
     element: <BookDetail />
   }
 ];

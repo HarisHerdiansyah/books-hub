@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
         <Flex align='center' gap={3}>
           <FontAwesomeIcon icon={faBook} color='white' size='xl' />
           <Text color='white' fontSize='2xl'>
-            Book Hub / Maya Astuti
+            Book Hub / {'<Display Name>'}
           </Text>
         </Flex>
       </Box>

@@ -1,13 +1,21 @@
-export const profilePath = {
-  profile: '/profile',
-  overview: '/profile/overview',
-  article: '/profile/article',
-  settings: '/profile/settings',
-  books: '/profile/list-book'
-};
-
-export const bookPath = {
-  add: '/book/add',
-  edit: '/book/edit',
-  detail: '/book/detail'
+export const PATH = {
+  book: {
+    add: '/book/add',
+    edit: '/book/edit',
+    detail: '/book/detail'
+  },
+  profile: {
+    profile: '/profile',
+    overview: '/profile/overview',
+    article: '/profile/article',
+    settings: '/profile/settings',
+    books: '/profile/list-book'
+  },
+  home: '/',
+  search: '/search-results',
+  showcase: {
+    showcase: '/showcase',
+    overview: '/showcase/overview',
+    books: '/showcase/list-book'
+  }
 };

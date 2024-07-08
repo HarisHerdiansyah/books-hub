@@ -1,8 +1,10 @@
-import Home from "./Home";
+import Home from './Home';
 
-const homeRoutes = {
-  path: "/",
-  element: <Home />
-}
+const homeRoutes = [
+  {
+    path: '/',
+    element: <Home />
+  }
+];
 
 export default homeRoutes;

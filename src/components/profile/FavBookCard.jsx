@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
-export default function FavBookCard({ bookTitle }) {
+export default function FavBookCard({ bookTitle, isShowcase }) {
   const navigate = useNavigate();
 
   const handleEditNavigate = () => navigate('/book/edit');
@@ -36,22 +36,25 @@ export default function FavBookCard({ bookTitle }) {
         <Text my={2}>Publik: Ya/Tidak</Text>
         <Text my={2}>Rating: 4.5/5</Text>
       </CardBody>
-      <CardFooter justify='space-between'>
-        <Button colorScheme='red' variant='link'>
-          Hapus dari favorit
-        </Button>
-        <Button
-          colorScheme='yellow'
-          leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
-          onClick={handleEditNavigate}
-        >
-          Edit
-        </Button>
-      </CardFooter>
+      {!isShowcase && (
+        <CardFooter justify='space-between'>
+          <Button colorScheme='red' variant='link'>
+            Hapus dari favorit
+          </Button>
+          <Button
+            colorScheme='yellow'
+            leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
+            onClick={handleEditNavigate}
+          >
+            Edit
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }
 
 FavBookCard.propTypes = {
-  bookTitle: PropTypes.string.isRequired
+  bookTitle: PropTypes.string.isRequired,
+  isShowcase: PropTypes.bool
 };

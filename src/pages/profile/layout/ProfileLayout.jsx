@@ -1,13 +1,17 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from '../../../components/profile';
 import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { profileNavLink } from '../../../constants';
+import { profileNavLink, showcaseNavLink } from '../../../constants';
 
 export default function ProfileLayout() {
+  const { pathname } = useLocation();
+  const isShowcase = pathname.includes('showcase');
+  const navlink = isShowcase ? showcaseNavLink : profileNavLink;
+
   return (
     <Box py={4} px={20}>
       <Flex justify='flex-end' gap={6}>
-        {profileNavLink.map((nav, i) => (
+        {navlink.map((nav, i) => (
           <Navigation
             key={i}
             text={nav.text}
@@ -29,9 +33,11 @@ export default function ProfileLayout() {
             ></Box>
             <CardHeader>
               <Text fontSize='3xl' fontWeight='semibold'>
-                Maya Astuti
+                {isShowcase ? 'Haris Herdiansyah' : 'Maya Astuti'}
               </Text>
-              <Text fontSize='2xl'>@mayaa</Text>
+              <Text fontSize='2xl'>
+                {isShowcase ? '@harisherdian_' : '@mayaaa'}
+              </Text>
             </CardHeader>
             <CardBody>
               <Text>

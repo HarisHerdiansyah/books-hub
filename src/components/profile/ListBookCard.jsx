@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -10,7 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck } from '@fortawesome/free-solid-svg-icons';
 
-export default function ListBookCard() {
+export default function ListBookCard({ isShowcase }) {
   const navigate = useNavigate();
 
   const handleEditNavigate = () => navigate('/book/edit');
@@ -33,23 +34,29 @@ export default function ListBookCard() {
         <Text my={2}>Author: Ahmad Fuadi</Text>
         <Text my={2}>Publik: Ya/Tidak</Text>
       </CardBody>
-      <CardFooter justify='flex-end'>
-        <ButtonGroup>
-          <Button
-            colorScheme='yellow'
-            leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
-            onClick={handleEditNavigate}
-          >
-            Edit
-          </Button>
-          <Button
-            colorScheme='green'
-            leftIcon={<FontAwesomeIcon icon={faCheck} />}
-          >
-            Selesai
-          </Button>
-        </ButtonGroup>
-      </CardFooter>
+      {!isShowcase && (
+        <CardFooter justify='flex-end'>
+          <ButtonGroup>
+            <Button
+              colorScheme='yellow'
+              leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
+              onClick={handleEditNavigate}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme='green'
+              leftIcon={<FontAwesomeIcon icon={faCheck} />}
+            >
+              Selesai
+            </Button>
+          </ButtonGroup>
+        </CardFooter>
+      )}
     </Card>
   );
 }
+
+ListBookCard.propTypes = {
+  isShowcase: PropTypes.bool
+};

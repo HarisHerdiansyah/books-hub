@@ -1,20 +1,33 @@
-import { profilePath } from './routes';
+import { PATH } from './routes';
 
 export const profileNavLink = [
   {
     id: '/profile/overview-Overview',
     text: 'Beranda',
-    path: profilePath.overview
+    path: PATH.profile.overview
   },
   {
     id: '/profile/list-book-Books',
     text: 'Buku',
-    path: profilePath.books
+    path: PATH.profile.books
   },
   {
     id: '/profile/settings-Settings',
     text: 'Pengaturan',
-    path: profilePath.settings
+    path: PATH.profile.settings
+  }
+];
+
+export const showcaseNavLink = [
+  {
+    id: '/showcase/overview-Overview',
+    text: 'Beranda',
+    path: PATH.showcase.overview
+  },
+  {
+    id: '/showcase/list-book-Books',
+    text: 'Buku',
+    path: PATH.showcase.books
   }
 ];
 
