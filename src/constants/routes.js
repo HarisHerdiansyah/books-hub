@@ -11,11 +11,15 @@ export const PATH = {
     settings: '/profile/settings',
     books: '/profile/list-book'
   },
-  home: '/',
+  home: '/home',
   search: '/search-results',
   showcase: {
     showcase: '/showcase',
     overview: '/showcase/overview',
     books: '/showcase/list-book'
-  }
+  },
+  auth: {
+    login: '/auth/login'
+  },
+  root: '/'
 };
