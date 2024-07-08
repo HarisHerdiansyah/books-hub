@@ -1,0 +1,24 @@
+import PropTypes from 'prop-types';
+import { Box, Flex, Text } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
+
+export default function RootLayout({ children }) {
+  return (
+    <>
+      <Box bg='#392467' py={4} px={20}>
+        <Flex align='center' gap={3}>
+          <FontAwesomeIcon icon={faBook} color='white' size='xl' />
+          <Text color='white' fontSize='2xl'>
+            Book Hub / Maya Astuti
+          </Text>
+        </Flex>
+      </Box>
+      {children}
+    </>
+  );
+}
+
+RootLayout.propTypes = {
+  children: PropTypes.any.isRequired
+};

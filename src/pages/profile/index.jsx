@@ -3,33 +3,26 @@ import Overview from './overview/Overview';
 import ListBook from './list-book/ListBook';
 import Article from './article/Article';
 import Settings from './settings/Settings';
-
-export const path = {
-  profile: '/profile',
-  overview: '/profile/overview',
-  article: '/profile/article',
-  settings: '/profile/settings',
-  books: '/profile/list-book'
-};
+import { profilePath } from '../../constants/routes';
 
 const profileRoutes = {
-  path: path.profile,
+  path: profilePath.profile,
   element: <ProfileLayout />,
   children: [
     {
-      path: path.overview,
+      path: profilePath.overview,
       element: <Overview />
     },
     {
-      path: path.books,
+      path: profilePath.books,
       element: <ListBook />
     },
     {
-      path: path.article,
+      path: profilePath.article,
       element: <Article />
     },
     {
-      path: path.settings,
+      path: profilePath.settings,
       element: <Settings />
     }
   ]

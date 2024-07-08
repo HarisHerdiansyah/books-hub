@@ -1,23 +1,20 @@
+import { profilePath } from './routes';
+
 export const profileNavLink = [
   {
     id: '/profile/overview-Overview',
-    text: 'Overview',
-    path: '/profile/overview'
+    text: 'Beranda',
+    path: profilePath.overview
   },
   {
     id: '/profile/list-book-Books',
-    text: 'Books',
-    path: '/profile/list-book'
-  },
-  {
-    id: '/profile/article-Article',
-    text: 'Article',
-    path: '/profile/article'
+    text: 'Buku',
+    path: profilePath.books
   },
   {
     id: '/profile/settings-Settings',
-    text: 'Settings',
-    path: '/profile/settings'
+    text: 'Pengaturan',
+    path: profilePath.settings
   }
 ];
 
@@ -93,4 +90,3 @@ export const books = [
     isDone: true
   }
 ];
-

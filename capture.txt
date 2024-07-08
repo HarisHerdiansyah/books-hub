@@ -12,3 +12,17 @@ Rencana stack : React JS, Redux & Redux Toolkit, RTK Query, Firebase, & Data-dat
 - /user/[id], untuk menampilkan profile orang lain
 - /user/[id]/books, untuk menampilkan data buku yang dipublish
 - /user/[id]/books/[id] untuk menampilkan detail buku dari user lain
+
+{
+  judul buku, // input text
+  penulis, // input text 
+  tahun terbit, // input number
+  genre, // dropdown
+  deskripsi dan review, // textarea (setelah buku selesai dibaca)
+  rating, // slider (?) (setelah buku selesai dibaca)
+  id buku, // auto generated
+  created at // auto generated,
+  publik,
+  is done,
+  total view
+}
