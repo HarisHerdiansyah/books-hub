@@ -1,12 +1,11 @@
 import { useLocation } from 'react-router-dom';
 import { Grid, GridItem, Box, Text } from '@chakra-ui/react';
 import { FavBookCard } from '../../../components/profile';
-import { books } from '../../../constants';
+import { books } from '../../../constants/utils';
 
 export default function Overview() {
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
-  // console.log(pathname);
 
   return (
     <Box w='100%'>

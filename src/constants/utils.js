@@ -31,6 +31,48 @@ export const showcaseNavLink = [
   }
 ];
 
+export const listBookDropdown = [
+  {
+    value: 'done',
+    label: 'Selesai dibaca'
+  },
+  {
+    value: 'progress',
+    label: 'Belum selesai dibaca'
+  },
+  {
+    value: 'wishlist',
+    label: 'Wishlist'
+  },
+  {
+    value: 'favs',
+    label: 'Favorit'
+  },
+  {
+    value: 'public',
+    label: 'Publik'
+  }
+];
+
+export const keyWording = {
+  bookTitle: 'Judul Buku',
+  writer: 'Penulis',
+  yearPublished: 'Tahun Terbit',
+  rating: 'Rating',
+  genre: 'Genre',
+  descAndReview: 'Deskripsi dan Review'
+};
+
+export const bookDetailMock = {
+  bookTitle: 'Filosofi Teras',
+  writer: 'Henry Manampiring',
+  yearPublished: '2020',
+  rating: '4.5',
+  genre: 'Personal Development',
+  descAndReview:
+    'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam itaque impedit quasi! Iure accusantium tenetur voluptates dicta sequi? Quis provident assumenda atque fuga facilis dicta vel, perferendis odio ullam temporibus nemo cupiditate tempora nulla consectetur quidem ad recusandae fugit autem iusto molestiae nesciunt sequi. Possimus aspernatur facilis provident dolorum culpa.'
+};
+
 export const books = [
   {
     id: '420dfee5-68fb-4712-a93f-07bfd8c4f224',

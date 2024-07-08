@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../../constants/routes';
+import { Form } from '../../../components/global';
+import { AuthLink } from '../../../components/auth';
 import {
   Container,
   Card,
   CardHeader,
   Text,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
   Box,
   Button,
   CardBody
@@ -38,36 +37,35 @@ export default function Register() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleRegister}>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='username'>
-                  Username
-                </FormLabel>
-                <Input type='text' id='username' />
-              </FormControl>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='email'>
-                  Email
-                </FormLabel>
-                <Input type='email' id='email' />
-              </FormControl>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='password'>
-                  Password
-                </FormLabel>
-                <Input type='password' id='password' />
-              </FormControl>
+              <Form
+                type='text'
+                id='username'
+                label='Username'
+                my={10}
+                isRequired
+              />
+              <Form type='email' id='email' label='Email' my={10} isRequired />
+              <Form
+                type='password'
+                id='password'
+                label='Password'
+                my={10}
+                isRequired
+              />
               <Flex align='center' justify='flex-end'>
-                <Button colorScheme='purple'>Daftar</Button>
+                <Button colorScheme='purple' type='submit'>
+                  Daftar
+                </Button>
               </Flex>
             </form>
           </Box>
         </CardBody>
-        <Flex align='center' justify='center' gap={1} my={10}>
-          <Text>Sudah mendaftar?</Text>
-          <Button variant='link' colorScheme='blue' onClick={toLogin}>
-            Masuk di sini!
-          </Button>
-        </Flex>
+        <AuthLink
+          textContent='Sudah mendaftar?'
+          linkContent='Masuk di sini!'
+          color='blue'
+          handleClick={toLogin}
+        />
       </Card>
     </Container>
   );
