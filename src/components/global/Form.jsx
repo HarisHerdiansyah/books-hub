@@ -13,7 +13,8 @@ export default function Form({
   label,
   id,
   placeholder,
-  optData
+  optData,
+  ...props
 }) {
   if (type === 'select') {
     return (
@@ -33,7 +34,7 @@ export default function Form({
   }
 
   return (
-    <FormControl isRequired={isRequired}>
+    <FormControl isRequired={isRequired} {...props}>
       <FormLabel fontSize='xl' htmlFor={id}>
         {label}
       </FormLabel>

@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { mockAuth } from '../../../constants/functions';
 import { PATH } from '../../../constants/routes';
+import { Form } from '../../../components/global';
+import { AuthLink } from '../../../components/auth';
 import {
   Container,
   Card,
   CardHeader,
   Text,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
   Box,
   Button,
   CardBody
@@ -51,33 +50,37 @@ export default function Login() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleLogin}>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='username'>
-                  Username
-                </FormLabel>
-                <Input type='text' id='username' />
-              </FormControl>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='password'>
-                  Password
-                </FormLabel>
-                <Input type='password' id='password' />
-              </FormControl>
+              <Form
+                type='text'
+                id='username'
+                label='Username'
+                my={10}
+                isRequired
+              />
+              <Form
+                type='password'
+                id='password'
+                label='Password'
+                my={10}
+                isRequired
+              />
               <Flex align='center' justify='space-between'>
                 <Button colorScheme='red' variant='link' onClick={toResetPass}>
                   Lupa password
                 </Button>
-                <Button colorScheme='blue' type='submit'>Masuk</Button>
+                <Button colorScheme='blue' type='submit'>
+                  Masuk
+                </Button>
               </Flex>
             </form>
           </Box>
         </CardBody>
-        <Flex align='center' justify='center' gap={1} my={10}>
-          <Text>Belum punya akun?</Text>
-          <Button variant='link' colorScheme='purple' onClick={toRegister}>
-            Daftar di sini!
-          </Button>
-        </Flex>
+        <AuthLink
+          textContent='Belum punya akun?'
+          linkContent='Daftar di sini!'
+          color='purple'
+          handleClick={toRegister}
+        />
       </Card>
     </Container>
   );

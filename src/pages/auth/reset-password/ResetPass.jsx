@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../../constants/routes';
+import { Form } from '../../../components/global';
+import { AuthLink } from '../../../components/auth';
 import {
   Container,
   Card,
   CardHeader,
   Text,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
   Box,
   Button,
   CardBody,
@@ -41,31 +40,28 @@ export default function ResetPass() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleSubmit}>
-              <FormControl my={10} isRequired>
-                <FormLabel fontSize='xl' htmlFor='email'>
-                  Email
-                </FormLabel>
-                <Input type='email' id='email' />
-              </FormControl>
+              <Form type='email' id='email' label='Email' my={10} isRequired />
               <Flex align='center' justify='flex-end'>
-                <Button colorScheme='red'>Kirim Email</Button>
+                <Button colorScheme='red' type='submit'>
+                  Kirim Email
+                </Button>
               </Flex>
             </form>
           </Box>
         </CardBody>
         <VStack my={10}>
-          <Flex align='center' justify='center' gap={1} my={1}>
-            <Text>Belum punya akun?</Text>
-            <Button variant='link' colorScheme='purple' onClick={toRegister}>
-              Daftar di sini!
-            </Button>
-          </Flex>
-          <Flex align='center' justify='center' gap={1} my={1}>
-            <Text>Sudah mendaftar?</Text>
-            <Button variant='link' colorScheme='blue' onClick={toLogin}>
-              Masuk di sini!
-            </Button>
-          </Flex>
+          <AuthLink
+            textContent='Belum punya akun?'
+            linkContent='Daftar di sini!'
+            color='purple'
+            handleClick={toRegister}
+          />
+          <AuthLink
+            textContent='Sudah mendaftar?'
+            linkContent='Masuk di sini!'
+            color='blue'
+            handleClick={toLogin}
+          />
         </VStack>
       </Card>
     </Container>
