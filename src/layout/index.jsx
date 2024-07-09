@@ -1,8 +1,14 @@
 import RootLayout from './RootLayout';
+import PrivateProvider from './provider/PrivateProvider';
 
-const topLevelRootRoutes = {
+const rootRoutes = {
   path: '/',
   element: <RootLayout />
 };
 
-export default topLevelRootRoutes;
+const privateProviderRoutes = {
+  path: '/',
+  element: <PrivateProvider />
+};
+
+export { rootRoutes, privateProviderRoutes };

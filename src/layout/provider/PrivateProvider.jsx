@@ -1,13 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { Apps } from '../../layout/Context';
-import { useEffect, useContext } from 'react';
+import { Apps } from './Context';
+import { useContext } from 'react';
 
-export default function Root() {
+export default function PrivateProvider() {
   const { user } = useContext(Apps);
-
-  useEffect(() => {
-    console.log(user);
-  });
 
   if (user !== null) {
     return <Outlet />;

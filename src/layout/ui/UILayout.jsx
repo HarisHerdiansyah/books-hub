@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { logout } from '../service/auth';
+import { logout } from '../../service/auth';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';

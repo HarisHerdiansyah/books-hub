@@ -1,5 +1,5 @@
-import AppProvider from './Context';
-import UILayout from './UILayout';
+import AppProvider from './provider/Context';
+import UILayout from './ui/UILayout';
 import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
