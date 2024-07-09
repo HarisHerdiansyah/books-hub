@@ -20,9 +20,12 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    console.log('first');
     e.preventDefault();
-    await login();
+    try {
+      await login();
+    } catch (e) {
+      return e;
+    }
   };
 
   const toRegister = () => navigate(PATH.auth.register);

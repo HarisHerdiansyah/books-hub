@@ -1,7 +1,13 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { AppAuth } from '../../service/auth';
+import { useEffect } from 'react';
 
 export default function Root() {
-  const isLogin = localStorage.getItem('auth');
+  const currUser = AppAuth.currentUser;
 
-  return isLogin ? <Outlet /> : <Navigate to='/auth/login' />;
+  useEffect(() => {
+    console.log(currUser);
+  });
+
+  return currUser ? <Outlet /> : <Navigate to='/auth/login' />;
 }

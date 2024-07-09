@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+import topLevelRootRoutes from '../layout';
 import rootRoutes from '../pages/root';
 import authRoutes from '../pages/auth';
 import homeRoutes from '../pages/home';
@@ -18,6 +19,11 @@ const privateRoutes = {
   ]
 };
 
-const router = createBrowserRouter([privateRoutes, ...authRoutes]);
+const routes = {
+  ...topLevelRootRoutes,
+  children: [...authRoutes, privateRoutes]
+};
+
+const router = createBrowserRouter([routes]);
 
 export default router;
