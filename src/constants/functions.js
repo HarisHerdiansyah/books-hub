@@ -15,3 +15,7 @@ export const mockAuth = {
     window.location.reload();
   }
 };
+
+export function logError(action, error) {
+  console.error(`Error ${action.toUpperCase()}`, error?.code, error?.message)
+}

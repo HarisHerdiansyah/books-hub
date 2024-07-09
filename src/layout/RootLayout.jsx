@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { mockAuth } from '../constants/functions';
+import { logout } from '../service/auth';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
             </Text>
           </Flex>
           {isLogin !== null && (
-            <Button colorScheme='gray' onClick={mockAuth.logout}>
+            <Button colorScheme='gray' onClick={async () => await logout()}>
               Logout
             </Button>
           )}
