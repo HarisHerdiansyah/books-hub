@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import { login } from '../../../service/auth';
-import { PATH } from '../../../constants/routes';
-import { Form } from '../../../components/global';
-import { AuthLink } from '../../../components/auth';
+import { useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Context } from '../../../constants';
+import { Auth } from '../../../service';
+import { PATH } from '../../../constants';
+import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
   Card,
@@ -18,11 +19,20 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { user } = useContext(Context);
+
+  if (user !== null) {
+    return <Navigate to={PATH.profile.overview} />;
+  }
 
   const handleLogin = async (e) => {
-    console.log('first');
     e.preventDefault();
-    await login();
+    try {
+      await Auth.login();
+      navigate(PATH.profile.overview);
+    } catch (error) {
+      return;
+    }
   };
 
   const toRegister = () => navigate(PATH.auth.register);
@@ -41,14 +51,14 @@ export default function Login() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleLogin}>
-              <Form
+              <GlobalComponent.Form
                 type='text'
                 id='username'
                 label='Username'
                 my={10}
                 isRequired
               />
-              <Form
+              <GlobalComponent.Form
                 type='password'
                 id='password'
                 label='Password'
@@ -66,11 +76,12 @@ export default function Login() {
             </form>
           </Box>
         </CardBody>
-        <AuthLink
+        <AuthComponent.AuthLink
           textContent='Belum punya akun?'
           linkContent='Daftar di sini!'
           color='purple'
           handleClick={toRegister}
+          my={10}
         />
       </Card>
     </Container>

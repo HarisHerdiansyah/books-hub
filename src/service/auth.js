@@ -1,25 +1,38 @@
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth';
 import app from './app';
-import { logError } from '../constants/functions';
+import { functions } from '../constants';
 
-export const AppAuth = getAuth(app);
+export const auth = getAuth(app);
 
 export async function login() {
   try {
-    await signInWithEmailAndPassword(
-      AppAuth,
-      'haris54237@gmail.com',
-      'haris1234'
-    );
+    await signInWithEmailAndPassword(auth, 'haris54237@gmail.com', 'haris1234');
   } catch (error) {
-    logError('login', error);
+    functions.logError('login', error);
   }
 }
 
 export async function logout() {
   try {
-    await signOut(AppAuth);
+    await signOut(auth);
   } catch (error) {
-    logError('logout', error);
+    functions.logError('logout', error);
+  }
+}
+
+export async function register() {
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      'haris54237@gmail.com',
+      'haris1234'
+    );
+  } catch (error) {
+    functions.logError('register', error);
   }
 }

@@ -3,7 +3,7 @@ import Overview from './overview/Overview';
 import ListBook from './list-book/ListBook';
 import Article from './article/Article';
 import Settings from './settings/Settings';
-import { PATH } from '../../constants/routes';
+import { PATH } from '../../constants';
 
 const profileRoutes = [
   {

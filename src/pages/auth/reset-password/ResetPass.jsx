@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { PATH } from '../../../constants/routes';
-import { Form } from '../../../components/global';
-import { AuthLink } from '../../../components/auth';
+import { PATH } from '../../../constants';
+import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
   Card,
@@ -40,7 +39,13 @@ export default function ResetPass() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleSubmit}>
-              <Form type='email' id='email' label='Email' my={10} isRequired />
+              <GlobalComponent.Form
+                type='email'
+                id='email'
+                label='Email'
+                my={10}
+                isRequired
+              />
               <Flex align='center' justify='flex-end'>
                 <Button colorScheme='red' type='submit'>
                   Kirim Email
@@ -50,13 +55,13 @@ export default function ResetPass() {
           </Box>
         </CardBody>
         <VStack my={10}>
-          <AuthLink
+          <AuthComponent.AuthLink
             textContent='Belum punya akun?'
             linkContent='Daftar di sini!'
             color='purple'
             handleClick={toRegister}
           />
-          <AuthLink
+          <AuthComponent.AuthLink
             textContent='Sudah mendaftar?'
             linkContent='Masuk di sini!'
             color='blue'

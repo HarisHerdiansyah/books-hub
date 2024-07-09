@@ -1,5 +1,5 @@
 import { Box, Container, Text, Flex } from '@chakra-ui/react';
-import { bookDetailMock, keyWording } from '../../../constants/utils';
+import { utils } from '../../../constants';
 
 export default function BookDetail() {
   return (
@@ -8,12 +8,12 @@ export default function BookDetail() {
         Detail Buku
       </Text>
       <Box fontSize={20}>
-        {Object.entries(bookDetailMock).map((book) => {
+        {Object.entries(utils.bookDetailMock).map((book) => {
           if (book[0] === 'descAndReview') {
             return (
               <Box my={3} key={book[0]}>
                 <Text fontWeight='semibold' mb={3}>
-                  {keyWording[book[0]]}:
+                  {utils.keyWording[book[0]]}:
                 </Text>
                 <Text fontSize={18} align='justify'>
                   {book[1]}
@@ -24,7 +24,7 @@ export default function BookDetail() {
 
           return (
             <Flex my={3} key={book[0]}>
-              <Text fontWeight='semibold'>{keyWording[book[0]]}:&nbsp;</Text>
+              <Text fontWeight='semibold'>{utils.keyWording[book[0]]}:&nbsp;</Text>
               <Text>{book[1]}</Text>
             </Flex>
           );

@@ -5,10 +5,11 @@ export default function AuthLink({
   textContent,
   color,
   handleClick,
-  linkContent
+  linkContent,
+  ...props
 }) {
   return (
-    <Flex align='center' justify='center' gap={1} my={1}>
+    <Flex align='center' justify='center' gap={1} my={1} {...props}>
       <Text>{textContent}</Text>
       <Button variant='link' colorScheme={color} onClick={handleClick}>
         {linkContent}
