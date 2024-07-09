@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { Context } from './Context';
-import { PATH } from '../../constants';
+import { Context, PATH } from '../../constants';
 
 export default function PrivateProvider() {
   const { user } = useContext(Context);

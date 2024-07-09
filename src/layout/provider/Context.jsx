@@ -1,9 +1,8 @@
-import { createContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Auth } from '../../service';
-
-export const Context = createContext();
+import { Context } from '../../constants';
 
 export default function AppProvider({ children }) {
   const [user, setUser] = useState(null);

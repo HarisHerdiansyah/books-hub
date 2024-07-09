@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Context } from '../../../constants';
 import { Auth } from '../../../service';
 import { PATH } from '../../../constants';
 import { GlobalComponent, AuthComponent } from '../../../components';
@@ -17,10 +19,20 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { user } = useContext(Context);
+
+  if (user !== null) {
+    return <Navigate to={PATH.profile.overview} />;
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await Auth.login();
+    try {
+      await Auth.login();
+      navigate(PATH.profile.overview);
+    } catch (error) {
+      return;
+    }
   };
 
   const toRegister = () => navigate(PATH.auth.register);
@@ -69,6 +81,7 @@ export default function Login() {
           linkContent='Daftar di sini!'
           color='purple'
           handleClick={toRegister}
+          my={10}
         />
       </Card>
     </Container>

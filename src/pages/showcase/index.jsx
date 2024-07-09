@@ -1,7 +1,7 @@
 import ProfileLayout from '../profile/layout/ProfileLayout';
 import Overview from '../profile/overview/Overview';
 import ListBook from '../profile/list-book/ListBook';
-import { PATH } from '../../constants/routes';
+import { PATH } from '../../constants';
 
 const showcaseRoutes = [
   {

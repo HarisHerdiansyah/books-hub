@@ -6,7 +6,8 @@ import { PATH } from '../../constants';
 const authRoutes = [
   {
     path: PATH.auth.login,
-    element: <Login />
+    element: <Login />,
+    index: true
   },
   {
     path: PATH.auth.register,

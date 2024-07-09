@@ -70,6 +70,7 @@ export default function Register() {
           linkContent='Masuk di sini!'
           color='blue'
           handleClick={toLogin}
+          my={10}
         />
       </Card>
     </Container>
