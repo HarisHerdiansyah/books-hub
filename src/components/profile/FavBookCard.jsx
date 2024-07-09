@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
+import { PATH } from '../../constants';
 import {
   Card,
   CardBody,
@@ -14,7 +15,7 @@ import { faStar, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 export default function FavBookCard({ bookTitle, isShowcase }) {
   const navigate = useNavigate();
 
-  const handleEditNavigate = () => navigate('/book/edit');
+  const handleEditNavigate = () => navigate(PATH.book.edit);
 
   return (
     <Card variant='outline'>

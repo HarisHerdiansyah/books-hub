@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { listBookDropdown } from '../../../constants/utils';
+import { utils } from '../../../constants';
 import {
   Button,
   Flex,
@@ -10,7 +10,7 @@ import {
   FormLabel,
   Select
 } from '@chakra-ui/react';
-import { ListBookCard } from '../../../components/profile';
+import { ProfileComponent } from '../../../components';
 
 export default function ListBook() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function ListBook() {
               Filter:
             </FormLabel>
             <Select placeholder='Select option'>
-              {listBookDropdown.map((list) => (
+              {utils.listBookDropdown.map((list) => (
                 <option value={list.value} key={list.label}>
                   {list.label}
                 </option>
@@ -45,16 +45,16 @@ export default function ListBook() {
       )}
       <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
         <GridItem>
-          <ListBookCard isShowcase={isShowcase} />
+          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
         </GridItem>
         <GridItem>
-          <ListBookCard isShowcase={isShowcase} />
+          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
         </GridItem>
         <GridItem>
-          <ListBookCard isShowcase={isShowcase} />
+          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
         </GridItem>
         <GridItem>
-          <ListBookCard isShowcase={isShowcase} />
+          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
         </GridItem>
       </Grid>
     </Box>

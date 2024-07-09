@@ -1,6 +1,6 @@
 import BookDetail from './detail/BookDetail';
 import BookForm from './form/BookForm';
-import { PATH } from '../../constants/routes';
+import { PATH } from '../../constants';
 
 const bookRoutes = [
   {

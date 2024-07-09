@@ -1,18 +1,18 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { Navigation } from '../../../components/profile';
+import { ProfileComponent } from '../../../components';
 import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { profileNavLink, showcaseNavLink } from '../../../constants/utils';
+import { utils } from '../../../constants';
 
 export default function ProfileLayout() {
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
-  const navlink = isShowcase ? showcaseNavLink : profileNavLink;
+  const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
 
   return (
     <Box py={4} px={20}>
       <Flex justify='flex-end' gap={6}>
         {navlink.map((nav, i) => (
-          <Navigation
+          <ProfileComponent.Navigation
             key={i}
             text={nav.text}
             path={nav.path}

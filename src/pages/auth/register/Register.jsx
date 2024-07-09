@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { PATH } from '../../../constants/routes';
-import { Form } from '../../../components/global';
-import { AuthLink } from '../../../components/auth';
+import { PATH } from '../../../constants';
+import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
   Card,
@@ -37,15 +36,21 @@ export default function Register() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleRegister}>
-              <Form
+              <GlobalComponent.Form
                 type='text'
                 id='username'
                 label='Username'
                 my={10}
                 isRequired
               />
-              <Form type='email' id='email' label='Email' my={10} isRequired />
-              <Form
+              <GlobalComponent.Form
+                type='email'
+                id='email'
+                label='Email'
+                my={10}
+                isRequired
+              />
+              <GlobalComponent.Form
                 type='password'
                 id='password'
                 label='Password'
@@ -60,11 +65,12 @@ export default function Register() {
             </form>
           </Box>
         </CardBody>
-        <AuthLink
+        <AuthComponent.AuthLink
           textContent='Sudah mendaftar?'
           linkContent='Masuk di sini!'
           color='blue'
           handleClick={toLogin}
+          my={10}
         />
       </Card>
     </Container>
