@@ -1,22 +1,22 @@
 import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
-import { AppAuth } from '../../service/auth';
+import { Auth } from '../../service';
 
-export const Apps = createContext();
+export const Context = createContext();
 
 export default function AppProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loadFetch, setLoadFetch] = useState(true);
+  const [loadUser, setLoadUser] = useState(true);
 
   useEffect(() => {
-    const authListener = onAuthStateChanged(AppAuth, (_user) => {
-      console.log('invoked', _user);
+    // TODO : Write logic for handle timeout
+    const authListener = onAuthStateChanged(Auth.auth, (_user) => {
       if (_user) {
-        setLoadFetch(false);
+        setLoadUser(false);
         setUser(_user);
       } else {
-        setLoadFetch(false);
+        setLoadUser(false);
         setUser(null);
       }
     });
@@ -26,7 +26,9 @@ export default function AppProvider({ children }) {
 
   const value = { user };
 
-  return <Apps.Provider value={value}>{!loadFetch && children}</Apps.Provider>;
+  return (
+    <Context.Provider value={value}>{!loadUser && children}</Context.Provider>
+  );
 }
 
 AppProvider.propTypes = {

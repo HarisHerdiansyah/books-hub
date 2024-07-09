@@ -4,7 +4,7 @@ import { Container, Text, Flex, Button, Grid } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
-import { GridForm, Form } from '../../../components/global';
+import { GlobalComponent } from '../../../components';
 
 export default function BookForm() {
   const { pathname } = useLocation();
@@ -27,15 +27,25 @@ export default function BookForm() {
       </Text>
       <form>
         <Grid templateColumns='repeat(2, 1fr)' gap={6}>
-          <GridForm type='text' label='Judul buku' id='bookTitle' isRequired />
-          <GridForm type='text' label='Penulis' id='writer' isRequired />
-          <GridForm
+          <GlobalComponent.GridForm
+            type='text'
+            label='Judul buku'
+            id='bookTitle'
+            isRequired
+          />
+          <GlobalComponent.GridForm
+            type='text'
+            label='Penulis'
+            id='writer'
+            isRequired
+          />
+          <GlobalComponent.GridForm
             type='number'
             label='Tahun terbit'
             id='yearPublished'
             isRequired
           />
-          <GridForm
+          <GlobalComponent.GridForm
             type='select'
             label='Genre'
             id='genre'
@@ -56,7 +66,11 @@ export default function BookForm() {
             fullSymbol={ratingIcon.full}
           />
         </Flex>
-        <Form type='textarea' id='descAndReview' label='Deskripsi dan Review' />
+        <GlobalComponent.Form
+          type='textarea'
+          id='descAndReview'
+          label='Deskripsi dan Review'
+        />
         <Flex align='center' justify='space-between' mt={12}>
           <Button colorScheme='red' variant='outline' onClick={handleBack}>
             Batalkan

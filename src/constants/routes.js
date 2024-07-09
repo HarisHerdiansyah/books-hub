@@ -1,4 +1,4 @@
-export const PATH = {
+export default {
   book: {
     add: '/book/add',
     edit: '/book/edit',

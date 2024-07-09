@@ -1,5 +1,5 @@
 import SearchResults from './SearchResults';
-import { PATH } from '../../constants/routes';
+import { PATH } from '../../constants';
 
 const searchResultsRoutes = [
   {

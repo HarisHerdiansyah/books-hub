@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../../service/auth';
-import { PATH } from '../../../constants/routes';
-import { Form } from '../../../components/global';
-import { AuthLink } from '../../../components/auth';
+import { Auth } from '../../../service';
+import { PATH } from '../../../constants';
+import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
   Card,
@@ -21,11 +20,7 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await login();
-    } catch (e) {
-      return e;
-    }
+    await Auth.login();
   };
 
   const toRegister = () => navigate(PATH.auth.register);
@@ -44,14 +39,14 @@ export default function Login() {
         <CardBody>
           <Box px={4}>
             <form onSubmit={handleLogin}>
-              <Form
+              <GlobalComponent.Form
                 type='text'
                 id='username'
                 label='Username'
                 my={10}
                 isRequired
               />
-              <Form
+              <GlobalComponent.Form
                 type='password'
                 id='password'
                 label='Password'
@@ -69,7 +64,7 @@ export default function Login() {
             </form>
           </Box>
         </CardBody>
-        <AuthLink
+        <AuthComponent.AuthLink
           textContent='Belum punya akun?'
           linkContent='Daftar di sini!'
           color='purple'

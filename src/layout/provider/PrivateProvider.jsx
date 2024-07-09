@@ -1,13 +1,14 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { Apps } from './Context';
 import { useContext } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { Context } from './Context';
+import { PATH } from '../../constants';
 
 export default function PrivateProvider() {
-  const { user } = useContext(Apps);
+  const { user } = useContext(Context);
 
   if (user !== null) {
     return <Outlet />;
   }
 
-  return <Navigate to='/auth/login' />;
+  return <Navigate to={PATH.auth.login} />;
 }

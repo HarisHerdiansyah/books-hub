@@ -1,8 +1,9 @@
 import Home from './Home';
+import { PATH } from '../../constants';
 
 const homeRoutes = [
   {
-    path: '/home',
+    path: PATH.home,
     element: <Home />
   }
 ];
