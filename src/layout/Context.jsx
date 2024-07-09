@@ -1,4 +1,4 @@
-import { createContext, useEffect } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
 import { AppAuth } from '../service/auth';
@@ -6,24 +6,27 @@ import { AppAuth } from '../service/auth';
 export const Apps = createContext();
 
 export default function AppProvider({ children }) {
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loadFetch, setLoadFetch] = useState(true);
 
   useEffect(() => {
     const authListener = onAuthStateChanged(AppAuth, (_user) => {
       console.log('invoked', _user);
       if (_user) {
-        // setUser(_user);
+        setLoadFetch(false);
+        setUser(_user);
       } else {
-        // setUser(null);
+        setLoadFetch(false);
+        setUser(null);
       }
     });
 
     return () => authListener();
   }, []);
 
-  // const value = { user };
+  const value = { user };
 
-  return <Apps.Provider>{children}</Apps.Provider>;
+  return <Apps.Provider value={value}>{!loadFetch && children}</Apps.Provider>;
 }
 
 AppProvider.propTypes = {

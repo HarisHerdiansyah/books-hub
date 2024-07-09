@@ -1,13 +1,17 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { AppAuth } from '../../service/auth';
-import { useEffect } from 'react';
+import { Apps } from '../../layout/Context';
+import { useEffect, useContext } from 'react';
 
 export default function Root() {
-  const currUser = AppAuth.currentUser;
+  const { user } = useContext(Apps);
 
   useEffect(() => {
-    console.log(currUser);
+    console.log(user);
   });
 
-  return currUser ? <Outlet /> : <Navigate to='/auth/login' />;
+  if (user !== null) {
+    return <Outlet />;
+  }
+
+  return <Navigate to='/auth/login' />;
 }
