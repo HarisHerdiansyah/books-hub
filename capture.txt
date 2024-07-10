@@ -14,16 +14,40 @@ Rencana stack : React JS, Redux & Redux Toolkit, RTK Query, Firebase, & Data-dat
 - /user/[id]/books/[id] untuk menampilkan detail buku dari user lain
 
 {
-  judul buku, // input text
-  penulis, // input text 
-  tahun terbit, // input number
-  genre, // dropdown
-  deskripsi dan review, // textarea (setelah buku selesai dibaca)
-  rating, // slider (?) (setelah buku selesai dibaca)
-  id buku, // auto generated
-  created at // auto generated,
-  publik,
-  is done,
-  total view
+  books: {
+    user_id: { // list buku }
+  },
+  detail-books: {
+    user_id : {
+      book_id: { // detail }
+    }
+  }
 }
 
+1. Panggil data buku di level layout profile/showcase baru filter dan di tiap-tiap page
+struktur data buku untuk list
+{
+  bookTitle, string, input
+  writer, string, input
+  yearPublished, number, input
+  genre, string, input
+  bookId, string, auto-generated,
+  isDone, boolean, auto-generated // setiap kali menambah buku, secara default belum selesai dibaca
+  isPublic, boolean, input
+  createdAt, timestamp, auto-generated
+  updatedAt, timestamp, auto-generated,
+  isFavourite, boolean, input
+  rating, number, input // setelah buku selesai
+  deskripsi dan review, text, input // setelah buku selesai,
+  isWishlist, booelan, input
+}
+
+2. Basic operations, tambah buku, edit buku, hapus buku, tandai selesai
+
+3. Input untuk tambah buku (judul, penulis, genre, tahun terbit, publik)
+
+4. Input untuk edit buku
+>> ketika belum selesai (judul, penulis, genre, tahun terbit, publik, favorit)
+>> ketika sudah selesai (judul, penulis, genre, tahun terbit, publik, favorit, deskripsi dan review, rating)
+
+5. Aksi hapus dari wishlist, masukkan ke daftar buku atau hapus data seutuhnya

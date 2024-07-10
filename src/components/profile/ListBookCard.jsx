@@ -1,16 +1,9 @@
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { PATH } from '../../constants';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Text,
-  Button,
-  ButtonGroup
-} from '@chakra-ui/react';
+import { Card, Flex, Text, Button, ButtonGroup } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faCheck, faStar } from '@fortawesome/free-solid-svg-icons';
 
 export default function ListBookCard({ isShowcase }) {
   const navigate = useNavigate();
@@ -18,25 +11,35 @@ export default function ListBookCard({ isShowcase }) {
   const handleEditNavigate = () => navigate(PATH.book.edit);
 
   return (
-    <Card w='100%' variant='outline'>
-      <CardBody>
-        <Link to='/book/detail'>
-          <Button
-            fontSize={22}
-            fontWeight='semibold'
-            color='#392467'
-            mb={4}
-            variant='link'
-          >
-            Negeri 5 Menara
-          </Button>
-        </Link>
-        <Text my={2}>Tahun Terbit: 2013</Text>
-        <Text my={2}>Author: Ahmad Fuadi</Text>
-        <Text my={2}>Publik: Ya/Tidak</Text>
-      </CardBody>
+    <Card w='100%' variant='outline' py={4} px={5}>
+      {/* <CardBody> */}
+      <Flex align='center' justify='space-between' mb={4}>
+        <Flex align='center' justify='flex-start' gap={2}>
+          <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
+          <Link to='/book/detail'>
+            <Button
+              fontSize={22}
+              fontWeight='semibold'
+              color='#392467'
+              variant='link'
+            >
+              Negeri 5 Menara
+            </Button>
+          </Link>
+        </Flex>
+        <Text fontWeight='semibold' textDecoration='underline'>
+          Publik
+        </Text>
+      </Flex>
+      <Text>Kategori: Novel</Text>
+      <Text>Author: Ahmad Fuadi</Text>
+      <Text>Tahun: 2020</Text>
+      {/* </CardBody> */}
       {!isShowcase && (
-        <CardFooter justify='flex-end'>
+        <Flex align='center' justify='space-between' mt={6}>
+          <Button colorScheme='red' variant='link'>
+            Hapus buku
+          </Button>
           <ButtonGroup>
             <Button
               colorScheme='yellow'
@@ -52,7 +55,7 @@ export default function ListBookCard({ isShowcase }) {
               Selesai
             </Button>
           </ButtonGroup>
-        </CardFooter>
+        </Flex>
       )}
     </Card>
   );

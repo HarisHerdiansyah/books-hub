@@ -10,12 +10,12 @@ export default function Overview() {
   return (
     <Box w='100%'>
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
-        Daftar Favorit
+        Disematkan
       </Text>
       <Grid templateColumns='repeat(2, 1fr)' gap={8}>
         {utils.books.slice(0, 4).map((book) => (
           <GridItem w='100%' key={book.id}>
-            <ProfileComponent.FavBookCard bookTitle={book.bookTitle} isShowcase={isShowcase} />
+            <ProfileComponent.ListBookCard bookTitle={book.bookTitle} isShowcase={isShowcase} />
           </GridItem>
         ))}
       </Grid>
