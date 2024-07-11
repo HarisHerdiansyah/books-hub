@@ -1,17 +1,20 @@
-// import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ProfileComponent } from '../../../components';
 import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { utils } from '../../../constants';
+import { Context, utils } from '../../../constants';
 
 export default function ProfileLayout() {
+  const { state, action } = useContext(Context);
+  const { auth } = state;
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
-  
-  // useEffect(() => {
-  //   console.log('test effect');
-  // }, []);
+
+  useEffect(() => {
+    action.getBooksDispatcher(auth.user.uid);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box py={4} px={20}>

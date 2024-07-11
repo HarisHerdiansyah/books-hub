@@ -19,7 +19,8 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { auth } = useContext(Context);
+  const { state } = useContext(Context);
+  const { auth } = state;
 
   if (auth.user !== null) {
     return <Navigate to={PATH.profile.overview} />;

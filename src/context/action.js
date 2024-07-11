@@ -3,10 +3,10 @@ import ACTION from './constant';
 
 export default function actionCreators(dispatch) {
   return {
-    getBooksDispatcher: async () => {
+    getBooksDispatcher: async (uid) => {
       try {
-        const books = await Firestore.getBooks();
-        dispatch({ type: ACTION.GET_BOOKS, payload: { books } });
+        const books = await Firestore.getBooks(uid);
+        dispatch({ type: ACTION.SET_BOOKS, payload: { books } });
       } catch (error) {
         console.log('getBooksDispatcher', error);
       }

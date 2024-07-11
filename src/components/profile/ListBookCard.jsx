@@ -1,11 +1,23 @@
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { PATH } from '../../constants';
-import { Card, Flex, Text, Button, ButtonGroup } from '@chakra-ui/react';
+import { Badge, Card, Flex, Text, Button, ButtonGroup } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faCheck, faStar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPencilAlt,
+  faCheck,
+  faStar
+} from '@fortawesome/free-solid-svg-icons';
 
-export default function ListBookCard({ isShowcase }) {
+export default function ListBookCard({
+  isShowcase,
+  title,
+  isPublic,
+  category,
+  writer,
+  yearPublished,
+  isFavourite
+}) {
   const navigate = useNavigate();
 
   const handleEditNavigate = () => navigate(PATH.book.edit);
@@ -15,7 +27,9 @@ export default function ListBookCard({ isShowcase }) {
       {/* <CardBody> */}
       <Flex align='center' justify='space-between' mb={4}>
         <Flex align='center' justify='flex-start' gap={2}>
-          <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
+          {isFavourite && (
+            <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
+          )}
           <Link to='/book/detail'>
             <Button
               fontSize={22}
@@ -23,17 +37,17 @@ export default function ListBookCard({ isShowcase }) {
               color='#392467'
               variant='link'
             >
-              Negeri 5 Menara
+              {title}
             </Button>
           </Link>
         </Flex>
-        <Text fontWeight='semibold' textDecoration='underline'>
-          Publik
-        </Text>
+        <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
+          {isPublic ? 'Publik' : 'Privat'}
+        </Badge>
       </Flex>
-      <Text>Kategori: Novel</Text>
-      <Text>Author: Ahmad Fuadi</Text>
-      <Text>Tahun: 2020</Text>
+      <Text>Kategori: {category || '-'}</Text>
+      <Text>Penulis: {writer}</Text>
+      <Text>Tahun: {yearPublished}</Text>
       {/* </CardBody> */}
       {!isShowcase && (
         <Flex align='center' justify='space-between' mt={6}>
@@ -62,5 +76,11 @@ export default function ListBookCard({ isShowcase }) {
 }
 
 ListBookCard.propTypes = {
-  isShowcase: PropTypes.bool
+  isShowcase: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+  isPublic: PropTypes.bool.isRequired,
+  category: PropTypes.string.isRequired,
+  writer: PropTypes.string.isRequired,
+  yearPublished: PropTypes.number.isRequired,
+  isFavourite: PropTypes.bool.isRequired
 };

@@ -10,16 +10,14 @@ import {
   where
 } from 'firebase/firestore';
 import app from './app';
-import { Auth } from '.';
 import { functions } from '../constants';
 
 export const firestore = getFirestore(app);
-const userId = Auth.auth.currentUser?.uid;
 
-export async function getBooks() {
+export async function getBooks(uid) {
   const withQuery = query(
     collection(firestore, 'books'),
-    where('userId', '==', userId)
+    where('userId', '==', uid)
   );
   try {
     const result = [];
@@ -33,10 +31,7 @@ export async function getBooks() {
 
 export async function addBook(payload) {
   try {
-    await setDoc(doc(firestore, 'books', payload.bookId), {
-      ...payload,
-      userId
-    });
+    await setDoc(doc(firestore, 'books', payload.bookId), payload);
     console.log('add book success');
   } catch (error) {
     functions.logError('add book', error);

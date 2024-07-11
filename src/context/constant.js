@@ -1,5 +1,4 @@
 export default {
-  GET_BOOKS: 'GET_BOOKS',
   SET_BOOKS: 'SET_BOOKS',
   ADD_BOOK: 'ADD_BOOK',
   UPDATE_BOOK: 'UPDATE_BOOK',

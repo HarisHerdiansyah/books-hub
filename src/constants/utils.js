@@ -31,25 +31,39 @@ export const showcaseNavLink = [
   }
 ];
 
+export const listBookDropdownValue = {
+  all: 'all',
+  done: 'done',
+  progress: 'progress',
+  wishlist: 'wishlist',
+  favourite: 'favourite',
+  isPublic: 'public'
+};
+
 export const listBookDropdown = [
   {
-    value: 'done',
+    value: listBookDropdownValue.all,
+    label: 'Semua',
+    default: true
+  },
+  {
+    value: listBookDropdownValue.done,
     label: 'Selesai dibaca'
   },
   {
-    value: 'progress',
+    value: listBookDropdownValue.progress,
     label: 'Belum selesai dibaca'
   },
   {
-    value: 'wishlist',
+    value: listBookDropdownValue.wishlist,
     label: 'Wishlist'
   },
   {
-    value: 'favs',
+    value: listBookDropdownValue.favourite,
     label: 'Favorit'
   },
   {
-    value: 'public',
+    value: listBookDropdownValue.isPublic,
     label: 'Publik'
   }
 ];
