@@ -10,10 +10,10 @@ export default function reducer(state, action) {
     [ACTION.LOAD_USER_DONE]: () => ({
       ...state,
       auth: {
-        user: { ...payload },
+        user: payload,
         isLoadUser: false
       }
-    }),
+    })
   };
 
   return REDUCER[action.type]();

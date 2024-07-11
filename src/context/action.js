@@ -14,7 +14,8 @@ export default function actionCreators(dispatch) {
     addBookDispatcher: async (payload) => await Firestore.addBook(payload),
     updateBookDispatcher: async (payload) =>
       await Firestore.updateBook(payload),
-    deleteBookDispatcher: async () => await Firestore.deleteBook(),
-    setUserDispatcher: (payload) => dispatch({ type: ACTION.SET_USER, payload })
+    deleteBookDispatcher: async (payload) =>
+      await Firestore.deleteBook(payload),
+    setUserDispatcher: (payload) => dispatch({ type: ACTION.LOAD_USER_DONE, payload })
   };
 }

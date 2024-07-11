@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ProfileComponent } from '../../../components';
 import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
@@ -9,9 +9,9 @@ export default function ProfileLayout() {
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
   
-  useEffect(() => {
-    console.log('test effect');
-  }, []);
+  // useEffect(() => {
+  //   console.log('test effect');
+  // }, []);
 
   return (
     <Box py={4} px={20}>
