@@ -3,9 +3,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { Context, PATH } from '../../constants';
 
 export default function PrivateProvider() {
-  const { state } = useContext(Context);
+  const { auth } = useContext(Context);
 
-  if (state.auth.user !== null) {
+  if (auth.user !== null) {
     return <Outlet />;
   }
 
