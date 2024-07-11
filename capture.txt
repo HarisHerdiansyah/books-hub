@@ -51,3 +51,21 @@ struktur data buku untuk list
 >> ketika sudah selesai (judul, penulis, genre, tahun terbit, publik, favorit, deskripsi dan review, rating)
 
 5. Aksi hapus dari wishlist, masukkan ke daftar buku atau hapus data seutuhnya
+
+GET
+Dispatch async action untuk ambil data buku di level layout profile dan mapping hasilnya dengan ambil nilai state `books`
+
+ADD
+Dispatch async action dan kirim payload berupa data buku baru. Atribut yang perlu di-input user antara lain title (text), writer (text), yearPublished (number | year), category (dropdown), isPublic (toggle | checkbox), isWishlist (toggle | checkbox)
+
+untuk atribut yang auto-generated adalah id, isDone, isFavourite, isPinned, createdAt, updatedAt, rating, descAndReview
+
+EDIT
+Ambil data buku yang ingin diedit, lalu ganti beberapa field yang diinginkan user. Di halaman edit, ketika buku sudah berstatus selesai dibaca, tampilkan component untuk menambahkan rating dan descAndReview
+
+DELETE
+Just delete it
+
+EDIT (mark done)
+Dispatch async action untuk mengupdate data buku untuk atribut tertentu
+
