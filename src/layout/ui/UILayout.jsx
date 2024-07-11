@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function UILayout() {
-  const { user } = useContext(Context);
+  const { auth } = useContext(Context);
 
   const handleLogout = async () => await Auth.logout();
 
@@ -20,7 +20,7 @@ export default function UILayout() {
             Books Hub
           </Text>
         </Flex>
-        {user !== null && (
+        {auth.user !== null && (
           <Button colorScheme='gray' onClick={handleLogout}>
             Logout
           </Button>

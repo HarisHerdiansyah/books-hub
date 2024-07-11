@@ -1,32 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Auth } from '../../service';
 import { Context } from '../../constants';
+import { initialState, reducer, actionCreators } from '../../context';
 
 export default function AppProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loadUser, setLoadUser] = useState(true);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const action = actionCreators(dispatch);
 
   useEffect(() => {
     // TODO : Write logic for handle timeout
     const authListener = onAuthStateChanged(Auth.auth, (_user) => {
-      if (_user) {
-        setLoadUser(false);
-        setUser(_user);
-      } else {
-        setLoadUser(false);
-        setUser(null);
-      }
+      action.setUserDispatcher(_user);
     });
 
     return () => authListener();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const value = { user };
-
   return (
-    <Context.Provider value={value}>{!loadUser && children}</Context.Provider>
+    <Context.Provider value={state}>
+      {!state.auth.isLoadUser && children}
+    </Context.Provider>
   );
 }
 
