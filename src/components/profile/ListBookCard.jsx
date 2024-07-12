@@ -2,7 +2,15 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import { PATH, Context } from '../../constants';
-import { Badge, Card, Flex, Text, Button, ButtonGroup } from '@chakra-ui/react';
+import {
+  Badge,
+  Card,
+  Flex,
+  Text,
+  Button,
+  ButtonGroup,
+  IconButton
+} from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencilAlt,
@@ -41,16 +49,15 @@ export default function ListBookCard({
           {isFavourite && (
             <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
           )}
-          <Link to='/book/detail'>
-            <Button
-              fontSize={22}
-              fontWeight='semibold'
-              color='#392467'
-              variant='link'
-            >
-              {title}
-            </Button>
-          </Link>
+          <Text
+            noOfLines={1}
+            color='#392467'
+            fontSize='xl'
+            fontWeight='semibold'
+            _hover={{ textDecoration: 'underline' }}
+          >
+            <Link to='/book/detail'>{title}</Link>
+          </Text>
         </Flex>
         <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
           {isPublic ? 'Publik' : 'Privat'}
@@ -65,21 +72,19 @@ export default function ListBookCard({
             Hapus buku
           </Button>
           <ButtonGroup>
-            <Button
+            <IconButton
+              size='lg'
               colorScheme='yellow'
-              leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
+              icon={<FontAwesomeIcon icon={faPencilAlt} />}
               onClick={handleEditNavigate}
-            >
-              Edit
-            </Button>
+            />
             {!isDone && (
-              <Button
+              <IconButton
+                size='lg'
                 colorScheme='green'
-                leftIcon={<FontAwesomeIcon icon={faCheck} />}
+                icon={<FontAwesomeIcon icon={faCheck} />}
                 onClick={handleMarkDoneAction}
-              >
-                Selesai
-              </Button>
+              />
             )}
           </ButtonGroup>
         </Flex>
