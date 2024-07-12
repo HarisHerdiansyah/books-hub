@@ -11,7 +11,14 @@ export default function actionCreators(dispatch) {
         console.log('getBooksDispatcher', error);
       }
     },
-    addBookDispatcher: async (payload) => await Firestore.addBook(payload),
+    addBookDispatcher: async (payload, cb) => {
+      try {
+        await Firestore.addBook(payload);
+        cb();
+      } catch (error) {
+        console.log('addBookDispatcher', error);
+      }
+    },
     updateBookDispatcher: async (payload) =>
       await Firestore.updateBook(payload),
     deleteBookDispatcher: async (payload) =>

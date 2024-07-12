@@ -40,16 +40,9 @@ export default function ListBook() {
             <FormLabel fontSize='xl' htmlFor='filter'>
               Filter:
             </FormLabel>
-            <Select
-              id='filter'
-              onChange={handleFilter}
-            >
+            <Select id='filter' onChange={handleFilter} value={filter}>
               {utils.listBookDropdown.map((list) => (
-                <option
-                  value={list.value}
-                  key={list.label}
-                  selected={list?.default}
-                >
+                <option value={list.value} key={list.label}>
                   {list.label}
                 </option>
               ))}

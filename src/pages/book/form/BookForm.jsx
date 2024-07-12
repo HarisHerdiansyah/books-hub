@@ -1,18 +1,26 @@
+import { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Rating from 'react-rating';
+import { v4 as uuid } from 'uuid';
+import { DateTime } from 'luxon';
 import { Container, Text, Flex, Button, Grid } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { GlobalComponent } from '../../../components';
-import { utils } from '../../../constants';
+import { utils, Context } from '../../../constants';
+import { bookObjectDefault } from '../../../context/state';
 
 export default function BookForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { state, action } = useContext(Context);
+  const { auth } = state;
+  const [book, setBook] = useState(bookObjectDefault);
+  const [visibility, setVisibility] = useState('Privat');
 
   const isEdit = pathname.includes('edit');
-  const title = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
+  const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
   const ratingIcon = {
     empty: <FontAwesomeIcon size='xl' color='red' icon={faStarReg} />,
     full: <FontAwesomeIcon size='xl' color='red' icon={faStarSolid} />
@@ -26,53 +34,101 @@ export default function BookForm() {
     navigate(-1);
   };
 
+  const handleFormControl = (e) => {
+    setBook((b) => {
+      if (e.target.type === 'checkbox') {
+        return {
+          ...b,
+          [e.target.id]: e.target.checked
+        };
+      }
+
+      if (e.target.type === 'number') {
+        return {
+          ...b,
+          [e.target.id]: parseInt(e.target.value)
+        };
+      }
+
+      return {
+        ...b,
+        [e.target.id]: e.target.value
+      };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const dataBook = {
+      ...book,
+      id: uuid(),
+      createdAt: DateTime.utc().toISO(),
+      isPublic: visibility === 'Publik',
+      userId: auth.user.uid
+    };
+    action.addBookDispatcher(dataBook, handleBack);
+  };
+
   return (
     <Container maxW={900}>
       <Text fontSize='3xl' fontWeight='normal' my={6}>
-        {title}
+        {currentAction}
       </Text>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Grid templateColumns='repeat(2, 1fr)' gap={6}>
           <GlobalComponent.GridForm
+            onChange={handleFormControl}
             type='text'
             label='Judul buku'
-            id='bookTitle'
+            id='title'
+            value={book.title}
             isRequired
           />
           <GlobalComponent.GridForm
+            onChange={handleFormControl}
             type='text'
             label='Penulis'
             id='writer'
+            value={book.writer}
             isRequired
           />
           <GlobalComponent.GridForm
+            onChange={handleFormControl}
             type='number'
             label='Tahun terbit'
             id='yearPublished'
+            value={book.yearPublished.toString()}
             isRequired
           />
           <GlobalComponent.GridForm
+            placeholder='-- Pilih Kategori --'
+            onChange={handleFormControl}
             type='select'
             label='Kategori'
             id='category'
+            value={book.category}
             optData={dropdownCategory}
             isRequired
           />
           <GlobalComponent.GridForm
+            onChange={setVisibility}
             type='radio-group'
-            value='Privat'
+            id='isPublic'
+            value={visibility}
             stackDirection='column'
             optData={[
               { value: 'Privat', label: 'Privat' },
               { value: 'Publik', label: 'Publik' }
             ]}
           />
-          <GlobalComponent.GridForm
-            type='checkbox'
-            label='Tambah ke wishlist'
-            id='wishlist'
-            value={true}
-          />
+          {!isEdit && (
+            <GlobalComponent.GridForm
+              onChange={handleFormControl}
+              type='checkbox'
+              label='Tambah ke wishlist'
+              id='isWishlist'
+            />
+          )}
         </Grid>
         {isEdit && (
           <>
@@ -97,12 +153,8 @@ export default function BookForm() {
           <Button colorScheme='red' variant='outline' onClick={handleBack}>
             Batalkan
           </Button>
-          <Button
-            type='submit'
-            colorScheme={isEdit ? 'yellow' : 'blue'}
-            onClick={handleBack}
-          >
-            {title}
+          <Button type='submit' colorScheme={isEdit ? 'yellow' : 'blue'}>
+            {currentAction}
           </Button>
         </Flex>
       </form>

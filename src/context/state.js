@@ -2,7 +2,7 @@ export const bookObjectDefault = {
   id: '',
   title: '',
   writer: '',
-  yearPublished: 1970,
+  yearPublished: 0,
   category: '',
   isDone: false,
   isPublic: false,
@@ -11,6 +11,7 @@ export const bookObjectDefault = {
   isPinned: false,
   createdAt: '',
   updatedAt: '',
+  userId: '',
   rating: 1.0,
   descAndReview: ''
 };
