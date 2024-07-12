@@ -19,10 +19,22 @@ export default function actionCreators(dispatch) {
         console.log('addBookDispatcher', error);
       }
     },
-    updateBookDispatcher: async (bookId, payload) =>
-      await Firestore.updateBook(bookId, payload),
-    deleteBookDispatcher: async (bookId) => await Firestore.deleteBook(bookId),
-    setUserDispatcher: (payload) =>
-      dispatch({ type: ACTION.LOAD_USER_DONE, payload })
+    updateBookDispatcher: async (bookId, payload, cb) => {
+      try {
+        await Firestore.updateBook(bookId, payload);
+        if (cb) cb();
+      } catch (error) {
+        console.log('updateBookDispatcher', error);
+      }
+    },
+    deleteBookDispatcher: async (bookId) => {
+      await Firestore.deleteBook(bookId);
+    },
+    setUserDispatcher: (payload) => {
+      dispatch({ type: ACTION.LOAD_USER_DONE, payload });
+    },
+    selectBookDispatcher: (bookId) => {
+      dispatch({ type: ACTION.SELECT_BOOK, payload: { bookId } });
+    }
   };
 }

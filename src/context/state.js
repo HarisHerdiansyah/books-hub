@@ -12,7 +12,7 @@ export const bookObjectDefault = {
   createdAt: '',
   updatedAt: '',
   userId: '',
-  rating: 1.0,
+  rating: 0,
   descAndReview: ''
 };
 

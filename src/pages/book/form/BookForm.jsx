@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Rating from 'react-rating';
 import { v4 as uuid } from 'uuid';
@@ -15,9 +15,12 @@ export default function BookForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
-  const { auth } = state;
-  const [book, setBook] = useState(bookObjectDefault);
-  const [visibility, setVisibility] = useState('Privat');
+  const { auth, selectedBook } = state;
+  const [book, setBook] = useState(selectedBook);
+  const [visibility, setVisibility] = useState(
+    book.isPublic ? 'Publik' : 'Privat'
+  );
+  const [rating, setRating] = useState(0);
 
   const isEdit = pathname.includes('edit');
   const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
@@ -30,7 +33,10 @@ export default function BookForm() {
     label: cat
   }));
 
+  useEffect(() => console.log(rating), [rating]);
+
   const handleBack = () => {
+    setBook(bookObjectDefault);
     navigate(-1);
   };
 
@@ -59,14 +65,29 @@ export default function BookForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataBook = {
+    let dataBook = {};
+
+    if (!isEdit) {
+      dataBook = {
+        ...book,
+        id: uuid(),
+        createdAt: DateTime.utc().toISO(),
+        isPublic: visibility === 'Publik',
+        userId: auth.user.uid
+      };
+      action.addBookDispatcher(dataBook, handleBack);
+      return;
+    }
+
+    dataBook = {
       ...book,
-      id: uuid(),
-      createdAt: DateTime.utc().toISO(),
+      updatedAt: DateTime.utc().toISO(),
       isPublic: visibility === 'Publik',
-      userId: auth.user.uid
+      rating
     };
-    action.addBookDispatcher(dataBook, handleBack);
+    action.updateBookDispatcher(book.id, dataBook, handleBack);
+    console.log(dataBook);
+    return;
   };
 
   return (
@@ -130,25 +151,29 @@ export default function BookForm() {
             />
           )}
         </Grid>
-        {isEdit && (
+        {isEdit && book.isDone ? (
           <>
             <Flex align='center' my={6} gap={6}>
               <Text fontSize='xl' fontWeight='semibold'>
                 Rating:
               </Text>
               <Rating
+                onChange={setRating}
                 fractions={2}
+                initialRating={rating}
                 emptySymbol={ratingIcon.empty}
                 fullSymbol={ratingIcon.full}
               />
             </Flex>
             <GlobalComponent.Form
+              onChange={handleFormControl}
               type='textarea'
               id='descAndReview'
               label='Deskripsi dan Review'
+              value={book.descAndReview}
             />
           </>
-        )}
+        ) : null}
         <Flex align='center' justify='space-between' mt={12}>
           <Button colorScheme='red' variant='outline' onClick={handleBack}>
             Batalkan

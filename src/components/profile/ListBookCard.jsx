@@ -24,7 +24,10 @@ export default function ListBookCard({
   const navigate = useNavigate();
   const { action } = useContext(Context);
 
-  const handleEditNavigate = () => navigate(PATH.book.edit);
+  const handleEditNavigate = () => {
+    action.selectBookDispatcher(id);
+    navigate(`${PATH.book.edit}/${id}`);
+  };
 
   const handleDeleteAction = () => action.deleteBookDispatcher(id);
 
