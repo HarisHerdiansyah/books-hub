@@ -23,7 +23,6 @@ export async function getBooks(uid) {
     const result = [];
     const snapshots = await getDocs(withQuery);
     snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
-    console.log(result);
     return result;
   } catch (error) {
     functions.logError('get books', error);
@@ -39,18 +38,18 @@ export async function addBook(payload) {
   }
 }
 
-export async function updateBook(payload) {
+export async function updateBook(bookId, payload) {
   try {
-    await updateDoc(doc(firestore, 'books', payload.id), payload);
+    await updateDoc(doc(firestore, 'books', bookId), payload);
     console.log('update book success');
   } catch (error) {
     functions.logError('update book', error);
   }
 }
 
-export async function deleteBook(payload) {
+export async function deleteBook(bookId) {
   try {
-    await deleteDoc(doc(firestore, 'books', payload.id));
+    await deleteDoc(doc(firestore, 'books', bookId));
     console.log('delete book success');
   } catch (error) {
     functions.logError('delete book', error);
