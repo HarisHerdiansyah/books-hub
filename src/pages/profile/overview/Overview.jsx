@@ -9,31 +9,30 @@ export default function Overview() {
   const { books } = state;
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
+  const pinnedBooks = books.filter((book) => book.isPinned === true);
 
   return (
     <Box w='100%'>
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
         Disematkan
       </Text>
-      {books.length > 0 ? (
+      {pinnedBooks.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8}>
-          {books
-            .filter((book) => book.isPinned === true)
-            .map((book) => (
-              <GridItem w='100%' key={book.id}>
-                <ProfileComponent.ListBookCard
-                  id={book.id}
-                  title={book.title}
-                  isPublic={book.isPublic}
-                  isDone={book.isDone}
-                  category={book.category}
-                  writer={book.writer}
-                  yearPublished={book.yearPublished}
-                  isFavourite={book.isFavourite}
-                  isShowcase={isShowcase}
-                />
-              </GridItem>
-            ))}
+          {pinnedBooks.map((book) => (
+            <GridItem w='100%' key={book.id}>
+              <ProfileComponent.ListBookCard
+                id={book.id}
+                title={book.title}
+                isPublic={book.isPublic}
+                isDone={book.isDone}
+                category={book.category}
+                writer={book.writer}
+                yearPublished={book.yearPublished}
+                isFavourite={book.isFavourite}
+                isShowcase={isShowcase}
+              />
+            </GridItem>
+          ))}
         </Grid>
       ) : (
         <Flex justify='center' mt={12}>

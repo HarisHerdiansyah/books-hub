@@ -56,7 +56,7 @@ export default function ListBookCard({
             fontWeight='semibold'
             _hover={{ textDecoration: 'underline' }}
           >
-            <Link to='/book/detail'>{title}</Link>
+            <Link to={`${PATH.book.detail}/${id}`}>{title}</Link>
           </Text>
         </Flex>
         <Badge colorScheme={isPublic ? 'blue' : 'gray'}>

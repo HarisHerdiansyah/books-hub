@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Rating from 'react-rating';
 import { v4 as uuid } from 'uuid';
@@ -9,7 +9,6 @@ import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { GlobalComponent } from '../../../components';
 import { utils, Context } from '../../../constants';
-import { bookObjectDefault } from '../../../context/state';
 
 export default function BookForm() {
   const { pathname } = useLocation();
@@ -20,23 +19,21 @@ export default function BookForm() {
   const [visibility, setVisibility] = useState(
     book.isPublic ? 'Publik' : 'Privat'
   );
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(book.rating);
 
   const isEdit = pathname.includes('edit');
   const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
   const ratingIcon = {
-    empty: <FontAwesomeIcon size='xl' color='red' icon={faStarReg} />,
-    full: <FontAwesomeIcon size='xl' color='red' icon={faStarSolid} />
+    empty: <FontAwesomeIcon size='xl' color='#ebeb05' icon={faStarReg} />,
+    full: <FontAwesomeIcon size='xl' color='#ebeb05' icon={faStarSolid} />
   };
   const dropdownCategory = utils.bookCategoryDropdown.map((cat) => ({
     value: cat,
     label: cat
   }));
 
-  useEffect(() => console.log(rating), [rating]);
-
   const handleBack = () => {
-    setBook(bookObjectDefault);
+    action.resetSelectedBookDispatcher();
     navigate(-1);
   };
 

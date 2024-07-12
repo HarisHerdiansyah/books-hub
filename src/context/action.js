@@ -35,6 +35,9 @@ export default function actionCreators(dispatch) {
     },
     selectBookDispatcher: (bookId) => {
       dispatch({ type: ACTION.SELECT_BOOK, payload: { bookId } });
+    },
+    resetSelectedBookDispatcher: () => {
+      dispatch({ type: ACTION.RESET_SELECTED_BOOK });
     }
   };
 }

@@ -68,25 +68,6 @@ export const listBookDropdown = [
   }
 ];
 
-export const keyWording = {
-  bookTitle: 'Judul Buku',
-  writer: 'Penulis',
-  yearPublished: 'Tahun Terbit',
-  rating: 'Rating',
-  genre: 'Genre',
-  descAndReview: 'Deskripsi dan Review'
-};
-
-export const bookDetailMock = {
-  bookTitle: 'Filosofi Teras',
-  writer: 'Henry Manampiring',
-  yearPublished: '2020',
-  rating: '4.5',
-  genre: 'Personal Development',
-  descAndReview:
-    'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam itaque impedit quasi! Iure accusantium tenetur voluptates dicta sequi? Quis provident assumenda atque fuga facilis dicta vel, perferendis odio ullam temporibus nemo cupiditate tempora nulla consectetur quidem ad recusandae fugit autem iusto molestiae nesciunt sequi. Possimus aspernatur facilis provident dolorum culpa.'
-};
-
 export const bookCategoryDropdown = [
   'Novel & Komik',
   'Cerita Fiksi',
@@ -99,3 +80,12 @@ export const bookCategoryDropdown = [
   'Aset & Keuangan',
   'Buku Panduan & Pembelajaran'
 ];
+
+export const bookDetailData = {
+  title: 'Judul Buku',
+  writer: 'Penulis',
+  yearPublished: 'Tahun Terbit',
+  category: 'Kategori',
+  rating: 'Rating',
+  descAndReview: 'Deskripsi dan Review'
+};

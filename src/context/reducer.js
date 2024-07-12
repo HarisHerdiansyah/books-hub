@@ -1,3 +1,4 @@
+import { bookObjectDefault } from './state';
 import ACTION from './constant';
 
 export default function reducer(state, action) {
@@ -22,7 +23,11 @@ export default function reducer(state, action) {
         ...state,
         selectedBook
       };
-    }
+    },
+    [ACTION.RESET_SELECTED_BOOK]: () => ({
+      ...state,
+      selectedBook: bookObjectDefault
+    })
   };
 
   return REDUCER[action.type]();

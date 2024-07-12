@@ -13,8 +13,7 @@ export default function ProfileLayout() {
 
   useEffect(() => {
     action.getBooksDispatcher(auth.user.uid);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [action, auth.user.uid]);
 
   return (
     <Box py={4} px={20}>

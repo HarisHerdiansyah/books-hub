@@ -15,13 +15,13 @@ import { functions } from '../constants';
 export const firestore = getFirestore(app);
 
 export async function getBooks(uid) {
-  const withQuery = query(
+  const dataQuery = query(
     collection(firestore, 'books'),
     where('userId', '==', uid)
   );
   try {
     const result = [];
-    const snapshots = await getDocs(withQuery);
+    const snapshots = await getDocs(dataQuery);
     snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
     return result;
   } catch (error) {
