@@ -1,3 +1,4 @@
+import { bookObjectDefault } from './state';
 import ACTION from './constant';
 
 export default function reducer(state, action) {
@@ -13,6 +14,19 @@ export default function reducer(state, action) {
         user: payload,
         isLoadUser: false
       }
+    }),
+    [ACTION.SELECT_BOOK]: () => {
+      const selectedBook = state.books.find(
+        (book) => book.id === payload.bookId
+      );
+      return {
+        ...state,
+        selectedBook
+      };
+    },
+    [ACTION.RESET_SELECTED_BOOK]: () => ({
+      ...state,
+      selectedBook: bookObjectDefault
     })
   };
 

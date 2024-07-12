@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function UILayout() {
-  const { auth } = useContext(Context);
+  const { state } = useContext(Context);
+  const { auth } = state;
 
   const handleLogout = async () => await Auth.logout();
 

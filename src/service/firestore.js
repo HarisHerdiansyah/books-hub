@@ -10,20 +10,18 @@ import {
   where
 } from 'firebase/firestore';
 import app from './app';
-import { Auth } from '.';
 import { functions } from '../constants';
 
 export const firestore = getFirestore(app);
-const userId = Auth.auth.currentUser?.uid;
 
-export async function getBooks() {
-  const withQuery = query(
+export async function getBooks(uid) {
+  const dataQuery = query(
     collection(firestore, 'books'),
-    where('userId', '==', userId)
+    where('userId', '==', uid)
   );
   try {
     const result = [];
-    const snapshots = await getDocs(withQuery);
+    const snapshots = await getDocs(dataQuery);
     snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
     return result;
   } catch (error) {
@@ -33,28 +31,25 @@ export async function getBooks() {
 
 export async function addBook(payload) {
   try {
-    await setDoc(doc(firestore, 'books', payload.bookId), {
-      ...payload,
-      userId
-    });
+    await setDoc(doc(firestore, 'books', payload.id), payload);
     console.log('add book success');
   } catch (error) {
     functions.logError('add book', error);
   }
 }
 
-export async function updateBook(payload) {
+export async function updateBook(bookId, payload) {
   try {
-    await updateDoc(doc(firestore, 'books', payload.bookId), payload);
+    await updateDoc(doc(firestore, 'books', bookId), payload);
     console.log('update book success');
   } catch (error) {
     functions.logError('update book', error);
   }
 }
 
-export async function deleteBook(payload) {
+export async function deleteBook(bookId) {
   try {
-    await deleteDoc(doc(firestore, 'books', payload.bookId));
+    await deleteDoc(doc(firestore, 'books', bookId));
     console.log('delete book success');
   } catch (error) {
     functions.logError('delete book', error);

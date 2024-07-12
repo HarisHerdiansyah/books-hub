@@ -4,7 +4,11 @@ import {
   Input,
   FormLabel,
   Select,
-  Textarea
+  Textarea,
+  RadioGroup,
+  Radio,
+  Stack,
+  Checkbox
 } from '@chakra-ui/react';
 
 export default function Form({
@@ -12,8 +16,12 @@ export default function Form({
   isRequired,
   label,
   id,
+  name,
   placeholder,
   optData,
+  value,
+  onChange,
+  stackDirection,
   ...props
 }) {
   if (type === 'select') {
@@ -22,7 +30,12 @@ export default function Form({
         <FormLabel fontSize='xl' htmlFor={id}>
           {label}:
         </FormLabel>
-        <Select id={id} placeholder={placeholder}>
+        <Select
+          id={id}
+          placeholder={placeholder}
+          onChange={onChange}
+          value={value}
+        >
           {optData.map((opt) => (
             <option key={opt.label} value={opt.value}>
               {opt.label}
@@ -33,15 +46,51 @@ export default function Form({
     );
   }
 
+  if (type === 'radio-group') {
+    return (
+      <RadioGroup onChange={onChange} value={value} id={id} name={name}>
+        <Stack direction={stackDirection}>
+          {optData.map((opt) => (
+            <Radio value={opt.value} key={opt.label}>
+              {opt.label}
+            </Radio>
+          ))}
+        </Stack>
+      </RadioGroup>
+    );
+  }
+
+  if (type === 'radio') {
+    return (
+      <Radio value={value} onChange={onChange} id={id} name={name}>
+        {label}
+      </Radio>
+    );
+  }
+
+  if (type === 'checkbox') {
+    return (
+      <Checkbox id={id} onChange={onChange}>
+        {label}
+      </Checkbox>
+    );
+  }
+
   return (
     <FormControl isRequired={isRequired} {...props}>
       <FormLabel fontSize='xl' htmlFor={id}>
         {label}
       </FormLabel>
       {type === 'textarea' ? (
-        <Textarea id={id} />
+        <Textarea id={id} onChange={onChange} value={value} />
       ) : (
-        <Input id={id} type={type} autoComplete='off' />
+        <Input
+          id={id}
+          type={type}
+          onChange={onChange}
+          value={value}
+          autoComplete='off'
+        />
       )}
     </FormControl>
   );
@@ -49,9 +98,13 @@ export default function Form({
 
 Form.propTypes = {
   type: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   placeholder: PropTypes.string,
   isRequired: PropTypes.bool,
-  id: PropTypes.string.isRequired,
-  optData: PropTypes.array
+  id: PropTypes.string,
+  name: PropTypes.string,
+  optData: PropTypes.array,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  stackDirection: PropTypes.string
 };

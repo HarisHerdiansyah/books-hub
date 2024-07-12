@@ -1,59 +1,91 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
-import { PATH } from '../../constants';
-import { Card, Flex, Text, Button, ButtonGroup } from '@chakra-ui/react';
+import { PATH, Context } from '../../constants';
+import {
+  Badge,
+  Card,
+  Flex,
+  Text,
+  Button,
+  ButtonGroup,
+  IconButton
+} from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faCheck, faStar } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPencilAlt,
+  faCheck,
+  faStar
+} from '@fortawesome/free-solid-svg-icons';
 
-export default function ListBookCard({ isShowcase }) {
+export default function ListBookCard({
+  id,
+  isShowcase,
+  title,
+  isPublic,
+  isDone,
+  category,
+  writer,
+  yearPublished,
+  isFavourite
+}) {
   const navigate = useNavigate();
+  const { action } = useContext(Context);
 
-  const handleEditNavigate = () => navigate(PATH.book.edit);
+  const handleEditNavigate = () => {
+    action.selectBookDispatcher(id);
+    navigate(`${PATH.book.edit}/${id}`);
+  };
+
+  const handleDeleteAction = () => action.deleteBookDispatcher(id);
+
+  const handleMarkDoneAction = () =>
+    action.updateBookDispatcher(id, { isDone: true });
 
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
-      {/* <CardBody> */}
       <Flex align='center' justify='space-between' mb={4}>
         <Flex align='center' justify='flex-start' gap={2}>
-          <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
-          <Link to='/book/detail'>
-            <Button
-              fontSize={22}
-              fontWeight='semibold'
-              color='#392467'
-              variant='link'
-            >
-              Negeri 5 Menara
-            </Button>
-          </Link>
+          {isFavourite && (
+            <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
+          )}
+          <Text
+            noOfLines={1}
+            color='#392467'
+            fontSize='xl'
+            fontWeight='semibold'
+            _hover={{ textDecoration: 'underline' }}
+          >
+            <Link to={`${PATH.book.detail}/${id}`}>{title}</Link>
+          </Text>
         </Flex>
-        <Text fontWeight='semibold' textDecoration='underline'>
-          Publik
-        </Text>
+        <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
+          {isPublic ? 'Publik' : 'Privat'}
+        </Badge>
       </Flex>
-      <Text>Kategori: Novel</Text>
-      <Text>Author: Ahmad Fuadi</Text>
-      <Text>Tahun: 2020</Text>
-      {/* </CardBody> */}
+      <Text>Kategori: {category || '-'}</Text>
+      <Text>Penulis: {writer}</Text>
+      <Text>Tahun: {yearPublished}</Text>
       {!isShowcase && (
         <Flex align='center' justify='space-between' mt={6}>
-          <Button colorScheme='red' variant='link'>
+          <Button colorScheme='red' variant='link' onClick={handleDeleteAction}>
             Hapus buku
           </Button>
           <ButtonGroup>
-            <Button
+            <IconButton
+              size='lg'
               colorScheme='yellow'
-              leftIcon={<FontAwesomeIcon icon={faPencilAlt} />}
+              icon={<FontAwesomeIcon icon={faPencilAlt} />}
               onClick={handleEditNavigate}
-            >
-              Edit
-            </Button>
-            <Button
-              colorScheme='green'
-              leftIcon={<FontAwesomeIcon icon={faCheck} />}
-            >
-              Selesai
-            </Button>
+            />
+            {!isDone && (
+              <IconButton
+                size='lg'
+                colorScheme='green'
+                icon={<FontAwesomeIcon icon={faCheck} />}
+                onClick={handleMarkDoneAction}
+              />
+            )}
           </ButtonGroup>
         </Flex>
       )}
@@ -62,5 +94,13 @@ export default function ListBookCard({ isShowcase }) {
 }
 
 ListBookCard.propTypes = {
-  isShowcase: PropTypes.bool
+  id: PropTypes.string.isRequired,
+  isShowcase: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+  isPublic: PropTypes.bool.isRequired,
+  isDone: PropTypes.bool.isRequired,
+  category: PropTypes.string.isRequired,
+  writer: PropTypes.string.isRequired,
+  yearPublished: PropTypes.number.isRequired,
+  isFavourite: PropTypes.bool.isRequired
 };

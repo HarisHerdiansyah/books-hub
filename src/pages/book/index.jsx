@@ -8,11 +8,11 @@ const bookRoutes = [
     element: <BookForm />
   },
   {
-    path: PATH.book.edit,
+    path: `${PATH.book.edit}/:bookId`,
     element: <BookForm />
   },
   {
-    path: PATH.book.detail,
+    path: `${PATH.book.detail}/:bookId`,
     element: <BookDetail />
   }
 ];

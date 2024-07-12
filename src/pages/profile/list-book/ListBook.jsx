@@ -1,5 +1,6 @@
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { utils } from '../../../constants';
+import { Context, PATH, utils } from '../../../constants';
 import {
   Button,
   Flex,
@@ -13,11 +14,17 @@ import {
 import { ProfileComponent } from '../../../components';
 
 export default function ListBook() {
+  const [filter, setFilter] = useState(utils.listBookDropdownValue.all);
+  const { state } = useContext(Context);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const { books } = state;
   const isShowcase = pathname.includes('showcase');
 
-  const handleAddNavigate = () => navigate('/book/add');
+  const handleAddNavigate = () => navigate(PATH.book.add);
+
+  const handleFilter = (e) => setFilter(e.target.value);
 
   return (
     <Box w='100%'>
@@ -33,7 +40,12 @@ export default function ListBook() {
             <FormLabel fontSize='xl' htmlFor='filter'>
               Filter:
             </FormLabel>
-            <Select placeholder='Select option'>
+            <Select
+              id='filter'
+              onChange={handleFilter}
+              value={filter}
+              disabled={books.length === 0}
+            >
               {utils.listBookDropdown.map((list) => (
                 <option value={list.value} key={list.label}>
                   {list.label}
@@ -43,20 +55,40 @@ export default function ListBook() {
           </Flex>
         </Flex>
       )}
-      <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
-        <GridItem>
-          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
-        </GridItem>
-        <GridItem>
-          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
-        </GridItem>
-        <GridItem>
-          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
-        </GridItem>
-        <GridItem>
-          <ProfileComponent.ListBookCard isShowcase={isShowcase} />
-        </GridItem>
-      </Grid>
+      {books.length > 0 ? (
+        <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
+          {books
+            .filter((book) => {
+              const { done, progress, wishlist, favourite, isPublic } =
+                utils.listBookDropdownValue;
+              if (filter === done) return book.isDone === true;
+              if (filter === progress) return book.isDone === false;
+              if (filter === wishlist) return book.isWishlist === true;
+              if (filter === favourite) return book.isFavourite === true;
+              if (filter === isPublic) return book.isPublic === true;
+              return book;
+            })
+            .map((book) => (
+              <GridItem w='100%' key={book.id}>
+                <ProfileComponent.ListBookCard
+                  id={book.id}
+                  title={book.title}
+                  isPublic={book.isPublic}
+                  isDone={book.isDone}
+                  category={book.category}
+                  writer={book.writer}
+                  yearPublished={book.yearPublished}
+                  isFavourite={book.isFavourite}
+                  isShowcase={isShowcase}
+                />
+              </GridItem>
+            ))}
+        </Grid>
+      ) : (
+        <Flex justify='center' mt={12}>
+          <Text fontSize='xl'>-- Daftar buku kosong --</Text>
+        </Flex>
+      )}
     </Box>
   );
 }
