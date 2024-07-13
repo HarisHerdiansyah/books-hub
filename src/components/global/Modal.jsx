@@ -21,6 +21,7 @@ export default function Modal({
       onClose={onClose}
       closeOnOverlayClick={false}
       size={size}
+      scrollBehavior='inside'
       isCentered
     >
       <ModalOverlay />
