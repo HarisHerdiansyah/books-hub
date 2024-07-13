@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Grid, GridItem, Box, Text, Flex } from '@chakra-ui/react';
+import { Grid, GridItem, Box, Text, Flex, Button } from '@chakra-ui/react';
 import { ProfileComponent } from '../../../components';
 import { Context } from '../../../constants';
 
@@ -16,6 +16,7 @@ export default function Overview() {
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
         Disematkan
       </Text>
+      <Button colorScheme='purple'>Sematkan Buku</Button>
       {pinnedBooks.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8}>
           {pinnedBooks.map((book) => (
