@@ -7,7 +7,6 @@ import {
   Card,
   Flex,
   Text,
-  Button,
   ButtonGroup,
   IconButton
 } from '@chakra-ui/react';
@@ -15,8 +14,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencilAlt,
   faCheck,
-  faStar
+  faStar as faStarSolid,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 
 export default function ListBookCard({
   id,
@@ -42,13 +43,24 @@ export default function ListBookCard({
   const handleMarkDoneAction = () =>
     action.updateBookDispatcher(id, { isDone: true });
 
+  const handleFavouriteAction = () =>
+    action.updateBookDispatcher(id, { isFavourite: !isFavourite });
+
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
       <Flex align='center' justify='space-between' mb={4}>
         <Flex align='center' justify='flex-start' gap={2}>
-          {isFavourite && (
-            <FontAwesomeIcon color='#ebeb05' fontSize={18} icon={faStar} />
-          )}
+          <IconButton
+            colorScheme='whiteAlpha'
+            icon={
+              <FontAwesomeIcon
+                color='#ebeb05'
+                fontSize={22}
+                icon={isFavourite ? faStarSolid : faStarReg}
+              />
+            }
+            onClick={handleFavouriteAction}
+          />
           <Text
             noOfLines={1}
             color='#392467'
@@ -68,10 +80,16 @@ export default function ListBookCard({
       <Text>Tahun: {yearPublished}</Text>
       {!isShowcase && (
         <Flex align='center' justify='space-between' mt={6}>
-          <Button colorScheme='red' variant='link' onClick={handleDeleteAction}>
-            Hapus buku
-          </Button>
+          <Badge colorScheme={isDone ? 'green' : 'orange'}>
+            {isDone ? 'Selesai' : 'Belum selesai'}
+          </Badge>
           <ButtonGroup>
+            <IconButton
+              size='lg'
+              colorScheme='red'
+              icon={<FontAwesomeIcon icon={faTrash} />}
+              onClick={handleDeleteAction}
+            />
             <IconButton
               size='lg'
               colorScheme='yellow'
@@ -82,7 +100,7 @@ export default function ListBookCard({
               <IconButton
                 size='lg'
                 colorScheme='green'
-                icon={<FontAwesomeIcon icon={faCheck} />}
+                icon={<FontAwesomeIcon icon={faCheck} fontSize={24} />}
                 onClick={handleMarkDoneAction}
               />
             )}
