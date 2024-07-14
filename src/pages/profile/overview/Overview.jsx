@@ -16,38 +16,56 @@ import { ProfileComponent, GlobalComponent } from '../../../components';
 import { Context } from '../../../constants';
 
 export default function Overview() {
-  const { state } = useContext(Context);
+  const { state, action } = useContext(Context);
   const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { books } = state;
   const pinnedBooks = books.filter((book) => book.isPinned);
-  const [dataPin, setDataPin] = useState(
-    pinnedBooks.map((b) => ({ id: b.id, isPinned: b.isPinned }))
-  ); // pass for batch update
+  const [dataPin, setDataPin] = useState({ lists: [], passedData: [] });
 
   const isShowcase = pathname.includes('showcase');
 
+  const handleOpenModal = () => {
+    setDataPin((pin) => ({
+      ...pin,
+      lists: books.map(({ id, title, isPinned }) => ({
+        id,
+        title,
+        isPinned
+      }))
+    }));
+    onOpen();
+  };
+
   const handleDataPin = (e) => {
-    if (dataPin.filter((data) => data.isPinned).length === 6) {
+    const { id, checked } = e.target;
+
+    if (dataPin.lists.filter((data) => data.isPinned).length === 3 && checked) {
       console.log('tidak bisa menambahkan lagi buku');
       return;
     }
 
-    const { id, checked } = e.target;
-    const copyDataPin = [...dataPin];
-    const bookIndex = copyDataPin.findIndex((book) => book.id === id);
+    const { lists, passedData } = { ...dataPin };
+    const listsIndex = lists.findIndex((book) => book.id === id);
+    const passedDataIndex = passedData.findIndex((book) => book.id === id);
 
-    if (bookIndex === -1) {
-      setDataPin((pinnedBook) => [...pinnedBook, { id, isPinned: checked }]);
+    lists[listsIndex].isPinned = checked;
+
+    if (passedDataIndex === -1) {
+      setDataPin((pin) => ({
+        lists,
+        passedData: [...pin.passedData, { id, isPinned: checked }]
+      }));
       return;
     }
 
-    copyDataPin[bookIndex].isPinned = checked;
+    passedData[passedDataIndex].isPinned = checked;
+    setDataPin({ lists, passedData });
     return;
   };
 
   const handleUpdatePinnedBooks = () => {
-    console.log(dataPin);
+    action.updatePinnedBookDispatcher(dataPin.passedData, onClose);
   };
 
   return (
@@ -55,7 +73,7 @@ export default function Overview() {
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
         Disematkan
       </Text>
-      <Button colorScheme='purple' onClick={onOpen}>
+      <Button colorScheme='purple' onClick={handleOpenModal}>
         Sematkan Buku
       </Button>
       <GlobalComponent.Modal
@@ -68,7 +86,7 @@ export default function Overview() {
         <ModalBody>
           <Text>Kamu hanya dapat menyematkan maksimal 6 buku.</Text>
           <Stack my={6}>
-            {books.map((book) => (
+            {dataPin.lists.map((book) => (
               <GlobalComponent.Form
                 onChange={handleDataPin}
                 defaultChecked={book.isPinned}
@@ -77,6 +95,10 @@ export default function Overview() {
                 id={book.id}
                 key={book.id}
                 colorScheme='purple'
+                disabled={
+                  dataPin.lists.filter((pin) => pin.isPinned).length === 3 &&
+                  !book.isPinned
+                }
               />
             ))}
           </Stack>

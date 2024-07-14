@@ -7,7 +7,8 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  where
+  where,
+  writeBatch
 } from 'firebase/firestore';
 import app from './app';
 import { functions } from '../constants';
@@ -44,6 +45,21 @@ export async function updateBook(bookId, payload) {
     console.log('update book success');
   } catch (error) {
     functions.logError('update book', error);
+  }
+}
+
+export async function updatePinnedBook(payload) {
+  const batch = writeBatch(firestore);
+  try {
+    payload.forEach((book) => {
+      batch.update(doc(firestore, 'books', book.id), {
+        isPinned: book.isPinned
+      });
+    });
+    await batch.commit();
+    console.log('update pinned book in batches success');
+  } catch (error) {
+    functions.logError('update pinned book', error);
   }
 }
 

@@ -38,6 +38,14 @@ export default function actionCreators(dispatch) {
     },
     resetSelectedBookDispatcher: () => {
       dispatch({ type: ACTION.RESET_SELECTED_BOOK });
+    },
+    updatePinnedBookDispatcher: async (payload, cb) => {
+      try {
+        await Firestore.updatePinnedBook(payload);
+        cb();
+      } catch (error) {
+        console.log('updatePinnedBookDispatcher', error);
+      }
     }
   };
 }
