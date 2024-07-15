@@ -90,6 +90,7 @@ export default function Form({
           onChange={onChange}
           value={value}
           autoComplete='off'
+          variant='flushed'
         />
       )}
     </FormControl>
