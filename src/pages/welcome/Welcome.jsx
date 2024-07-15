@@ -70,7 +70,7 @@ export default function Welcome() {
           my={6}
           type='textarea'
           label='Tentang'
-          id='description'
+          id='about'
         />
         <Flex justify='flex-end' my={16}>
           <Button colorScheme='blue' type='submit'>
