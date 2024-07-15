@@ -3,7 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Rating from 'react-rating';
 import { v4 as uuid } from 'uuid';
 import { DateTime } from 'luxon';
-import { Container, Text, Flex, Button, Grid } from '@chakra-ui/react';
+import {
+  Container,
+  Text,
+  Flex,
+  Button,
+  Grid,
+  useToast
+} from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +18,7 @@ import { GlobalComponent } from '../../../components';
 import { utils, Context } from '../../../constants';
 
 export default function BookForm() {
+  const toast = useToast();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
@@ -72,7 +80,10 @@ export default function BookForm() {
         isPublic: visibility === 'Publik',
         userId: auth.user.uid
       };
-      action.addBookDispatcher(dataBook, handleBack);
+      action.addBookDispatcher(dataBook, (isSuccess) => {
+        toast(utils.dataToast(isSuccess, 'add'));
+        handleBack();
+      });
       return;
     }
 
@@ -82,7 +93,10 @@ export default function BookForm() {
       isPublic: visibility === 'Publik',
       rating
     };
-    action.updateBookDispatcher(book.id, dataBook, handleBack);
+    action.updateBookDispatcher(book.id, dataBook, (isSuccess) => {
+      toast(utils.dataToast(isSuccess, 'update'));
+      handleBack();
+    });
     console.log(dataBook);
     return;
   };

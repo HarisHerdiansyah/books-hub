@@ -14,21 +14,29 @@ export default function actionCreators(dispatch) {
     addBookDispatcher: async (payload, cb) => {
       try {
         await Firestore.addBook(payload);
-        cb();
+        cb(true);
       } catch (error) {
+        cb(false);
         console.log('addBookDispatcher', error);
       }
     },
     updateBookDispatcher: async (bookId, payload, cb) => {
       try {
         await Firestore.updateBook(bookId, payload);
-        if (cb) cb();
+        cb(true);
       } catch (error) {
+        cb(false);
         console.log('updateBookDispatcher', error);
       }
     },
-    deleteBookDispatcher: async (bookId) => {
-      await Firestore.deleteBook(bookId);
+    deleteBookDispatcher: async (bookId, cb) => {
+      try {
+        await Firestore.deleteBook(bookId);
+        cb(true);
+      } catch (error) {
+        cb(false);
+        console.log('deleteBookDispatcher', error);
+      }
     },
     setUserDispatcher: (payload) => {
       dispatch({ type: ACTION.LOAD_USER_DONE, payload });
@@ -42,8 +50,9 @@ export default function actionCreators(dispatch) {
     updatePinnedBookDispatcher: async (payload, cb) => {
       try {
         await Firestore.updatePinnedBook(payload);
-        cb();
+        cb(true);
       } catch (error) {
+        cb(false);
         console.log('updatePinnedBookDispatcher', error);
       }
     }

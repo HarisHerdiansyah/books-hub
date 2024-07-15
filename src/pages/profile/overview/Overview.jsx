@@ -10,12 +10,14 @@ import {
   useDisclosure,
   ModalBody,
   ModalFooter,
-  Stack
+  Stack,
+  useToast
 } from '@chakra-ui/react';
 import { ProfileComponent, GlobalComponent } from '../../../components';
-import { Context } from '../../../constants';
+import { Context, utils } from '../../../constants';
 
 export default function Overview() {
+  const toast = useToast();
   const { state, action } = useContext(Context);
   const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,7 +67,10 @@ export default function Overview() {
   };
 
   const handleUpdatePinnedBooks = () => {
-    action.updatePinnedBookDispatcher(dataPin.passedData, onClose);
+    action.updatePinnedBookDispatcher(dataPin.passedData, (isSuccess) => {
+      toast(utils.dataToast(isSuccess, 'pin'));
+      if (isSuccess) onClose();
+    });
   };
 
   return (
