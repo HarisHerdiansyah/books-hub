@@ -4,14 +4,18 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
+import { createUserData, getUserData } from './firestore';
 import app from './app';
 import { functions } from '../constants';
 
 export const auth = getAuth(app);
 
-export async function login() {
+export async function login(credentials) {
+  const { email, password } = credentials;
   try {
-    await signInWithEmailAndPassword(auth, 'haris54237@gmail.com', 'haris1234');
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    const userSnapshot = await getUserData(response.user.uid);
+    return userSnapshot;
   } catch (error) {
     functions.logError('login', error);
   }
@@ -25,13 +29,17 @@ export async function logout() {
   }
 }
 
-export async function register() {
+export async function register(credentials) {
+  const { email, password } = credentials;
   try {
-    await createUserWithEmailAndPassword(
+    const response = await createUserWithEmailAndPassword(
       auth,
-      'haris54237@gmail.com',
-      'haris1234'
+      email,
+      password
     );
+    await createUserData(response.user.uid);
+    await signOut(auth);
+    console.log('register success');
   } catch (error) {
     functions.logError('register', error);
   }

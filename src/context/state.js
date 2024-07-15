@@ -23,5 +23,6 @@ export default {
   },
   books: [],
   selectedBook: bookObjectDefault,
-  searchResults: []
+  searchResults: [],
+  userData: {}
 };

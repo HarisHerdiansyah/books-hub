@@ -11,9 +11,10 @@ export default function reducer(state, action) {
     [ACTION.LOAD_USER_DONE]: () => ({
       ...state,
       auth: {
-        user: payload,
+        user: payload.authUser,
         isLoadUser: false
-      }
+      },
+      userData: payload.userSnapshot
     }),
     [ACTION.SELECT_BOOK]: () => {
       const selectedBook = state.books.find(
@@ -27,6 +28,10 @@ export default function reducer(state, action) {
     [ACTION.RESET_SELECTED_BOOK]: () => ({
       ...state,
       selectedBook: bookObjectDefault
+    }),
+    [ACTION.SET_USER_DATA]: () => ({
+      ...state,
+      userData: payload
     })
   };
 

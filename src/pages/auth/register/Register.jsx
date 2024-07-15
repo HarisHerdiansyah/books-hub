@@ -1,5 +1,6 @@
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PATH } from '../../../constants';
+import { PATH, Context } from '../../../constants';
 import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
@@ -16,10 +17,19 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { action } = useContext(Context);
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+
+  const handleInput = (e) => {
+    setCredentials((cred) => ({ ...cred, [e.target.id]: e.target.value }));
+  };
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log('wkwk');
+    setCredentials({ email: '', password: '' });
+    action.registerDispatcher(credentials, (isSuccess) =>
+      alert(`${isSuccess ? 'Berhasil' : 'Gagal'} Registrasi`)
+    );
   };
 
   const toLogin = () => navigate(PATH.auth.login);
@@ -37,13 +47,8 @@ export default function Register() {
           <Box px={4}>
             <form onSubmit={handleRegister}>
               <GlobalComponent.Form
-                type='text'
-                id='username'
-                label='Username'
-                my={10}
-                isRequired
-              />
-              <GlobalComponent.Form
+                onChange={handleInput}
+                value={credentials.email}
                 type='email'
                 id='email'
                 label='Email'
@@ -51,6 +56,8 @@ export default function Register() {
                 isRequired
               />
               <GlobalComponent.Form
+                onChange={handleInput}
+                value={credentials.password}
                 type='password'
                 id='password'
                 label='Password'

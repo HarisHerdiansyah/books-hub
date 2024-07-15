@@ -13,11 +13,11 @@ const router = createBrowserRouter([
     ...rootRoutes,
     children: [
       ...authRoutes,
-      ...welcomeRoutes,
       {
         ...privateProviderRoutes,
         children: [
           ...homeRoutes,
+          ...welcomeRoutes,
           ...profileRoutes,
           ...bookRoutes,
           ...searchResultsRoutes,

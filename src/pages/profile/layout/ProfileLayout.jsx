@@ -1,15 +1,25 @@
 import { useContext, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ProfileComponent } from '../../../components';
-import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  Card,
+  CardBody,
+  CardHeader,
+  Image
+} from '@chakra-ui/react';
 import { Context, utils } from '../../../constants';
 
 export default function ProfileLayout() {
   const { state, action } = useContext(Context);
-  const { auth } = state;
+  const { auth, userData } = state;
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
+
+  // console.log(userData);
 
   useEffect(() => {
     action.getBooksDispatcher(auth.user.uid);
@@ -29,30 +39,26 @@ export default function ProfileLayout() {
       </Flex>
       <Flex my={8} gap={8}>
         <Box w={350}>
-          <Card pt={10} pb={8} w={350} color='white' bg='#392467'>
-            <Box
-              w={225}
-              h={225}
-              border={'1px solid black'}
-              m='auto'
-              borderRadius={150}
-              bg='white'
-            ></Box>
+          <Card pt={10} pb={8} w={350} h={700} color='white' bg='#392467'>
+            <Box m='auto'>
+              <Image
+                name={`${userData?.firstName} ${userData.lastName}`}
+                src={userData?.profilePhotoURL}
+                boxSize='220px'
+                objectFit='cover'
+                borderRadius='full'
+              />
+            </Box>
             <CardHeader>
               <Text fontSize='3xl' fontWeight='semibold'>
-                {isShowcase ? 'Haris Herdiansyah' : 'Maya Astuti'}
+                {userData?.firstName}
               </Text>
-              <Text fontSize='2xl'>
-                {isShowcase ? '@harisherdian_' : '@mayaaa'}
-              </Text>
+              <Text fontSize='xl'>@{userData?.username}</Text>
+              <Text fontSize='lg'>{userData?.bio}</Text>
             </CardHeader>
             <CardBody>
-              <Text>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Repellat fuga, velit atque earum consequatur veritatis! At ullam
-                aperiam alias asperiores, nostrum culpa quos. Porro aut,
-                voluptates magni at nam minus.
-              </Text>
+              <Text fontSize='xl'>About Me:</Text>
+              <Text>{userData?.about}</Text>
             </CardBody>
           </Card>
         </Box>

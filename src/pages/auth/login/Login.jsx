@@ -1,7 +1,6 @@
-import { useContext } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context } from '../../../constants';
-import { Auth } from '../../../service';
 import { PATH } from '../../../constants';
 import { GlobalComponent, AuthComponent } from '../../../components';
 import {
@@ -18,22 +17,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Login() {
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const navigate = useNavigate();
-  const { state } = useContext(Context);
-  const { auth } = state;
+  const { action } = useContext(Context);
 
-  if (auth.user !== null) {
-    return <Navigate to={PATH.profile.overview} />;
-  }
+  const handleInput = (e) => {
+    setCredentials((cred) => ({ ...cred, [e.target.id]: e.target.value }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await Auth.login();
+    action.loginDispatcher(credentials, (firstLogin) => {
+      if (firstLogin) {
+        navigate(PATH.welcome);
+        return;
+      }
       navigate(PATH.profile.overview);
-    } catch (error) {
       return;
-    }
+    });
   };
 
   const toRegister = () => navigate(PATH.auth.register);
@@ -53,13 +54,17 @@ export default function Login() {
           <Box px={4}>
             <form onSubmit={handleLogin}>
               <GlobalComponent.Form
-                type='text'
-                id='username'
-                label='Username'
+                onChange={handleInput}
+                value={credentials.email}
+                type='email'
+                id='email'
+                label='Email'
                 my={10}
                 isRequired
               />
               <GlobalComponent.Form
+                onChange={handleInput}
+                value={credentials.password}
                 type='password'
                 id='password'
                 label='Password'

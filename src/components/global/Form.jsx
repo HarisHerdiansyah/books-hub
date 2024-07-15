@@ -22,6 +22,7 @@ export default function Form({
   value,
   onChange,
   stackDirection,
+  disabled,
   ...props
 }) {
   if (type === 'select') {
@@ -91,6 +92,7 @@ export default function Form({
           value={value}
           autoComplete='off'
           variant='flushed'
+          disabled={disabled}
         />
       )}
     </FormControl>
@@ -102,6 +104,7 @@ Form.propTypes = {
   label: PropTypes.string,
   placeholder: PropTypes.string,
   isRequired: PropTypes.bool,
+  disabled: PropTypes.bool,
   id: PropTypes.string,
   name: PropTypes.string,
   optData: PropTypes.array,
