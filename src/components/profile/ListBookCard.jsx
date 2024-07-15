@@ -1,14 +1,15 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
-import { PATH, Context } from '../../constants';
+import { PATH, Context, utils } from '../../constants';
 import {
   Badge,
   Card,
   Flex,
   Text,
   ButtonGroup,
-  IconButton
+  IconButton,
+  useToast
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -30,6 +31,7 @@ export default function ListBookCard({
   yearPublished,
   isFavourite
 }) {
+  const toast = useToast();
   const navigate = useNavigate();
   const { action } = useContext(Context);
 
@@ -38,13 +40,23 @@ export default function ListBookCard({
     navigate(`${PATH.book.edit}/${id}`);
   };
 
-  const handleDeleteAction = () => action.deleteBookDispatcher(id);
+  const handleDeleteAction = () =>
+    action.deleteBookDispatcher(id, (isSuccess) =>
+      toast(utils.dataToast(isSuccess, 'delete'))
+    );
 
   const handleMarkDoneAction = () =>
-    action.updateBookDispatcher(id, { isDone: true });
+    action.updateBookDispatcher(id, { isDone: true }, (isSuccess) =>
+      toast(utils.dataToast(isSuccess, 'markdone'))
+    );
 
   const handleFavouriteAction = () =>
-    action.updateBookDispatcher(id, { isFavourite: !isFavourite });
+    action.updateBookDispatcher(
+      id,
+      { isFavourite: !isFavourite },
+      (isSuccess) =>
+        toast(utils.dataToast(isSuccess, 'favourite', !isFavourite))
+    );
 
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
