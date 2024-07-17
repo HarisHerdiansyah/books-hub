@@ -23,5 +23,6 @@ export default {
     register: '/auth/register',
     resetPass: '/auth/reset-password'
   },
-  root: '/'
+  root: '/',
+  welcome: '/welcome'
 };

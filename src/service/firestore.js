@@ -1,6 +1,7 @@
 import {
   getFirestore,
   getDocs,
+  getDoc as getSingleDoc,
   collection,
   setDoc,
   doc,
@@ -69,5 +70,43 @@ export async function deleteBook(bookId) {
     console.log('delete book success');
   } catch (error) {
     functions.logError('delete book', error);
+  }
+}
+
+export async function createUserData(uid) {
+  try {
+    await setDoc(doc(firestore, 'users', uid), {
+      uid,
+      firstName: '',
+      lastName: '',
+      username: '',
+      bio: '',
+      about: '',
+      firstLogin: true,
+      profilePhotoURL: ''
+    });
+    console.log('create user data success');
+  } catch (error) {
+    functions.logError('create user data', error);
+  }
+}
+
+export async function getUserData(uid) {
+  try {
+    const snapshot = await getSingleDoc(doc(firestore, 'users', uid));
+    console.log('get user data success');
+    return snapshot.data();
+  } catch (error) {
+    functions.logError('get user data', error);
+  }
+}
+
+export async function updateUserData(uid, payload) {
+  console.log('updateUserData invoked')
+  try {
+    await updateDoc(doc(firestore, 'users', uid), payload);
+    console.log('update user data success');
+  } catch (error) {
+    functions.logError('update user data', error);
   }
 }
