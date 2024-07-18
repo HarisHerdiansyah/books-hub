@@ -2,17 +2,16 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { Context } from '../../constants';
-import { Auth } from '../../service';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function UILayout() {
   const { pathname } = useLocation();
-  const { state } = useContext(Context);
-  const { auth } = state;
+  const { state, action } = useContext(Context);
+  const { user } = state;
 
-  const handleLogout = async () => await Auth.logout();
+  const handleLogout = () => action.logoutDispatcher();
 
   return (
     <Box bg='#392467' py={4} px={20}>
@@ -23,7 +22,7 @@ export default function UILayout() {
             Books Hub
           </Text>
         </Flex>
-        {auth.user !== null && !pathname.includes('auth') ? (
+        {user.authState !== null && !pathname.includes('auth') ? (
           <Button colorScheme='gray' onClick={handleLogout}>
             Logout
           </Button>

@@ -13,7 +13,7 @@ import {
   Box,
   Link as ChakraLink
 } from '@chakra-ui/react';
-import { Storage } from '../../service';
+import { functions } from '../../constants';
 import { Context, PATH } from '../../constants';
 import { GlobalComponent } from '../../components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -61,7 +61,7 @@ export default function Welcome() {
   };
 
   const handleUploadPhoto = () => {
-    const upload = Storage.uploadFile(uploadState.fileInput, auth.user.uid);
+    const upload = functions.uploadFile(uploadState.fileInput, auth.user.uid);
     upload.on(
       'state_changed',
       () => {
@@ -81,7 +81,8 @@ export default function Welcome() {
         }));
       },
       () => {
-        Storage.getFileURL(upload.snapshot.ref)
+        functions
+          .getFileURL(upload.snapshot.ref)
           .then((url) => {
             setUploadState((upState) => ({
               ...upState,

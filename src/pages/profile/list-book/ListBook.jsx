@@ -19,7 +19,7 @@ export default function ListBook() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { books } = state;
+  const { book } = state;
   const isShowcase = pathname.includes('showcase');
 
   const handleAddNavigate = () => navigate(PATH.book.add);
@@ -44,7 +44,7 @@ export default function ListBook() {
               id='filter'
               onChange={handleFilter}
               value={filter}
-              disabled={books.length === 0}
+              disabled={book.lists.length === 0}
             >
               {utils.listBookDropdown.map((list) => (
                 <option value={list.value} key={list.label}>
@@ -55,17 +55,17 @@ export default function ListBook() {
           </Flex>
         </Flex>
       )}
-      {books.length > 0 ? (
+      {book.lists.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
-          {books
+          {book.lists
             .filter((book) => {
               const { done, progress, wishlist, favourite, isPublic } =
                 utils.listBookDropdownValue;
-              if (filter === done) return book.isDone === true;
-              if (filter === progress) return book.isDone === false;
-              if (filter === wishlist) return book.isWishlist === true;
-              if (filter === favourite) return book.isFavourite === true;
-              if (filter === isPublic) return book.isPublic === true;
+              if (filter === done) return book.isDone;
+              if (filter === progress) return !book.isDone;
+              if (filter === wishlist) return book.isWishlist;
+              if (filter === favourite) return book.isFavourite;
+              if (filter === isPublic) return book.isPublic;
               return book;
             })
             .map((book) => (

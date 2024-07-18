@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
-import { PATH, Context, utils } from '../../constants';
+import { PATH, Context } from '../../constants';
 import {
   Badge,
   Card,
@@ -40,23 +40,25 @@ export default function ListBookCard({
     navigate(`${PATH.book.edit}/${id}`);
   };
 
-  const handleDeleteAction = () =>
-    action.deleteBookDispatcher(id, (isSuccess) =>
-      toast(utils.dataToast(isSuccess, 'delete'))
-    );
+  const handleDelete = () => {
+    action.deleteBookDispatcher({ id, title }, (data) => toast(data));
+  };
 
-  const handleMarkDoneAction = () =>
-    action.updateBookDispatcher(id, { isDone: true }, (isSuccess) =>
-      toast(utils.dataToast(isSuccess, 'markdone'))
-    );
-
-  const handleFavouriteAction = () =>
+  const handleMarkDone = () => {
     action.updateBookDispatcher(
-      id,
-      { isFavourite: !isFavourite },
-      (isSuccess) =>
-        toast(utils.dataToast(isSuccess, 'favourite', !isFavourite))
+      { id, title, isDone: true },
+      'markDone',
+      (data) => toast(data)
     );
+  };
+
+  const handleFavourite = () => {
+    action.updateBookDispatcher(
+      { id, title, isFavourite: !isFavourite },
+      'favourite',
+      (data) => toast(data)
+    );
+  };
 
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
@@ -71,7 +73,7 @@ export default function ListBookCard({
                 icon={isFavourite ? faStarSolid : faStarReg}
               />
             }
-            onClick={handleFavouriteAction}
+            onClick={handleFavourite}
           />
           <Text
             noOfLines={1}
@@ -100,7 +102,7 @@ export default function ListBookCard({
               size='lg'
               colorScheme='red'
               icon={<FontAwesomeIcon icon={faTrash} />}
-              onClick={handleDeleteAction}
+              onClick={handleDelete}
             />
             <IconButton
               size='lg'
@@ -113,7 +115,7 @@ export default function ListBookCard({
                 size='lg'
                 colorScheme='green'
                 icon={<FontAwesomeIcon icon={faCheck} fontSize={24} />}
-                onClick={handleMarkDoneAction}
+                onClick={handleMarkDone}
               />
             )}
           </ButtonGroup>

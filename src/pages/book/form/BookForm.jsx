@@ -22,12 +22,12 @@ export default function BookForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
-  const { auth, selectedBook } = state;
-  const [book, setBook] = useState(selectedBook);
+  const { user, book } = state;
+  const [initialBook, setInitialBook] = useState(book.selectedBook);
   const [visibility, setVisibility] = useState(
-    book.isPublic ? 'Publik' : 'Privat'
+    initialBook.isPublic ? 'Publik' : 'Privat'
   );
-  const [rating, setRating] = useState(book.rating);
+  const [rating, setRating] = useState(initialBook.rating);
 
   const isEdit = pathname.includes('edit');
   const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
@@ -46,7 +46,7 @@ export default function BookForm() {
   };
 
   const handleFormControl = (e) => {
-    setBook((b) => {
+    setInitialBook((b) => {
       if (e.target.type === 'checkbox') {
         return {
           ...b,
@@ -74,30 +74,29 @@ export default function BookForm() {
 
     if (!isEdit) {
       dataBook = {
-        ...book,
+        ...initialBook,
         id: uuid(),
         createdAt: DateTime.utc().toISO(),
         isPublic: visibility === 'Publik',
-        userId: auth.user.uid
+        userId: user.userData.uid
       };
-      action.addBookDispatcher(dataBook, (isSuccess) => {
-        toast(utils.dataToast(isSuccess, 'add'));
+      action.addBookDispatcher(dataBook, (data) => {
+        toast(data);
         handleBack();
       });
       return;
     }
 
     dataBook = {
-      ...book,
+      ...initialBook,
       updatedAt: DateTime.utc().toISO(),
       isPublic: visibility === 'Publik',
       rating
     };
-    action.updateBookDispatcher(book.id, dataBook, (isSuccess) => {
-      toast(utils.dataToast(isSuccess, 'update'));
+    action.updateBookDispatcher(dataBook, 'update', (data) => {
+      toast(data);
       handleBack();
     });
-    console.log(dataBook);
     return;
   };
 
@@ -113,7 +112,7 @@ export default function BookForm() {
             type='text'
             label='Judul buku'
             id='title'
-            value={book.title}
+            value={initialBook.title}
             isRequired
           />
           <GlobalComponent.GridForm
@@ -121,7 +120,7 @@ export default function BookForm() {
             type='text'
             label='Penulis'
             id='writer'
-            value={book.writer}
+            value={initialBook.writer}
             isRequired
           />
           <GlobalComponent.GridForm
@@ -129,7 +128,7 @@ export default function BookForm() {
             type='number'
             label='Tahun terbit'
             id='yearPublished'
-            value={book.yearPublished.toString()}
+            value={initialBook.yearPublished.toString()}
             isRequired
           />
           <GlobalComponent.GridForm
@@ -138,7 +137,7 @@ export default function BookForm() {
             type='select'
             label='Kategori'
             id='category'
-            value={book.category}
+            value={initialBook.category}
             optData={dropdownCategory}
             isRequired
           />
@@ -162,7 +161,7 @@ export default function BookForm() {
             />
           )}
         </Grid>
-        {isEdit && book.isDone ? (
+        {isEdit && initialBook.isDone ? (
           <>
             <Flex align='center' my={6} gap={6}>
               <Text fontSize='xl' fontWeight='semibold'>
@@ -181,7 +180,7 @@ export default function BookForm() {
               type='textarea'
               id='descAndReview'
               label='Deskripsi dan Review'
-              value={book.descAndReview}
+              value={initialBook.descAndReview}
             />
           </>
         ) : null}

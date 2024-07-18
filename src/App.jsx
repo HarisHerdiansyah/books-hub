@@ -6,7 +6,13 @@ import './index.css';
 export default function App() {
   return (
     <ChakraProvider
-      toastOptions={{ defaultOptions: { position: 'top-right' } }}
+      toastOptions={{
+        defaultOptions: {
+          position: 'top-right',
+          duration: 3000,
+          isClosable: true
+        }
+      }}
     >
       <RouterProvider router={router} />
     </ChakraProvider>

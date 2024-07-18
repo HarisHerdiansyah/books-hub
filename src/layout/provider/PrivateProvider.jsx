@@ -4,9 +4,9 @@ import { Context, PATH } from '../../constants';
 
 export default function PrivateProvider() {
   const { state } = useContext(Context);
-  const { auth } = state;
+  const { user } = state;
 
-  if (auth.user !== null) {
+  if (user.authState !== null) {
     return <Outlet />;
   }
 
