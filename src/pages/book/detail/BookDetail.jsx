@@ -8,8 +8,8 @@ export default function BookDetail() {
   const { bookId } = useParams();
   const navigate = useNavigate();
 
-  const { books } = state;
-  const bookDetail = books.find((book) => book.id === bookId);
+  const { book } = state;
+  const bookDetail = book.lists.find((book) => book.id === bookId);
 
   const handleBack = () => navigate(-1);
 

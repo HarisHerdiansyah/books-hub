@@ -11,7 +11,8 @@ import {
   FormLabel,
   Button,
   Box,
-  Link as ChakraLink
+  Link as ChakraLink,
+  useToast
 } from '@chakra-ui/react';
 import { functions } from '../../constants';
 import { Context, PATH } from '../../constants';
@@ -20,9 +21,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 export default function Welcome() {
+  const toast = useToast();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
-  const { auth } = state;
+  const { user } = state;
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -61,7 +63,10 @@ export default function Welcome() {
   };
 
   const handleUploadPhoto = () => {
-    const upload = functions.uploadFile(uploadState.fileInput, auth.user.uid);
+    const upload = functions.uploadFile(
+      uploadState.fileInput,
+      `users/${user.userData.uid}/profile`
+    );
     upload.on(
       'state_changed',
       () => {
@@ -112,12 +117,14 @@ export default function Welcome() {
       profilePhotoURL: uploadState.fileURL,
       firstLogin: false
     };
-    action.updateUserDataDispatcher(auth.user.uid, payload, (isSuccess) => {
+    action.updateUserDataDispatcher(user.userData.uid, payload, (isSuccess) => {
       if (isSuccess) {
+        toast({ title: 'Berhasil!', status: 'success' });
         navigate(PATH.profile.overview);
         return;
       }
-      alert('Error');
+      toast({ title: 'Terjadi kesalahan. Coba lagi!', status: 'error' });
+      return;
     });
   };
 

@@ -17,6 +17,7 @@ import { ProfileComponent, GlobalComponent } from '../../../components';
 import { Context, utils } from '../../../constants';
 
 export default function Overview() {
+  const MAX_PIN = 4;
   const toast = useToast();
   const { state, action } = useContext(Context);
   const { pathname } = useLocation();
@@ -41,11 +42,6 @@ export default function Overview() {
 
   const handleDataPin = (e) => {
     const { id, checked } = e.target;
-
-    if (dataPin.lists.filter((data) => data.isPinned).length === 3 && checked) {
-      console.log('tidak bisa menambahkan lagi buku');
-      return;
-    }
 
     const { lists, passedData } = { ...dataPin };
     const listsIndex = lists.findIndex((book) => book.id === id);
@@ -101,8 +97,8 @@ export default function Overview() {
                 key={book.id}
                 colorScheme='purple'
                 disabled={
-                  dataPin.lists.filter((pin) => pin.isPinned).length === 3 &&
-                  !book.isPinned
+                  dataPin.lists.filter((pin) => pin.isPinned).length ===
+                    MAX_PIN && !book.isPinned
                 }
               />
             ))}
