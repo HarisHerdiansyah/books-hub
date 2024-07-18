@@ -7,7 +7,8 @@ import {
   setDoc,
   doc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  writeBatch
 } from 'firebase/firestore';
 import app from '../../service/app';
 import { functions } from '../../constants';
@@ -118,6 +119,30 @@ export default function bookActionCreator(dispatch) {
     },
     resetSelectedBookDispatcher: () => {
       dispatch({ type: ACTIONS.RESET_SELECTED_BOOK });
+    },
+    updatePinnedBookDispatcher: async (payload, popUpCb) => {
+      dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: true });
+      try {
+        const batch = writeBatch(Firestore);
+        payload.forEach((book) => {
+          batch.update(doc(Firestore, 'books', book.id), {
+            isPinned: book.isPinned
+          });
+        });
+        await batch.commit();
+        popUpCb({
+          title: 'Daftar diperbarui!',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Daftar gagal diperbarui. Coba lagi!',
+          status: 'error'
+        });
+        functions.logError('update pin', e);
+      } finally {
+        dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: false });
+      }
     }
   };
 }

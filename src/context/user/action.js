@@ -4,7 +4,13 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
-import { getFirestore, getDoc, doc, setDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc
+} from 'firebase/firestore';
 import { DateTime } from 'luxon';
 import app from '../../service/app';
 import { functions } from '../../constants';
@@ -115,6 +121,18 @@ export default function userActionCreator(dispatch) {
         });
       } catch (e) {
         functions.logError('state changed', e);
+      }
+    },
+    updateUserDataDispatcher: async (uid, payload, cb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await updateDoc(singleUserRef(uid), payload);
+        cb(true);
+      } catch (e) {
+        cb(false);
+        functions.logError('update user data', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     }
   };

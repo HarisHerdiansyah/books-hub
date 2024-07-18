@@ -51,22 +51,15 @@ export default function ProfileLayout() {
               />
             </Box>
             <CardHeader>
-              <Text fontSize='3xl' fontWeight='semibold'>
+              <Text fontSize='2xl' fontWeight='semibold'>
                 {user.userData?.firstName}
               </Text>
-              <Text fontSize='xl'>@{user.userData?.username}</Text>
-              <Text fontSize='lg'>{user.userData?.bio}</Text>
+              <Text fontSize='lg'>@{user.userData?.username}</Text>
+              <Text fontSize='md'>{user.userData?.bio}</Text>
             </CardHeader>
             <CardBody>
-              <Text fontSize='xl'>About Me:</Text>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Commodi temporibus ipsam iure eos cupiditate quo nostrum ratione
-                vel laudantium aspernatur nulla, reiciendis sunt officia
-                assumenda quam hic corporis corrupti culpa quod adipisci
-                tenetur? Minus et iure quis! Expedita possimus sit provident
-                velit reprehenderit, quasi illum!
-              </Text>
+              <Text fontSize='lg'>About Me:</Text>
+              <Text>{user.userData?.about}</Text>
             </CardBody>
           </Card>
         </Box>

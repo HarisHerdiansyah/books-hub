@@ -71,7 +71,7 @@ export default function Form({
 
   if (type === 'checkbox') {
     return (
-      <Checkbox id={id} onChange={onChange} {...props}>
+      <Checkbox id={id} onChange={onChange} disabled={disabled} {...props}>
         {label}
       </Checkbox>
     );

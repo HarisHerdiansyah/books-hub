@@ -9,7 +9,7 @@ export default function LoadingOverlay() {
       inset={0}
       zIndex={999}
       backgroundColor='rgba(0, 0, 0, 0.5)'
-      height='100vh'
+      height='100%'
     >
       <Spinner
         thickness='5px'
