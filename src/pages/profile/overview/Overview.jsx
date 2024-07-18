@@ -21,8 +21,8 @@ export default function Overview() {
   const { state, action } = useContext(Context);
   const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { books } = state;
-  const pinnedBooks = books.filter((book) => book.isPinned);
+  const { book } = state;
+  const pinnedBooks = book.lists.filter((book) => book.isPinned);
   const [dataPin, setDataPin] = useState({ lists: [], passedData: [] });
 
   const isShowcase = pathname.includes('showcase');
@@ -30,7 +30,7 @@ export default function Overview() {
   const handleOpenModal = () => {
     setDataPin((pin) => ({
       ...pin,
-      lists: books.map(({ id, title, isPinned }) => ({
+      lists: book.lists.map(({ id, title, isPinned }) => ({
         id,
         title,
         isPinned

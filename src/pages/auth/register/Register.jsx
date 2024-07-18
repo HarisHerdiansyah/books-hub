@@ -10,12 +10,14 @@ import {
   Flex,
   Box,
   Button,
-  CardBody
+  CardBody,
+  useToast
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function Register() {
+  const toast = useToast();
   const navigate = useNavigate();
   const { action } = useContext(Context);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -27,9 +29,7 @@ export default function Register() {
   const handleRegister = (e) => {
     e.preventDefault();
     setCredentials({ email: '', password: '' });
-    action.registerDispatcher(credentials, (isSuccess) =>
-      alert(`${isSuccess ? 'Berhasil' : 'Gagal'} Registrasi`)
-    );
+    action.registerDispatcher(credentials, (data) => toast(data));
   };
 
   const toLogin = () => navigate(PATH.auth.login);
