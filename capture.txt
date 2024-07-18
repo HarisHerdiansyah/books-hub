@@ -1,71 +1,19 @@
-Referensi UI : Github
-Big idea : Bookshelf apps dengan improvisasi
-Rencana stack : React JS, Redux & Redux Toolkit, RTK Query, Firebase, & Data-data dari external API
+Backlog:
+- Overlay loading masih kurang pas 
+- Batas karakter untuk property about
+- Pagination
 
-- /, sementara dikosongkan
-- /profile, referensi seperti github, sebelah kiri foto profile, username, dan bio, sebelah kanan daftar buku yang difavoritkan dan statistik data buku user
-- /books, referensi seperti menu repo github, buat menu seperti yg sudah ada, beri tab untuk filter sudah dibaca, belum selesai dibaca, dan wishlist
-- /books, untuk buku yg sudah selesai dibaca tampilkan link "Tulis deskripsi dan review",
-- /article, untuk menulis artikel
-- pada navbar, buat komponen search bar untuk mencari deskripsi dan review buku dari user lain, mirip seperti mencari repo dari orang lain
-- tampilkan hasil di url /search?book=[value] atau cari by user /search?user=[value]
-- /user/[id], untuk menampilkan profile orang lain
-- /user/[id]/books, untuk menampilkan data buku yang dipublish
-- /user/[id]/books/[id] untuk menampilkan detail buku dari user lain
+New Feature:
+- Search
+> UI : 
+Buat komponen input yang ketika diklik muncul dropdown yang berisi beberapa opsi yang nanti nilai digunakan sebagai "key" untuk query ke database. Flow component di klik > munculkan dropdown > opsi diklik > hilangkan dropdown > tambahkan element di sisi kiri input berupa tag dengan close button (ketika close button di klik, unmount tag dan muncul lagi dropdown) > input berlaku seperti biasa dan di sebelah kanan ada tombol untuk search
+> Backend :
+Lakukan query dengan perilaku yg sama seperti LIKE pada SQL. Jika tidak memungkinkan, ambil seluruh data dan query dari sisi frontend
 
-{
-  books: {
-    user_id: { // list buku }
-  },
-  detail-books: {
-    user_id : {
-      book_id: { // detail }
-    }
-  }
-}
+Data-data yang tampil setelah query, bisa di sortir berdasarkan views atau tanggal list dibuat.
 
-1. Panggil data buku di level layout profile/showcase baru filter dan di tiap-tiap page
-struktur data buku untuk list
-{
-  bookTitle, string, input
-  writer, string, input
-  yearPublished, number, input
-  genre, string, input
-  bookId, string, auto-generated,
-  isDone, boolean, auto-generated // setiap kali menambah buku, secara default belum selesai dibaca
-  isPublic, boolean, input
-  createdAt, timestamp, auto-generated
-  updatedAt, timestamp, auto-generated,
-  isFavourite, boolean, input
-  rating, number, input // setelah buku selesai
-  deskripsi dan review, text, input // setelah buku selesai,
-  isWishlist, booelan, input
-}
 
-2. Basic operations, tambah buku, edit buku, hapus buku, tandai selesai
+- Home
+Query 3 sampai 5 buku dengan views paling banyak
 
-3. Input untuk tambah buku (judul, penulis, genre, tahun terbit, publik)
-
-4. Input untuk edit buku
->> ketika belum selesai (judul, penulis, genre, tahun terbit, publik, favorit)
->> ketika sudah selesai (judul, penulis, genre, tahun terbit, publik, favorit, deskripsi dan review, rating)
-
-5. Aksi hapus dari wishlist, masukkan ke daftar buku atau hapus data seutuhnya
-
-GET
-Dispatch async action untuk ambil data buku di level layout profile dan mapping hasilnya dengan ambil nilai state `books`
-
-ADD
-Dispatch async action dan kirim payload berupa data buku baru. Atribut yang perlu di-input user antara lain title (text), writer (text), yearPublished (number | year), category (dropdown), isPublic (toggle | checkbox), isWishlist (toggle | checkbox)
-
-untuk atribut yang auto-generated adalah id, isDone, isFavourite, isPinned, createdAt, updatedAt, rating, descAndReview
-
-EDIT
-Ambil data buku yang ingin diedit, lalu ganti beberapa field yang diinginkan user. Di halaman edit, ketika buku sudah berstatus selesai dibaca, tampilkan component untuk menambahkan rating dan descAndReview
-
-DELETE
-Just delete it
-
-EDIT (mark done)
-Dispatch async action untuk mengupdate data buku untuk atribut tertentu
-
+Tambahkan property baru "views", setiap kali user membuka deskripsi, views buku yang bersangkutan bertambah 1.
