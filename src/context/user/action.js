@@ -41,14 +41,19 @@ export default function userActionCreator(dispatch) {
         );
         const userSnapshot = await getDoc(singleUserRef(response.user.uid));
         const userData = userSnapshot.data();
-        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
-        cb(userData?.firstLogin);
+        cb(userData?.firstLogin, {
+          title: 'Berhasil Masuk!',
+          status: 'success'
+        });
       } catch (e) {
-        dispatch({
-          type: ACTIONS.IS_ERROR,
-          payload: { title: 'Gagal Masuk!', msg: e?.message }
+        cb(false, {
+          title: 'Gagal Masuk',
+          description: e?.message,
+          status: 'error'
         });
         functions.logError('login', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
     registerDispatcher: async (credentials, popUpCb) => {
@@ -74,34 +79,38 @@ export default function userActionCreator(dispatch) {
           updatedAt: ''
         });
         await signOut(Auth);
-        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
         popUpCb({
           title: 'Registrasi berhasil!',
           status: 'success'
         });
       } catch (e) {
-        dispatch({
-          type: ACTIONS.IS_ERROR,
-          payload: { title: 'Gagal Melakukan Registrasi!', msg: e?.message }
-        });
         popUpCb({
           title: 'Registrasi gagal! Coba lagi!',
+          description: e?.message,
           status: 'error'
         });
         functions.logError('register', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
-    logoutDispatcher: async () => {
+    logoutDispatcher: async (popUpCb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
         await signOut(Auth);
-        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+        popUpCb({
+          title: 'Berhasil keluar!',
+          status: 'success'
+        });
       } catch (e) {
-        dispatch({
-          type: ACTIONS.IS_ERROR,
-          payload: { title: 'Terjadi Kesalahan!', msg: e?.message }
+        popUpCb({
+          title: 'Aksi gagal. Coba lagi.',
+          description: e?.message,
+          status: 'error'
         });
         functions.logError('logout', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
     stateChangedDispatcher: async (authState) => {
@@ -127,6 +136,7 @@ export default function userActionCreator(dispatch) {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
         await updateDoc(singleUserRef(uid), payload);
+        dispatch({ type: ACTIONS.SET_USER, payload });
         cb(true);
       } catch (e) {
         cb(false);

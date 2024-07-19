@@ -8,7 +8,9 @@ import {
   RadioGroup,
   Radio,
   Stack,
-  Checkbox
+  Checkbox,
+  Flex,
+  Text
 } from '@chakra-ui/react';
 
 export default function Form({
@@ -23,6 +25,8 @@ export default function Form({
   onChange,
   stackDirection,
   disabled,
+  currentCountChar,
+  limitChar,
   ...props
 }) {
   if (type === 'select') {
@@ -79,11 +83,25 @@ export default function Form({
 
   return (
     <FormControl isRequired={isRequired} {...props}>
-      <FormLabel fontSize='xl' htmlFor={id}>
-        {label}
-      </FormLabel>
+      <Flex align='center' justify='space-between'>
+        <FormLabel fontSize='xl' htmlFor={id}>
+          {label}
+        </FormLabel>
+        {type === 'textarea' && (
+          <Text fontSize='lg'>
+            {currentCountChar} / {limitChar}
+          </Text>
+        )}
+      </Flex>
       {type === 'textarea' ? (
-        <Textarea id={id} onChange={onChange} value={value} />
+        <Textarea
+          id={id}
+          onChange={onChange}
+          value={value}
+          height={150}
+          maxLength={limitChar}
+          disabled={disabled}
+        />
       ) : (
         <Input
           id={id}
@@ -110,5 +128,7 @@ Form.propTypes = {
   optData: PropTypes.array,
   value: PropTypes.string,
   onChange: PropTypes.func,
-  stackDirection: PropTypes.string
+  stackDirection: PropTypes.string,
+  limitChar: PropTypes.number,
+  currentCountChar: PropTypes.number
 };

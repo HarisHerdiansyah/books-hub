@@ -2,16 +2,17 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { Context } from '../../constants';
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, useToast } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function UILayout() {
+  const toast = useToast();
   const { pathname } = useLocation();
   const { state, action } = useContext(Context);
   const { user } = state;
 
-  const handleLogout = () => action.logoutDispatcher();
+  const handleLogout = () => action.logoutDispatcher((data) => toast(data));
 
   return (
     <Box bg='#392467' py={4} px={20}>

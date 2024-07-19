@@ -9,14 +9,16 @@ import {
   Text,
   ButtonGroup,
   IconButton,
-  useToast
+  useToast,
+  Button
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencilAlt,
   faCheck,
   faStar as faStarSolid,
-  faTrash
+  faTrash,
+  faBookmark
 } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 
@@ -29,7 +31,8 @@ export default function ListBookCard({
   category,
   writer,
   yearPublished,
-  isFavourite
+  isFavourite,
+  isWishlist
 }) {
   const toast = useToast();
   const navigate = useNavigate();
@@ -60,21 +63,43 @@ export default function ListBookCard({
     );
   };
 
+  const handleUpdateWishlist = () => {
+    action.updateBookDispatcher(
+      { id, title, isWishlist: false },
+      'wishlist',
+      (data) => toast(data)
+    );
+  };
+
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
       <Flex align='center' justify='space-between' mb={4}>
         <Flex align='center' justify='flex-start' gap={2}>
-          <IconButton
-            colorScheme='whiteAlpha'
-            icon={
-              <FontAwesomeIcon
-                color='#ebeb05'
-                fontSize={22}
-                icon={isFavourite ? faStarSolid : faStarReg}
-              />
-            }
-            onClick={handleFavourite}
-          />
+          {isWishlist ? (
+            <IconButton
+              colorScheme='whiteAlpha'
+              disabled
+              icon={
+                <FontAwesomeIcon
+                  color='darkblue'
+                  fontSize={22}
+                  icon={faBookmark}
+                />
+              }
+            />
+          ) : (
+            <IconButton
+              colorScheme='whiteAlpha'
+              icon={
+                <FontAwesomeIcon
+                  color='#ebeb05'
+                  fontSize={22}
+                  icon={isFavourite ? faStarSolid : faStarReg}
+                />
+              }
+              onClick={handleFavourite}
+            />
+          )}
           <Text
             noOfLines={1}
             color='#392467'
@@ -94,9 +119,19 @@ export default function ListBookCard({
       <Text>Tahun: {yearPublished}</Text>
       {!isShowcase && (
         <Flex align='center' justify='space-between' mt={6}>
-          <Badge colorScheme={isDone ? 'green' : 'orange'}>
-            {isDone ? 'Selesai' : 'Belum selesai'}
-          </Badge>
+          {!isWishlist ? (
+            <Badge colorScheme={isDone ? 'green' : 'orange'}>
+              {isDone ? 'Selesai' : 'Belum selesai'}
+            </Badge>
+          ) : (
+            <Button
+              variant='link'
+              color='darkblue'
+              onClick={handleUpdateWishlist}
+            >
+              Pindahkan ke daftar baca
+            </Button>
+          )}
           <ButtonGroup>
             <IconButton
               size='lg'
@@ -110,7 +145,7 @@ export default function ListBookCard({
               icon={<FontAwesomeIcon icon={faPencilAlt} />}
               onClick={handleEditNavigate}
             />
-            {!isDone && (
+            {!isDone && !isWishlist && (
               <IconButton
                 size='lg'
                 colorScheme='green'
@@ -127,12 +162,13 @@ export default function ListBookCard({
 
 ListBookCard.propTypes = {
   id: PropTypes.string.isRequired,
-  isShowcase: PropTypes.bool,
+  isShowcase: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   isPublic: PropTypes.bool.isRequired,
   isDone: PropTypes.bool.isRequired,
   category: PropTypes.string.isRequired,
   writer: PropTypes.string.isRequired,
   yearPublished: PropTypes.number.isRequired,
-  isFavourite: PropTypes.bool.isRequired
+  isFavourite: PropTypes.bool.isRequired,
+  isWishlist: PropTypes.bool.isRequired
 };

@@ -18,7 +18,8 @@ const Firestore = getFirestore(app);
 const popUpUpdateDesc = {
   update: 'telah berhasil diperbarui.',
   favourite: 'ditambahkan ke daftar favorit.',
-  markDone: 'telah selesai dibaca.'
+  markDone: 'telah selesai dibaca.',
+  wishlist: 'dipindahkan ke daftar baca.'
 };
 
 export const ACTIONS = {

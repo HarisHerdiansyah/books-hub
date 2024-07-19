@@ -18,9 +18,10 @@ import { functions } from '../../constants';
 import { Context, PATH } from '../../constants';
 import { GlobalComponent } from '../../components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 export default function Welcome() {
+  const LIMIT_ABOUT = 300;
   const toast = useToast();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
@@ -70,6 +71,7 @@ export default function Welcome() {
     upload.on(
       'state_changed',
       () => {
+        // start callback
         setUploadState((upState) => ({
           ...upState,
           loading: true,
@@ -77,6 +79,7 @@ export default function Welcome() {
         }));
       },
       () => {
+        // error callback
         setUploadState((upState) => ({
           ...upState,
           fileInput: null,
@@ -86,6 +89,7 @@ export default function Welcome() {
         }));
       },
       () => {
+        // success callback
         functions
           .getFileURL(upload.snapshot.ref)
           .then((url) => {
@@ -136,7 +140,7 @@ export default function Welcome() {
         <Flex my={8} align='center' justify='center' gap={6}>
           <Avatar size='2xl' src={uploadState.localURL} />
           <Box>
-            <FormControl maxW={300}>
+            <FormControl maxW={300} mb={4}>
               <FormLabel
                 htmlFor='profileImage'
                 fontSize='lg'
@@ -145,7 +149,7 @@ export default function Welcome() {
               >
                 <FontAwesomeIcon icon={faCamera} style={{ marginRight: 8 }} />
                 {uploadState.fileInput
-                  ? uploadState.fileInput.name
+                  ? 'Ganti foto profil'
                   : 'Pilih foto profil'}
               </FormLabel>
               <Input
@@ -157,17 +161,20 @@ export default function Welcome() {
               />
             </FormControl>
             {uploadState.loading && (
-              <Text fontSize='lg'>Sedang mengunggah</Text>
+              <GlobalComponent.LoadingOverlay text='Mengunggah foto . . .' />
             )}
             {uploadState.error && (
-              <Text fontSize='lg'>{uploadState.errorMsg}</Text>
+              <Text fontSize='lg' color='red.500'>
+                Kesalahan saat menunggah. Coba lagi.
+              </Text>
             )}
             {uploadState.success && (
               <ChakraLink
                 textDecoration='underline'
-                color='blue'
+                color='blue.500'
                 fontSize='lg'
                 display='block'
+                fontWeight='semibold'
                 href={uploadState.fileURL}
                 isExternal
               >
@@ -178,8 +185,9 @@ export default function Welcome() {
               <Button
                 colorScheme='purple'
                 variant='link'
-                fontSize='xl'
+                fontSize='lg'
                 onClick={handleUploadPhoto}
+                leftIcon={<FontAwesomeIcon icon={faUpload} />}
               >
                 Unggah
               </Button>
@@ -188,6 +196,7 @@ export default function Welcome() {
         </Flex>
         <Grid templateColumns='repeat(2, 1fr)' gap={6}>
           <GlobalComponent.GridForm
+            disabled={!uploadState.success}
             onChange={handleInput}
             value={userData.username}
             type='text'
@@ -196,6 +205,7 @@ export default function Welcome() {
             isRequired
           />
           <GlobalComponent.GridForm
+            disabled={!uploadState.success}
             onChange={handleInput}
             value={userData.bio}
             type='text'
@@ -204,6 +214,7 @@ export default function Welcome() {
             isRequired
           />
           <GlobalComponent.GridForm
+            disabled={!uploadState.success}
             onChange={handleInput}
             value={userData.firstName}
             type='text'
@@ -212,6 +223,7 @@ export default function Welcome() {
             isRequired
           />
           <GlobalComponent.GridForm
+            disabled={!uploadState.success}
             onChange={handleInput}
             value={userData.lastName}
             type='text'
@@ -221,12 +233,15 @@ export default function Welcome() {
           />
         </Grid>
         <GlobalComponent.Form
+          disabled={!uploadState.success}
           onChange={handleInput}
           value={userData.about}
           my={6}
           type='textarea'
           label='Tentang'
           id='about'
+          currentCountChar={userData.about.length}
+          limitChar={LIMIT_ABOUT}
         />
         <Flex justify='flex-end' my={16}>
           <Button colorScheme='blue' type='submit'>

@@ -19,8 +19,6 @@ export default function ProfileLayout() {
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
 
-  // console.log(userData);
-
   useEffect(() => {
     action.getBooksDispatcher(user.userData?.uid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,8 +56,10 @@ export default function ProfileLayout() {
               <Text fontSize='md'>{user.userData?.bio}</Text>
             </CardHeader>
             <CardBody>
-              <Text fontSize='lg'>About Me:</Text>
-              <Text>{user.userData?.about}</Text>
+              <Text fontSize='lg' fontWeight='semibold' mb={3}>
+                About Me:
+              </Text>
+              <Text align='justify'>{user.userData?.about}</Text>
             </CardBody>
           </Card>
         </Box>

@@ -11,7 +11,8 @@ import {
   Flex,
   Box,
   Button,
-  CardBody
+  CardBody,
+  useToast
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +20,7 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const navigate = useNavigate();
+  const toast = useToast();
   const { action } = useContext(Context);
 
   const handleInput = (e) => {
@@ -27,7 +29,8 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    action.loginDispatcher(credentials, (firstLogin) => {
+    action.loginDispatcher(credentials, (firstLogin, data) => {
+      toast(data);
       if (firstLogin) {
         navigate(PATH.welcome);
         return;
