@@ -70,17 +70,7 @@ export default function ListBook() {
             })
             .map((book) => (
               <GridItem w='100%' key={book.id}>
-                <ProfileComponent.ListBookCard
-                  id={book.id}
-                  title={book.title}
-                  isPublic={book.isPublic}
-                  isDone={book.isDone}
-                  category={book.category}
-                  writer={book.writer}
-                  yearPublished={book.yearPublished}
-                  isFavourite={book.isFavourite}
-                  isShowcase={isShowcase}
-                />
+                <ProfileComponent.ListBookCard {...book} />
               </GridItem>
             ))}
         </Grid>
