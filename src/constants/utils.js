@@ -90,44 +90,9 @@ export const bookDetailData = {
   descAndReview: 'Deskripsi dan Review'
 };
 
-export function dataToast(isSuccess, action, ...restOptions) {
-  const title = isSuccess ? 'Berhasil' : 'Gagal';
-  const status = isSuccess ? 'success' : 'error';
-  const [isAddToFav] = restOptions;
-  const addToFavDesc = isAddToFav
-    ? 'Buku telah ditandai sebagai favorit.'
-    : 'Buku dihapus dari favorit';
-
-  const toastDescription = {
-    add: {
-      description: isSuccess
-        ? 'Buku telah berhasil ditambahkan.'
-        : 'Buku gagal ditambahkan. Coba lagi.'
-    },
-    update: {
-      description: isSuccess
-        ? 'Buku telah berhasil diperbarui.'
-        : 'Buku gagal diperbarui. Coba lagi.'
-    },
-    delete: {
-      description: isSuccess
-        ? 'Buku telah dihapus dari daftar.'
-        : 'Buku gagal dihapus. Coba lagi.'
-    },
-    markdone: {
-      description: isSuccess
-        ? 'Selamat! Kamu sudah menyelesaikan bacaanmu!'
-        : 'Ada kesalahan. Coba lagi.'
-    },
-    favourite: {
-      description: isSuccess ? addToFavDesc : 'Ada kesalahan. Coba lagi.'
-    },
-    pin: {
-      description: isSuccess
-        ? 'Daftar buku telah berhasil diperbarui'
-        : 'Gagal memperbarui daftar. Coba lagi'
-    }
-  };
-
-  return { title, status, description: toastDescription[action].description };
-}
+export const searchMethod = {
+  user: 'Anggota Lain',
+  title: 'Judul Buku',
+  writer: 'Penulis',
+  category: 'Kategori Buku'
+};
