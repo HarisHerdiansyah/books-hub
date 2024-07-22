@@ -131,12 +131,12 @@ export default function bookActionCreator(dispatch) {
           });
         });
         await batch.commit();
-        popUpCb({
+        popUpCb(true, {
           title: 'Daftar diperbarui!',
           status: 'success'
         });
       } catch (e) {
-        popUpCb({
+        popUpCb(false, {
           title: 'Daftar gagal diperbarui. Coba lagi!',
           status: 'error'
         });

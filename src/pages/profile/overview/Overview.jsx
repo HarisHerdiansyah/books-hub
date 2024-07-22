@@ -14,7 +14,7 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { ProfileComponent, GlobalComponent } from '../../../components';
-import { Context, utils } from '../../../constants';
+import { Context } from '../../../constants';
 
 export default function Overview() {
   const MAX_PIN = 4;
@@ -63,9 +63,9 @@ export default function Overview() {
   };
 
   const handleUpdatePinnedBooks = () => {
-    action.updatePinnedBookDispatcher(dataPin.passedData, (isSuccess) => {
-      toast(utils.dataToast(isSuccess, 'pin'));
-      if (isSuccess) onClose();
+    action.updatePinnedBookDispatcher(dataPin.passedData, (success, data) => {
+      toast(data);
+      if (success) onClose();
     });
   };
 

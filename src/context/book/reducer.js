@@ -15,7 +15,8 @@ export const bookObjectDefault = {
   updatedAt: '',
   userId: '',
   rating: 0,
-  descAndReview: ''
+  descAndReview: '',
+  views: 0
 };
 
 export const bookState = {
