@@ -21,8 +21,7 @@ export default function ProfileLayout() {
 
   useEffect(() => {
     action.getBooksDispatcher(user.userData?.uid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.userData?.uid]);
+  }, [action, user.userData?.uid]);
 
   return (
     <Box py={4} px={20}>

@@ -70,7 +70,10 @@ export default function ListBook() {
             })
             .map((book) => (
               <GridItem w='100%' key={book.id}>
-                <ProfileComponent.ListBookCard {...book} />
+                <ProfileComponent.ListBookCard
+                  isShowcase={isShowcase}
+                  {...book}
+                />
               </GridItem>
             ))}
         </Grid>
