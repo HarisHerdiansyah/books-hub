@@ -8,7 +8,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  writeBatch
+  writeBatch,
+  onSnapshot
 } from 'firebase/firestore';
 import app from '../../service/app';
 import { functions } from '../../constants';
@@ -16,10 +17,9 @@ import { functions } from '../../constants';
 const Firestore = getFirestore(app);
 
 const popUpUpdateDesc = {
-  update: 'telah berhasil diperbarui.',
-  favourite: 'ditambahkan ke daftar favorit.',
-  markDone: 'telah selesai dibaca.',
-  wishlist: 'dipindahkan ke daftar baca.'
+  update: 'telah berhasil diperbarui',
+  markDone: 'telah selesai dibaca',
+  wishlist: 'dipindahkan ke daftar baca'
 };
 
 export const ACTIONS = {
@@ -37,6 +37,18 @@ export const ACTIONS = {
 
 export default function bookActionCreator(dispatch) {
   return {
+    setBooksDispatcher: (uid) => {
+      dispatch({ type: ACTIONS.LOAD_BOOKS });
+      const dataQuery = query(
+        collection(Firestore, 'books'),
+        where('userId', '==', uid)
+      );
+      return onSnapshot(dataQuery, (querySnapshot) => {
+        const result = [];
+        querySnapshot.forEach((snapshot) => result.push(snapshot.data()));
+        dispatch({ type: ACTIONS.SET_BOOKS, payload: result });
+      });
+    },
     getBooksDispatcher: async (uid) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
       const dataQuery = query(
@@ -79,11 +91,27 @@ export default function bookActionCreator(dispatch) {
     updateBookDispatcher: async (payload, action, popUpCb) => {
       dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: true });
       try {
+        let description;
+        let status;
+
+        if (action === 'favourite') {
+          if (payload.isFavourite) {
+            description = `${payload.title} telah ditambahkan ke daftar favorit!`;
+            status = 'success';
+          } else {
+            description = `${payload.title} dihapus dari daftar favorit!`;
+            status = 'info';
+          }
+        } else {
+          description = `${payload.title} ${popUpUpdateDesc[action]}!`;
+          status = 'success';
+        }
+
         await updateDoc(doc(Firestore, 'books', payload.id), payload);
         popUpCb({
           title: 'Berhasil memperbarui buku!',
-          description: `${payload.title} ${popUpUpdateDesc[action]}!`,
-          status: 'success'
+          description,
+          status
         });
       } catch (e) {
         popUpCb({
