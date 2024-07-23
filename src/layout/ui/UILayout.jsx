@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import { Context, PATH, utils } from '../../constants';
+import { useLocation, useNavigate, createSearchParams } from 'react-router-dom';
+import { Context, PATH } from '../../constants';
 import {
   Box,
   Button,
@@ -9,18 +9,11 @@ import {
   Text,
   useToast,
   useDisclosure,
-  Menu,
-  MenuButton,
   ModalBody,
-  MenuList,
-  MenuItem
+  Input
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBook,
-  faChevronDown,
-  faMagnifyingGlass
-} from '@fortawesome/free-solid-svg-icons';
+import { faBook, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { GlobalComponent } from '../../components';
 
 export default function UILayout() {
@@ -30,17 +23,14 @@ export default function UILayout() {
   const { pathname } = useLocation();
   const { state, action } = useContext(Context);
   const { user } = state;
-  const [currentSearchMethod, setCurrentSearchMethod] = useState('');
   const [inputSearch, setInputSearch] = useState('');
+  const isLoggedIn = user.authState !== null && !pathname.includes('auth');
 
   const handleLogout = () => action.logoutDispatcher((data) => toast(data));
-
-  const handleSearchMethod = (e) => setCurrentSearchMethod(e.target.value);
 
   const handleInput = (e) => setInputSearch(e.target.value);
 
   const handleClose = () => {
-    setCurrentSearchMethod('');
     setInputSearch('');
     onClose();
   };
@@ -51,37 +41,45 @@ export default function UILayout() {
     navigate({
       pathname: PATH.search,
       search: createSearchParams({
-        [currentSearchMethod]: inputSearch
+        q: inputSearch
       }).toString()
     });
   };
 
   return (
-    <Box bg='#392467' py={4} px={20}>
-      <Flex align='center' justify='space-between'>
-        <Flex align='center' gap={6}>
-          <FontAwesomeIcon icon={faBook} color='white' size='2xl' />
-          <Flex
-            onClick={onOpen}
-            align='center'
-            gap={2}
-            bgColor='white'
-            py={1}
-            px={4}
-            borderRadius='5px'
-            w={250}
-            cursor='pointer'
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-            <Text fontSize='lg'>Cari</Text>
+    <>
+      <Box bg='#392467' py={4} px={20}>
+        <Flex align='center' justify='space-between'>
+          <Flex align='center' gap={6}>
+            <FontAwesomeIcon icon={faBook} color='white' size='2xl' />
+            {isLoggedIn ? (
+              <Flex
+                onClick={onOpen}
+                align='center'
+                gap={2}
+                bgColor='white'
+                py={1}
+                px={4}
+                borderRadius='5px'
+                w={250}
+                cursor='pointer'
+              >
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                <Text fontSize='lg'>Cari</Text>
+              </Flex>
+            ) : (
+              <Text color='white' fontWeight='semibold' fontSize='3xl'>
+                Books Hub
+              </Text>
+            )}
           </Flex>
+          {isLoggedIn && (
+            <Button colorScheme='gray' onClick={handleLogout}>
+              Logout
+            </Button>
+          )}
         </Flex>
-        {user.authState !== null && !pathname.includes('auth') ? (
-          <Button colorScheme='gray' onClick={handleLogout}>
-            Logout
-          </Button>
-        ) : null}
-      </Flex>
+      </Box>
       <GlobalComponent.Modal
         title='Cari data buku'
         size='xl'
@@ -90,50 +88,31 @@ export default function UILayout() {
         closeBtn
       >
         <ModalBody>
-          <Flex align='center' gap={6}>
-            <Text fontSize='lg' fontWeight='semibold'>
-              Metode Pencarian:{' '}
-            </Text>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
-                colorScheme='blue'
-              >
-                {currentSearchMethod
-                  ? utils.searchMethod[currentSearchMethod]
-                  : 'Pilih'}
-              </MenuButton>
-              <MenuList>
-                {Object.entries(utils.searchMethod).map((m) => (
-                  <MenuItem
-                    value={m[0]}
-                    key={m[0]}
-                    onClick={handleSearchMethod}
-                  >
-                    {m[1]}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
-          </Flex>
           <form onSubmit={handleSearchAction}>
-            <GlobalComponent.Form
-              id='search'
+            <Input
+              my={8}
               type='text'
+              id='search'
               value={inputSearch}
               onChange={handleInput}
-              my={6}
+              variant='flushed'
+              autoComplete='off'
+              borderBottomColor='gray'
+              borderBottomWidth={2}
             />
             <Flex justify='flex-end' mb={10}>
-              <Button colorScheme='blue' type='submit'>
+              <Button
+                colorScheme='blue'
+                type='submit'
+                isDisabled={!inputSearch}
+              >
                 Cari
               </Button>
             </Flex>
           </form>
         </ModalBody>
       </GlobalComponent.Modal>
-    </Box>
+    </>
   );
 }
 

@@ -31,7 +31,8 @@ export const ACTIONS = {
   SELECT_BOOK: 'SELECT_BOOK',
   RESET_SELECTED_BOOK: 'RESET_SELECTED_BOOK',
   LOAD_BOOKS_ERROR: 'LOAD_BOOKS_ERROR',
-  WRITE_OR_DELETE_BOOK: 'WRITE_OR_DELETE_BOOK'
+  WRITE_OR_DELETE_BOOK: 'WRITE_OR_DELETE_BOOK',
+  STORE_SEARCH_RESULTS: 'STORE_SEARCH_RESULTS'
 };
 
 export default function bookActionCreator(dispatch) {
@@ -143,6 +144,26 @@ export default function bookActionCreator(dispatch) {
         functions.logError('update pin', e);
       } finally {
         dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: false });
+      }
+    },
+    searchBookDispatcher: async (searchInput, uid) => {
+      dispatch({ type: ACTIONS.LOAD_BOOKS });
+      try {
+        const dataQuery = query(
+          collection(Firestore, 'books'),
+          where('userId', '!=', uid),
+          where('searchKeyword', 'array-contains-any', searchInput.split(' '))
+        );
+        const result = [];
+        const snapshots = await getDocs(dataQuery);
+        snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
+        dispatch({ type: ACTIONS.STORE_SEARCH_RESULTS, payload: result });
+      } catch (e) {
+        dispatch({
+          type: ACTIONS.LOAD_BOOKS_ERROR,
+          payload: { title: 'Gagal memuat buku', msg: e?.message }
+        });
+        functions.logError('search book', e);
       }
     }
   };
