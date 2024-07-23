@@ -35,7 +35,7 @@ export default function bookReducer(state, payload) {
   return {
     [ACTIONS.LOAD_BOOKS]: () => ({
       ...state,
-      isLoading: true,
+      isLoading: payload || true,
       book: {
         ...state.book,
         error: {
