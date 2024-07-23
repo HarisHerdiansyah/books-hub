@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
@@ -78,9 +79,11 @@ export default function userActionCreator(dispatch) {
           createdAt: DateTime.utc().toISO(),
           updatedAt: ''
         });
+        await sendEmailVerification(response.user);
         await signOut(Auth);
         popUpCb({
           title: 'Registrasi berhasil!',
+          description: 'Periksa email anda dan segera verifikasi',
           status: 'success'
         });
       } catch (e) {

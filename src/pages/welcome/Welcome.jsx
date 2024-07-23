@@ -194,60 +194,59 @@ export default function Welcome() {
             )}
           </Box>
         </Flex>
-        <Grid templateColumns='repeat(2, 1fr)' gap={6}>
-          <GlobalComponent.GridForm
-            disabled={!uploadState.success}
-            onChange={handleInput}
-            value={userData.username}
-            type='text'
-            label='Username'
-            id='username'
-            isRequired
-          />
-          <GlobalComponent.GridForm
-            disabled={!uploadState.success}
-            onChange={handleInput}
-            value={userData.bio}
-            type='text'
-            label='Bio'
-            id='bio'
-            isRequired
-          />
-          <GlobalComponent.GridForm
-            disabled={!uploadState.success}
-            onChange={handleInput}
-            value={userData.firstName}
-            type='text'
-            label='Nama depan'
-            id='firstName'
-            isRequired
-          />
-          <GlobalComponent.GridForm
-            disabled={!uploadState.success}
-            onChange={handleInput}
-            value={userData.lastName}
-            type='text'
-            label='Nama belakang'
-            id='lastName'
-            isRequired
-          />
-        </Grid>
-        <GlobalComponent.Form
-          disabled={!uploadState.success}
-          onChange={handleInput}
-          value={userData.about}
-          my={6}
-          type='textarea'
-          label='Tentang'
-          id='about'
-          currentCountChar={userData.about.length}
-          limitChar={LIMIT_ABOUT}
-        />
-        <Flex justify='flex-end' my={16}>
-          <Button colorScheme='blue' type='submit'>
-            Simpan dan Lanjut
-          </Button>
-        </Flex>
+        {uploadState.success && (
+          <>
+            <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+              <GlobalComponent.GridForm
+                onChange={handleInput}
+                value={userData.username}
+                type='text'
+                label='Username'
+                id='username'
+                isRequired
+              />
+              <GlobalComponent.GridForm
+                onChange={handleInput}
+                value={userData.bio}
+                type='text'
+                label='Bio'
+                id='bio'
+                isRequired
+              />
+              <GlobalComponent.GridForm
+                onChange={handleInput}
+                value={userData.firstName}
+                type='text'
+                label='Nama depan'
+                id='firstName'
+                isRequired
+              />
+              <GlobalComponent.GridForm
+                onChange={handleInput}
+                value={userData.lastName}
+                type='text'
+                label='Nama belakang'
+                id='lastName'
+                isRequired
+              />
+            </Grid>
+            <GlobalComponent.Form
+              onChange={handleInput}
+              value={userData.about}
+              my={6}
+              type='textarea'
+              label='Tentang'
+              id='about'
+              currentCountChar={userData.about.length}
+              limitChar={LIMIT_ABOUT}
+            />
+            <Flex justify='flex-end' my={16}>
+              <Button colorScheme='blue' type='submit'>
+                Simpan dan Lanjut
+              </Button>
+            </Flex>
+          </>
+        )}
       </form>
     </Container>
   );
