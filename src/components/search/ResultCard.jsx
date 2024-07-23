@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { DateTime } from 'luxon';
 import { Card, Flex, Tooltip, Avatar, Box, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { PATH } from '../../constants';
 
 export default function ResultCard({
+  id,
   username,
   title,
   updatedAt,
@@ -19,7 +21,7 @@ export default function ResultCard({
       <Flex align='center' justify='space-between'>
         <Flex align='center' gap={3} mb={4}>
           <Tooltip label='Lihat Profil'>
-            <Avatar name='Ahmad Kaseem' size='md' cursor='pointer' />
+            <Avatar name={username} size='md' cursor='pointer' />
           </Tooltip>
           <Box>
             <Text
@@ -28,12 +30,13 @@ export default function ResultCard({
               fontWeight='semibold'
               _hover={{ textDecoration: 'underline' }}
             >
-              <Link to={PATH.profile.overview}>
+              <Link to={`${PATH.book.detail}/${id}?fromSearch=true`}>
                 @{username}/{title}
               </Link>
             </Text>
             <Text fontSize='sm' color='#444'>
-              Terakhir diperbarui {updatedAt}
+              Terakhir diperbarui{' '}
+              {DateTime.fromISO(updatedAt).setLocale('id').toRelativeCalendar()}
             </Text>
           </Box>
         </Flex>
@@ -58,6 +61,7 @@ export default function ResultCard({
 
 ResultCard.propTypes = {
   uid: PropTypes.string,
+  id: PropTypes.string,
   username: PropTypes.string,
   title: PropTypes.string,
   updatedAt: PropTypes.string,
