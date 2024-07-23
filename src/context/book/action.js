@@ -152,7 +152,9 @@ export default function bookActionCreator(dispatch) {
         const dataQuery = query(
           collection(Firestore, 'books'),
           where('userId', '!=', uid),
-          where('searchKeyword', 'array-contains-any', searchInput.split(' '))
+          where('searchKeyword', 'array-contains-any', searchInput.split(' ')),
+          where('isPublic', '==', true),
+          where('isDone', '==', true)
         );
         const result = [];
         const snapshots = await getDocs(dataQuery);
