@@ -1,15 +1,60 @@
 import { useContext, useState } from 'react';
-import { Box, Button, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Text,
+  useToast
+} from '@chakra-ui/react';
 import { GlobalComponent } from '../../../components';
 import { Context } from '../../../constants';
 
 export default function Settings() {
-  const { state } = useContext(Context);
+  const toast = useToast();
+  const { state, action } = useContext(Context);
   const { user } = state;
   const [accountData, setAccountData] = useState(user.userData);
 
   const handleChange = (e) =>
     setAccountData((data) => ({ ...data, [e.target.id]: e.target.value }));
+
+  const handleClick = (data) => {
+    const { authState } = user;
+    const { email, password, confirm_password } = accountData;
+
+    if (data === 'email') {
+      action.updateEmailDispatcher(authState, email, (dataToast) =>
+        toast(dataToast)
+      );
+      return;
+    }
+
+    if (data === 'password') {
+      if (password === confirm_password) {
+        action.updatePasswordDispatcher(authState, password, (dataToast) =>
+          toast(dataToast)
+        );
+        return;
+      } else {
+        toast({ title: 'Password tidak sama', status: 'info' });
+        return;
+      }
+    }
+
+    action.updateUserDataDispatcher(
+      user.userData.uid,
+      {
+        [data]: accountData[data]
+      },
+      (success, dataToast) => {
+        toast(dataToast);
+        if (success) window.location.reload();
+      }
+    );
+    return;
+  };
 
   return (
     <Box w='100%'>
@@ -28,7 +73,12 @@ export default function Settings() {
               my={6}
             />
             <Flex justify='flex-end'>
-              <Button colorScheme='blue'>Ganti username</Button>
+              <Button
+                colorScheme='blue'
+                onClick={() => handleClick('username')}
+              >
+                Ganti username
+              </Button>
             </Flex>
           </GridItem>
           <GridItem>
@@ -41,7 +91,9 @@ export default function Settings() {
               my={6}
             />
             <Flex justify='flex-end'>
-              <Button colorScheme='blue'>Ganti bio</Button>
+              <Button colorScheme='blue' onClick={() => handleClick('bio')}>
+                Ganti bio
+              </Button>
             </Flex>
           </GridItem>
         </Grid>
@@ -59,7 +111,9 @@ export default function Settings() {
             my={6}
           />
           <Flex justify='flex-end'>
-            <Button colorScheme='blue'>Ganti deskripsi</Button>
+            <Button colorScheme='blue' onClick={() => handleClick('about')}>
+              Ganti deskripsi
+            </Button>
           </Flex>
         </Box>
       </Box>
@@ -75,7 +129,9 @@ export default function Settings() {
               my={6}
             />
             <Flex justify='flex-end'>
-              <Button colorScheme='blue'>Ganti email</Button>
+              <Button colorScheme='blue' onClick={() => handleClick('email')}>
+                Ganti email
+              </Button>
             </Flex>
           </GridItem>
         </Grid>
@@ -96,7 +152,9 @@ export default function Settings() {
           />
         </Grid>
         <Flex justify='flex-end'>
-          <Button colorScheme='blue'>Ganti password</Button>
+          <Button colorScheme='blue' onClick={() => handleClick('password')}>
+            Ganti password
+          </Button>
         </Flex>
       </Box>
     </Box>

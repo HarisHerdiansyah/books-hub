@@ -3,7 +3,9 @@ import {
   getAuth,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateEmail,
+  updatePassword
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -138,12 +140,67 @@ export default function userActionCreator(dispatch) {
     updateUserDataDispatcher: async (uid, payload, cb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        await updateDoc(singleUserRef(uid), payload);
-        dispatch({ type: ACTIONS.SET_USER, payload });
-        cb(true);
+        const actualPayload = { ...payload };
+        let setUserFromPayload = false;
+        if ('firstLogin' in payload && payload.firstLogin) {
+          actualPayload.firstLogin = false;
+          setUserFromPayload = true;
+        }
+        await updateDoc(singleUserRef(uid), actualPayload);
+        if (setUserFromPayload) {
+          dispatch({ type: ACTIONS.SET_USER, payload: actualPayload });
+        }
+        cb(true, {
+          title: 'Berhasil memperbarui data!',
+          status: 'success'
+        });
       } catch (e) {
-        cb(false);
+        cb(false, {
+          title: 'Gagal memperbarui data!',
+          status: 'error'
+        });
         functions.logError('update user data', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    updateEmailDispatcher: async (user, newEmail, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await updateEmail(user, newEmail);
+        await updateDoc(singleUserRef(user.uid), { email: newEmail });
+        popUpCb({
+          title: 'Berhasil',
+          description: 'Email telah berhasil diperbarui',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('update email', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    updatePasswordDispatcher: async (user, newPass, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await updatePassword(user, newPass);
+        popUpCb({
+          title: 'Berhasil',
+          description: 'Password telah berhasil diperbarui',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('update password');
       } finally {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }

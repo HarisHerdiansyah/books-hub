@@ -119,17 +119,19 @@ export default function Welcome() {
     const payload = {
       ...userData,
       profilePhotoURL: uploadState.fileURL,
-      firstLogin: false
+      firstLogin: true
     };
-    action.updateUserDataDispatcher(user.userData.uid, payload, (isSuccess) => {
-      if (isSuccess) {
-        toast({ title: 'Berhasil!', status: 'success' });
-        navigate(PATH.profile.overview);
-        return;
+    action.updateUserDataDispatcher(
+      user.userData.uid,
+      payload,
+      (isSuccess, data) => {
+        toast(data);
+        if (isSuccess) {
+          navigate(PATH.profile.overview);
+          return;
+        }
       }
-      toast({ title: 'Terjadi kesalahan. Coba lagi!', status: 'error' });
-      return;
-    });
+    );
   };
 
   return (
