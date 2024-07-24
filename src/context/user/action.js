@@ -4,6 +4,7 @@ import {
   getAuth,
   reauthenticateWithCredential,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
@@ -209,6 +210,26 @@ export default function userActionCreator(dispatch) {
           status: 'error'
         });
         functions.logError('update password', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    resetPasswordDispatcher: async (email, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await sendPasswordResetEmail(Auth, email);
+        popUpCb({
+          title: 'Email dikirim!',
+          description: 'Periksa email kamu untuk mengatur ulang password.',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('reset password', e);
       } finally {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }

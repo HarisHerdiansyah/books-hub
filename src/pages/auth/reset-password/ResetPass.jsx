@@ -1,5 +1,6 @@
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PATH } from '../../../constants';
+import { Context, PATH } from '../../../constants';
 import { GlobalComponent, AuthComponent } from '../../../components';
 import {
   Container,
@@ -10,17 +11,24 @@ import {
   Box,
   Button,
   CardBody,
-  VStack
+  VStack,
+  useToast
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 export default function ResetPass() {
   const navigate = useNavigate();
+  const toast = useToast();
+  const [email, setEmail] = useState('');
+  const { action } = useContext(Context);
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('wkwk');
+    setEmail('');
+    action.resetPasswordDispatcher(email, (dataToast) => toast(dataToast));
   };
 
   const toLogin = () => navigate(PATH.auth.login);
@@ -44,6 +52,8 @@ export default function ResetPass() {
                 id='email'
                 label='Email'
                 my={10}
+                value={email}
+                onChange={handleEmailChange}
                 isRequired
               />
               <Flex align='center' justify='flex-end'>
