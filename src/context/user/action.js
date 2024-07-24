@@ -1,8 +1,14 @@
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   getAuth,
+  reauthenticateWithCredential,
+  sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateEmail,
+  updatePassword
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -78,9 +84,11 @@ export default function userActionCreator(dispatch) {
           createdAt: DateTime.utc().toISO(),
           updatedAt: ''
         });
+        await sendEmailVerification(response.user);
         await signOut(Auth);
         popUpCb({
           title: 'Registrasi berhasil!',
+          description: 'Periksa email anda dan segera verifikasi',
           status: 'success'
         });
       } catch (e) {
@@ -135,12 +143,93 @@ export default function userActionCreator(dispatch) {
     updateUserDataDispatcher: async (uid, payload, cb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        await updateDoc(singleUserRef(uid), payload);
-        dispatch({ type: ACTIONS.SET_USER, payload });
-        cb(true);
+        const actualPayload = { ...payload };
+        let setUserFromPayload = false;
+        if ('firstLogin' in payload && payload.firstLogin) {
+          actualPayload.firstLogin = false;
+          setUserFromPayload = true;
+        }
+        await updateDoc(singleUserRef(uid), actualPayload);
+        if (setUserFromPayload) {
+          dispatch({ type: ACTIONS.SET_USER, payload: actualPayload });
+        }
+        cb(true, {
+          title: 'Berhasil memperbarui data!',
+          status: 'success'
+        });
       } catch (e) {
-        cb(false);
+        cb(false, {
+          title: 'Gagal memperbarui data!',
+          status: 'error'
+        });
         functions.logError('update user data', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    updateEmailDispatcher: async (user, newEmail, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await updateEmail(user, newEmail);
+        await updateDoc(singleUserRef(user.uid), { email: newEmail });
+        popUpCb({
+          title: 'Berhasil',
+          description: 'Email telah berhasil diperbarui',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('update email', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    updatePasswordDispatcher: async (user, cred, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        console.log(cred);
+        const credentials = EmailAuthProvider.credential(
+          cred.email,
+          cred.password
+        );
+        await reauthenticateWithCredential(user, credentials);
+        await updatePassword(user, cred.newPassword);
+        popUpCb({
+          title: 'Berhasil',
+          description: 'Password telah berhasil diperbarui',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('update password', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    resetPasswordDispatcher: async (email, popUpCb) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        await sendPasswordResetEmail(Auth, email);
+        popUpCb({
+          title: 'Email dikirim!',
+          description: 'Periksa email kamu untuk mengatur ulang password.',
+          status: 'success'
+        });
+      } catch (e) {
+        popUpCb({
+          title: 'Gagal',
+          description: 'Terjadi kesalahan. Coba lagi.',
+          status: 'error'
+        });
+        functions.logError('reset password', e);
       } finally {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }

@@ -20,9 +20,9 @@ export default function ProfileLayout() {
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
 
   useEffect(() => {
-    const unsubscribe = action.setBooksDispatcher(user.userData?.uid);
+    const unsubscribe = action.setBooksDispatcher(user.authState?.uid);
     return () => unsubscribe();
-  }, [action, user.userData?.uid]);
+  }, [action, user.authState?.uid]);
 
   return (
     <Box py={4} px={20}>
