@@ -22,7 +22,8 @@ export default function Settings() {
 
   const handleClick = (data) => {
     const { authState } = user;
-    const { email, password, confirm_password } = accountData;
+    const { email, password, newPassword } = accountData;
+    console.log(accountData);
 
     if (data === 'email') {
       action.updateEmailDispatcher(authState, email, (dataToast) =>
@@ -32,15 +33,12 @@ export default function Settings() {
     }
 
     if (data === 'password') {
-      if (password === confirm_password) {
-        action.updatePasswordDispatcher(authState, password, (dataToast) =>
-          toast(dataToast)
-        );
-        return;
-      } else {
-        toast({ title: 'Password tidak sama', status: 'info' });
-        return;
-      }
+      action.updatePasswordDispatcher(
+        authState,
+        { email, password, newPassword },
+        (dataToast) => toast(dataToast)
+      );
+      return;
     }
 
     action.updateUserDataDispatcher(
@@ -140,14 +138,18 @@ export default function Settings() {
         <Grid templateColumns='repeat(2, 1fr)' gap={20} px={8}>
           <GlobalComponent.GridForm
             id='password'
-            label='Password'
+            label='Password Lama'
             type='password'
+            value={accountData?.password}
+            onChange={handleChange}
             my={6}
           />
           <GlobalComponent.GridForm
-            id='confirm_password'
-            label='Konfimarsi Password'
+            id='newPassword'
+            label='Password Baru'
             type='password'
+            value={accountData?.newPassword}
+            onChange={handleChange}
             my={6}
           />
         </Grid>

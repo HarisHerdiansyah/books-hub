@@ -1,6 +1,8 @@
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   getAuth,
+  reauthenticateWithCredential,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
@@ -185,10 +187,16 @@ export default function userActionCreator(dispatch) {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
-    updatePasswordDispatcher: async (user, newPass, popUpCb) => {
+    updatePasswordDispatcher: async (user, cred, popUpCb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        await updatePassword(user, newPass);
+        console.log(cred);
+        const credentials = EmailAuthProvider.credential(
+          cred.email,
+          cred.password
+        );
+        await reauthenticateWithCredential(user, credentials);
+        await updatePassword(user, cred.newPassword);
         popUpCb({
           title: 'Berhasil',
           description: 'Password telah berhasil diperbarui',
@@ -200,7 +208,7 @@ export default function userActionCreator(dispatch) {
           description: 'Terjadi kesalahan. Coba lagi.',
           status: 'error'
         });
-        functions.logError('update password');
+        functions.logError('update password', e);
       } finally {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
