@@ -1,12 +1,12 @@
 import { initializeApp } from 'firebase/app';
 const firebaseConfig = {
-  apiKey: 'AIzaSyBcb9Di4zgMi1oA2cszE-3XRtrTooxA3O4',
-  authDomain: 'books-hub-mock.firebaseapp.com',
-  projectId: 'books-hub-mock',
-  storageBucket: 'books-hub-mock.appspot.com',
-  messagingSenderId: '534367910799',
-  appId: '1:534367910799:web:5f34590c9b7f49bb3ce9fa',
-  measurementId: 'G-19FPFBDJY6'
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MSG_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
