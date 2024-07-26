@@ -13,28 +13,24 @@ import { Context } from '../../../constants';
 
 export default function Settings() {
   const toast = useToast();
-  const { state, action } = useContext(Context);
-  const { user } = state;
-  const [accountData, setAccountData] = useState(user.userData);
+  const { action } = useContext(Context);
+  const [currentUserData, setCurrentUserData] = useState(
+    JSON.parse(window.sessionStorage.getItem('userData'))
+  );
 
   const handleChange = (e) =>
-    setAccountData((data) => ({ ...data, [e.target.id]: e.target.value }));
+    setCurrentUserData((data) => ({ ...data, [e.target.id]: e.target.value }));
 
   const handleClick = (data) => {
-    const { authState } = user;
-    const { email, password, newPassword } = accountData;
-    console.log(accountData);
+    const { email, password, newPassword } = currentUserData;
 
     if (data === 'email') {
-      action.updateEmailDispatcher(authState, email, (dataToast) =>
-        toast(dataToast)
-      );
+      action.updateEmailDispatcher(email, (dataToast) => toast(dataToast));
       return;
     }
 
     if (data === 'password') {
       action.updatePasswordDispatcher(
-        authState,
         { email, password, newPassword },
         (dataToast) => toast(dataToast)
       );
@@ -42,14 +38,8 @@ export default function Settings() {
     }
 
     action.updateUserDataDispatcher(
-      user.userData.uid,
-      {
-        [data]: accountData[data]
-      },
-      (success, dataToast) => {
-        toast(dataToast);
-        if (success) window.location.reload();
-      }
+      { [data]: currentUserData[data] },
+      (dataToast) => toast(dataToast)
     );
     return;
   };
@@ -66,7 +56,7 @@ export default function Settings() {
               id='username'
               label='Username'
               type='text'
-              value={accountData.username}
+              value={currentUserData.username}
               onChange={handleChange}
               my={6}
             />
@@ -84,7 +74,7 @@ export default function Settings() {
               id='bio'
               label='Bio'
               type='text'
-              value={accountData.bio}
+              value={currentUserData.bio}
               onChange={handleChange}
               my={6}
             />
@@ -103,8 +93,8 @@ export default function Settings() {
             label='Tentang'
             type='textarea'
             limitChar={300}
-            currentCountChar={accountData.about.length}
-            value={accountData.about}
+            currentCountChar={currentUserData.about.length}
+            value={currentUserData.about}
             onChange={handleChange}
             my={6}
           />
@@ -122,7 +112,7 @@ export default function Settings() {
               id='email'
               label='Email'
               type='email'
-              value={accountData.email}
+              value={currentUserData.email}
               onChange={handleChange}
               my={6}
             />
@@ -140,7 +130,7 @@ export default function Settings() {
             id='password'
             label='Password Lama'
             type='password'
-            value={accountData?.password}
+            value={currentUserData?.password}
             onChange={handleChange}
             my={6}
           />
@@ -148,7 +138,7 @@ export default function Settings() {
             id='newPassword'
             label='Password Baru'
             type='password'
-            value={accountData?.newPassword}
+            value={currentUserData?.newPassword}
             onChange={handleChange}
             my={6}
           />

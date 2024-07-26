@@ -3,7 +3,6 @@ import {
   EmailAuthProvider,
   getAuth,
   reauthenticateWithCredential,
-  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -20,6 +19,7 @@ import {
 import { DateTime } from 'luxon';
 import app from '../../service/app';
 import { functions } from '../../constants';
+import { userDataObjectDefault } from './reducer';
 
 const Auth = getAuth(app);
 const Firestore = getFirestore(app);
@@ -47,6 +47,13 @@ export default function userActionCreator(dispatch) {
         );
         const userSnapshot = await getDoc(singleUserRef(response.user.uid));
         const userData = userSnapshot.data();
+
+        if (userData?.firstLogin) {
+          dispatch({ type: ACTIONS.SET_USER, payload: userData });
+        } else {
+          window.sessionStorage.setItem('userData', JSON.stringify(userData));
+        }
+
         cb(userData?.firstLogin, {
           title: 'Berhasil Masuk!',
           status: 'success'
@@ -72,19 +79,9 @@ export default function userActionCreator(dispatch) {
           password
         );
         await setDoc(singleUserRef(response.user.uid), {
-          uid: response.user.uid,
-          email,
-          firstName: '',
-          lastName: '',
-          username: '',
-          bio: '',
-          about: '',
-          firstLogin: true,
-          profilePhotoURL: '',
-          createdAt: DateTime.utc().toISO(),
-          updatedAt: ''
+          ...userDataObjectDefault,
+          createdAt: DateTime.utc().toISO()
         });
-        await sendEmailVerification(response.user);
         await signOut(Auth);
         popUpCb({
           title: 'Registrasi berhasil!',
@@ -106,6 +103,7 @@ export default function userActionCreator(dispatch) {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
         await signOut(Auth);
+        window.sessionStorage.removeItem('userData');
         popUpCb({
           title: 'Berhasil keluar!',
           status: 'success'
@@ -121,44 +119,30 @@ export default function userActionCreator(dispatch) {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
-    stateChangedDispatcher: async (authState) => {
-      try {
-        if (authState !== null) {
-          const userSnapshot = await getDoc(singleUserRef(authState.uid));
-          const userData = userSnapshot.data();
-          dispatch({
-            type: ACTIONS.STATE_CHANGED,
-            payload: { authState, userData }
-          });
-          return;
-        }
-        dispatch({
-          type: ACTIONS.STATE_CHANGED,
-          payload: { authState }
-        });
-      } catch (e) {
-        functions.logError('state changed', e);
-      }
+    stateChangedDispatcher: (authState) => {
+      dispatch({
+        type: ACTIONS.STATE_CHANGED,
+        payload: { authState }
+      });
     },
-    updateUserDataDispatcher: async (uid, payload, cb) => {
+    updateUserDataDispatcher: async (payload, popUpCb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        const actualPayload = { ...payload };
-        let setUserFromPayload = false;
-        if ('firstLogin' in payload && payload.firstLogin) {
-          actualPayload.firstLogin = false;
-          setUserFromPayload = true;
-        }
-        await updateDoc(singleUserRef(uid), actualPayload);
-        if (setUserFromPayload) {
-          dispatch({ type: ACTIONS.SET_USER, payload: actualPayload });
-        }
-        cb(true, {
+        await updateDoc(singleUserRef(Auth.currentUser.uid), payload);
+
+        const currentUserData = JSON.parse(
+          window.sessionStorage.getItem('userData')
+        );
+        window.sessionStorage.setItem(
+          'userData',
+          JSON.stringify({ ...currentUserData, ...payload })
+        );
+        popUpCb({
           title: 'Berhasil memperbarui data!',
           status: 'success'
         });
       } catch (e) {
-        cb(false, {
+        popUpCb({
           title: 'Gagal memperbarui data!',
           status: 'error'
         });
@@ -167,11 +151,10 @@ export default function userActionCreator(dispatch) {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
-    updateEmailDispatcher: async (user, newEmail, popUpCb) => {
+    updateEmailDispatcher: async (newEmail, popUpCb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        await updateEmail(user, newEmail);
-        await updateDoc(singleUserRef(user.uid), { email: newEmail });
+        await updateEmail(Auth.currentUser, newEmail);
         popUpCb({
           title: 'Berhasil',
           description: 'Email telah berhasil diperbarui',
@@ -188,16 +171,15 @@ export default function userActionCreator(dispatch) {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
     },
-    updatePasswordDispatcher: async (user, cred, popUpCb) => {
+    updatePasswordDispatcher: async (cred, popUpCb) => {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       try {
-        console.log(cred);
         const credentials = EmailAuthProvider.credential(
-          cred.email,
+          Auth.currentUser.email,
           cred.password
         );
-        await reauthenticateWithCredential(user, credentials);
-        await updatePassword(user, cred.newPassword);
+        await reauthenticateWithCredential(Auth.currentUser, credentials);
+        await updatePassword(Auth.currentUser, cred.newPassword);
         popUpCb({
           title: 'Berhasil',
           description: 'Password telah berhasil diperbarui',

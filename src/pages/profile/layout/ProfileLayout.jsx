@@ -18,6 +18,7 @@ export default function ProfileLayout() {
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
+  const userData = JSON.parse(window.sessionStorage.getItem('userData'));
 
   useEffect(() => {
     const unsubscribe = action.setBooksDispatcher(user.authState?.uid);
@@ -41,8 +42,8 @@ export default function ProfileLayout() {
           <Card pt={10} pb={8} w={350} h={700} color='white' bg='#392467'>
             <Box m='auto'>
               <Image
-                name={`${user.userData?.firstName} ${user.userData?.lastName}`}
-                src={user.userData?.profilePhotoURL}
+                name={`${userData.firstName} ${userData.lastName}`}
+                src={userData.profilePhotoURL}
                 boxSize='220px'
                 objectFit='cover'
                 borderRadius='full'
@@ -50,16 +51,16 @@ export default function ProfileLayout() {
             </Box>
             <CardHeader>
               <Text fontSize='2xl' fontWeight='semibold'>
-                {user.userData?.firstName}
+                {userData.firstName}
               </Text>
-              <Text fontSize='lg'>@{user.userData?.username}</Text>
-              <Text fontSize='md'>{user.userData?.bio}</Text>
+              <Text fontSize='lg'>@{userData.username}</Text>
+              <Text fontSize='md'>{userData.bio}</Text>
             </CardHeader>
             <CardBody>
               <Text fontSize='lg' fontWeight='semibold' mb={3}>
                 About Me:
               </Text>
-              <Text align='justify'>{user.userData?.about}</Text>
+              <Text align='justify'>{userData.about}</Text>
             </CardBody>
           </Card>
         </Box>

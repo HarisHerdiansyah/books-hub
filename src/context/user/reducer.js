@@ -1,8 +1,20 @@
 import { ACTIONS } from './action';
 
+export const userDataObjectDefault = {
+  firstName: '',
+  lastName: '',
+  username: '',
+  bio: '',
+  about: '',
+  firstLogin: true,
+  profilePhotoURL: '',
+  createdAt: '',
+  updatedAt: ''
+};
+
 export const userState = {
   authState: null,
-  userData: null,
+  userData: userDataObjectDefault,
   loadUser: true
 };
 

@@ -17,7 +17,7 @@ import { ProfileComponent, GlobalComponent } from '../../../components';
 import { Context } from '../../../constants';
 
 export default function Overview() {
-  const MAX_PIN = 4;
+  const MAX_PIN = 6;
   const toast = useToast();
   const { state, action } = useContext(Context);
   const { pathname } = useLocation();

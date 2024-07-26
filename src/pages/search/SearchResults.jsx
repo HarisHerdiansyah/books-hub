@@ -10,13 +10,8 @@ export default function SearchResults() {
   const { user, book } = state;
 
   useEffect(() => {
-    console.log(book.searchResults);
-  }, [book.searchResults]);
-
-  useEffect(() => {
-    action.searchBookDispatcher(searchParams.get('q'), user.userData.uid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, user.userData.uid]);
+    action.searchBookDispatcher(searchParams.get('q'), user.authState.uid);
+  }, [searchParams, user.authState.uid, action]);
 
   return (
     <Container maxW={1000}>

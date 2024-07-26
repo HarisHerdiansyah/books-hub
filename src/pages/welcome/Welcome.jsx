@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DateTime } from 'luxon';
 import {
   Avatar,
   Container,
@@ -25,17 +26,10 @@ export default function Welcome() {
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
   const { user, upload } = state;
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    bio: '',
-    about: '',
-    profilePhotoURL: ''
-  });
+  const [newUserData, setNewUserData] = useState({ ...user.userData });
 
   const handleInput = (e) => {
-    setUserData((data) => ({ ...data, [e.target.id]: e.target.value }));
+    setNewUserData((data) => ({ ...data, [e.target.id]: e.target.value }));
   };
 
   const handleFileInput = (e) => {
@@ -47,20 +41,19 @@ export default function Welcome() {
   const handleUploadPhoto = () => {
     action.uploadFileDispatcher(
       upload.userFileInput,
-      `/users/${user.userData.uid}/profile`
+      `/users/${user.authState.uid}/profile`
     );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-      ...userData,
-      profilePhotoURL: upload.fileDownloadURL,
-      firstLogin: true
-    };
     action.updateUserDataDispatcher(
-      user.userData.uid,
-      payload,
+      {
+        ...newUserData,
+        profilePhotoURL: upload.fileDownloadURL,
+        updatedAt: DateTime.utc().toISO(),
+        firstLogin: false
+      },
       (isSuccess, data) => {
         toast(data);
         if (isSuccess) {
@@ -143,7 +136,7 @@ export default function Welcome() {
             <Grid templateColumns='repeat(2, 1fr)' gap={6} my={8}>
               <GlobalComponent.GridForm
                 onChange={handleInput}
-                value={userData.username}
+                value={newUserData.username}
                 type='text'
                 label='Username'
                 id='username'
@@ -151,7 +144,7 @@ export default function Welcome() {
               />
               <GlobalComponent.GridForm
                 onChange={handleInput}
-                value={userData.bio}
+                value={newUserData.bio}
                 type='text'
                 label='Bio'
                 id='bio'
@@ -159,7 +152,7 @@ export default function Welcome() {
               />
               <GlobalComponent.GridForm
                 onChange={handleInput}
-                value={userData.firstName}
+                value={newUserData.firstName}
                 type='text'
                 label='Nama depan'
                 id='firstName'
@@ -167,7 +160,7 @@ export default function Welcome() {
               />
               <GlobalComponent.GridForm
                 onChange={handleInput}
-                value={userData.lastName}
+                value={newUserData.lastName}
                 type='text'
                 label='Nama belakang'
                 id='lastName'
@@ -176,12 +169,12 @@ export default function Welcome() {
             </Grid>
             <GlobalComponent.Form
               onChange={handleInput}
-              value={userData.about}
+              value={newUserData.about}
               my={6}
               type='textarea'
               label='Tentang'
               id='about'
-              currentCountChar={userData.about.length}
+              currentCountChar={newUserData.about.length}
               limitChar={LIMIT_ABOUT}
             />
             <Flex justify='flex-end' my={16}>
