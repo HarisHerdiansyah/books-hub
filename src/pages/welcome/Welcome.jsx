@@ -14,7 +14,6 @@ import {
   Link as ChakraLink,
   useToast
 } from '@chakra-ui/react';
-import { functions } from '../../constants';
 import { Context, PATH } from '../../constants';
 import { GlobalComponent } from '../../components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,7 +24,7 @@ export default function Welcome() {
   const toast = useToast();
   const navigate = useNavigate();
   const { state, action } = useContext(Context);
-  const { user } = state;
+  const { user, upload } = state;
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -34,83 +33,21 @@ export default function Welcome() {
     about: '',
     profilePhotoURL: ''
   });
-  const [uploadState, setUploadState] = useState({
-    loading: false,
-    success: false,
-    error: false,
-    errorMsg: null,
-    fileInput: null,
-    fileURL: '',
-    localURL: '',
-    showUploadBtn: false
-  });
 
   const handleInput = (e) => {
     setUserData((data) => ({ ...data, [e.target.id]: e.target.value }));
   };
 
   const handleFileInput = (e) => {
-    const selectedFile = e.target.files[0];
-    console.log(selectedFile);
-    const localURL = URL.createObjectURL(selectedFile);
-    setUploadState((upState) => ({
-      ...upState,
-      success: false,
-      error: false,
-      fileInput: e.target.files[0],
-      showUploadBtn: true,
-      localURL
-    }));
+    const file = e.target.files[0];
+    const localURL = URL.createObjectURL(file);
+    action.setFileDispatcher({ file, localURL });
   };
 
   const handleUploadPhoto = () => {
-    const upload = functions.uploadFile(
-      uploadState.fileInput,
-      `users/${user.userData.uid}/profile`
-    );
-    upload.on(
-      'state_changed',
-      () => {
-        // start callback
-        setUploadState((upState) => ({
-          ...upState,
-          loading: true,
-          showUploadBtn: false
-        }));
-      },
-      () => {
-        // error callback
-        setUploadState((upState) => ({
-          ...upState,
-          fileInput: null,
-          loading: false,
-          error: true,
-          errorMsg: 'Terjadi kesalahan saat upload. Coba lagi.'
-        }));
-      },
-      () => {
-        // success callback
-        functions
-          .getFileURL(upload.snapshot.ref)
-          .then((url) => {
-            setUploadState((upState) => ({
-              ...upState,
-              fileInput: null,
-              loading: false,
-              success: true,
-              fileURL: url
-            }));
-          })
-          .catch(() => {
-            setUploadState((upState) => ({
-              ...upState,
-              fileInput: null,
-              loading: false,
-              error: true,
-              errorMsg: 'Terjadi kesalahan saat mengambil data. Coba lagi.'
-            }));
-          });
-      }
+    action.uploadFileDispatcher(
+      upload.userFileInput,
+      `/users/${user.userData.uid}/profile`
     );
   };
 
@@ -118,7 +55,7 @@ export default function Welcome() {
     e.preventDefault();
     const payload = {
       ...userData,
-      profilePhotoURL: uploadState.fileURL,
+      profilePhotoURL: upload.fileDownloadURL,
       firstLogin: true
     };
     action.updateUserDataDispatcher(
@@ -136,11 +73,13 @@ export default function Welcome() {
 
   return (
     <Container maxW={800} my={6}>
-      <Text fontSize='4xl'>Selamat datang!</Text>
-      <Text fontSize='xl'>Isi data diri kamu dulu yuk!</Text>
+      <Text fontSize='4xl'>Halo! Selamat bergabung!</Text>
+      <Text fontSize='2xl' mt={8}>
+        Pilih foto untuk dijadikan profil!
+      </Text>
       <form onSubmit={handleSubmit}>
         <Flex my={8} align='center' justify='center' gap={6}>
-          <Avatar size='2xl' src={uploadState.localURL} />
+          <Avatar size='2xl' src={upload.localGeneratedURL} />
           <Box>
             <FormControl maxW={300} mb={4}>
               <FormLabel
@@ -150,7 +89,7 @@ export default function Welcome() {
                 cursor='pointer'
               >
                 <FontAwesomeIcon icon={faCamera} style={{ marginRight: 8 }} />
-                {uploadState.fileInput
+                {upload.userFileInput
                   ? 'Ganti foto profil'
                   : 'Pilih foto profil'}
               </FormLabel>
@@ -162,28 +101,28 @@ export default function Welcome() {
                 onChange={handleFileInput}
               />
             </FormControl>
-            {uploadState.loading && (
+            {upload.loading && (
               <GlobalComponent.LoadingOverlay text='Mengunggah foto . . .' />
             )}
-            {uploadState.error && (
+            {upload.error && (
               <Text fontSize='lg' color='red.500'>
-                Kesalahan saat menunggah. Coba lagi.
+                {upload.errorMsg}
               </Text>
             )}
-            {uploadState.success && (
+            {upload.success && (
               <ChakraLink
                 textDecoration='underline'
                 color='blue.500'
                 fontSize='lg'
                 display='block'
                 fontWeight='semibold'
-                href={uploadState.fileURL}
+                href={upload.fileDownloadURL}
                 isExternal
               >
-                Berhasil mengunggah.
+                Berhasil mengunggah. Lihat foto.
               </ChakraLink>
             )}
-            {uploadState.showUploadBtn && (
+            {upload.showUploadButton && !upload.error && (
               <Button
                 colorScheme='purple'
                 variant='link'
@@ -196,9 +135,12 @@ export default function Welcome() {
             )}
           </Box>
         </Flex>
-        {uploadState.success && (
+        {upload.success && (
           <>
-            <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+            <Text fontSize='2xl' mt={16}>
+              Isi informasi tentang kamu!
+            </Text>
+            <Grid templateColumns='repeat(2, 1fr)' gap={6} my={8}>
               <GlobalComponent.GridForm
                 onChange={handleInput}
                 value={userData.username}
