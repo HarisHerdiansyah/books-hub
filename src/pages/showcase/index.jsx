@@ -9,11 +9,11 @@ const showcaseRoutes = [
     element: <ProfileLayout />,
     children: [
       {
-        path: PATH.showcase.overview,
+        path: `${PATH.showcase.overview}/:showcaseUserId`,
         element: <Overview />
       },
       {
-        path: PATH.showcase.books,
+        path: `${PATH.showcase.books}/:showcaseUserId`,
         element: <ListBook />
       }
     ]

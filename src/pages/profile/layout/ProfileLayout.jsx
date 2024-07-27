@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { ProfileComponent } from '../../../components';
 import {
   Box,
@@ -15,15 +15,24 @@ import { Context, utils } from '../../../constants';
 export default function ProfileLayout() {
   const { state, action } = useContext(Context);
   const { user } = state;
+  const { showcaseUserId } = useParams();
   const { pathname } = useLocation();
   const isShowcase = pathname.includes('showcase');
   const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
   const userData = JSON.parse(window.sessionStorage.getItem('userData'));
+  const profileData = isShowcase ? user.ownerData : userData;
 
   useEffect(() => {
-    const unsubscribe = action.setBooksDispatcher(user.authState?.uid);
+    const targetUser = isShowcase ? showcaseUserId : user.authState?.uid;
+    const unsubscribe = action.setBooksDispatcher(targetUser, isShowcase);
     return () => unsubscribe();
-  }, [action, user.authState?.uid]);
+  }, [action, user.authState?.uid, isShowcase, showcaseUserId]);
+
+  useEffect(() => {
+    if (isShowcase) {
+      action.setOwnerDataDispatcher(showcaseUserId);
+    }
+  }, [isShowcase, action, showcaseUserId]);
 
   return (
     <Box py={4} px={20}>
@@ -34,6 +43,7 @@ export default function ProfileLayout() {
             text={nav.text}
             path={nav.path}
             className='navigation'
+            params={showcaseUserId || ''}
           />
         ))}
       </Flex>
@@ -42,8 +52,8 @@ export default function ProfileLayout() {
           <Card pt={10} pb={8} w={350} h={700} color='white' bg='#392467'>
             <Box m='auto'>
               <Image
-                name={`${userData.firstName} ${userData.lastName}`}
-                src={userData.profilePhotoURL}
+                name={`${profileData.firstName} ${profileData.lastName}`}
+                src={profileData.profilePhotoURL}
                 boxSize='220px'
                 objectFit='cover'
                 borderRadius='full'
@@ -51,16 +61,16 @@ export default function ProfileLayout() {
             </Box>
             <CardHeader>
               <Text fontSize='2xl' fontWeight='semibold'>
-                {userData.firstName}
+                {profileData.firstName}
               </Text>
-              <Text fontSize='lg'>@{userData.username}</Text>
-              <Text fontSize='md'>{userData.bio}</Text>
+              <Text fontSize='lg'>@{profileData.username}</Text>
+              <Text fontSize='md'>{profileData.bio}</Text>
             </CardHeader>
             <CardBody>
               <Text fontSize='lg' fontWeight='semibold' mb={3}>
                 About Me:
               </Text>
-              <Text align='justify'>{userData.about}</Text>
+              <Text align='justify'>{profileData.about}</Text>
             </CardBody>
           </Card>
         </Box>

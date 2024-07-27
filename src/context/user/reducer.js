@@ -15,7 +15,8 @@ export const userDataObjectDefault = {
 export const userState = {
   authState: null,
   userData: userDataObjectDefault,
-  loadUser: true
+  loadUser: true,
+  ownerData: userDataObjectDefault
 };
 
 export default function userReducer(state, payload) {
@@ -38,6 +39,13 @@ export default function userReducer(state, payload) {
       user: {
         ...state.user,
         userData: payload
+      }
+    }),
+    [ACTIONS.SET_OWNER]: () => ({
+      ...state,
+      user: {
+        ...state.user,
+        ownerData: payload
       }
     })
   };

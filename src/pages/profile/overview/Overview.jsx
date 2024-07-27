@@ -74,9 +74,11 @@ export default function Overview() {
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
         Disematkan
       </Text>
-      <Button colorScheme='purple' onClick={handleOpenModal}>
-        Sematkan Buku
-      </Button>
+      {!isShowcase && (
+        <Button colorScheme='purple' onClick={handleOpenModal}>
+          Sematkan Buku
+        </Button>
+      )}
       <GlobalComponent.Modal
         title='Sematkan Buku'
         isOpen={isOpen}

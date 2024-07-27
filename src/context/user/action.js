@@ -31,7 +31,8 @@ export const ACTIONS = {
   LOAD_AUTH_PROCESS: 'LOAD_AUTH_PROCESS',
   IS_ERROR: 'IS_ERROR',
   LOGOUT: 'LOGOUT',
-  STATE_CHANGED: 'STATE_CHANGED'
+  STATE_CHANGED: 'STATE_CHANGED',
+  SET_OWNER: 'SET_OWNER'
 };
 
 export default function userActionCreator(dispatch) {
@@ -212,6 +213,17 @@ export default function userActionCreator(dispatch) {
           status: 'error'
         });
         functions.logError('reset password', e);
+      } finally {
+        dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
+      }
+    },
+    setOwnerDataDispatcher: async (uid) => {
+      dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
+      try {
+        const snapshot = await getDoc(singleUserRef(uid));
+        dispatch({ type: ACTIONS.SET_OWNER, payload: snapshot.data() });
+      } catch (e) {
+        functions.logError('set owner data', e);
       } finally {
         dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: false });
       }
