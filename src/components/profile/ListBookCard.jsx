@@ -10,7 +10,9 @@ import {
   ButtonGroup,
   IconButton,
   useToast,
-  Button
+  Button,
+  Box,
+  Tooltip
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,9 +20,38 @@ import {
   faCheck,
   faStar as faStarSolid,
   faTrash,
-  faBookmark
+  faBookmark,
+  faEye
 } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
+
+function WishlistIcon() {
+  return (
+    <IconButton
+      colorScheme='whiteAlpha'
+      disabled
+      icon={
+        <FontAwesomeIcon color='darkblue' fontSize={22} icon={faBookmark} />
+      }
+    />
+  );
+}
+
+function FavouriteButton({ isFavourite, handleFavourite }) {
+  return (
+    <IconButton
+      colorScheme='whiteAlpha'
+      icon={
+        <FontAwesomeIcon
+          color='#ebeb05'
+          fontSize={22}
+          icon={isFavourite ? faStarSolid : faStarReg}
+        />
+      }
+      onClick={handleFavourite}
+    />
+  );
+}
 
 export default function ListBookCard({
   id,
@@ -32,7 +63,8 @@ export default function ListBookCard({
   writer,
   yearPublished,
   isFavourite,
-  isWishlist
+  isWishlist,
+  views
 }) {
   const toast = useToast();
   const navigate = useNavigate();
@@ -73,33 +105,20 @@ export default function ListBookCard({
 
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
-      <Flex align='center' justify='space-between' mb={4}>
+      <Flex align='center' justify='space-between'>
         <Flex align='center' justify='flex-start' gap={2}>
-          {isWishlist ? (
-            <IconButton
-              colorScheme='whiteAlpha'
-              disabled
-              icon={
-                <FontAwesomeIcon
-                  color='darkblue'
-                  fontSize={22}
-                  icon={faBookmark}
+          {!isShowcase ? (
+            <>
+              {isWishlist ? (
+                <WishlistIcon />
+              ) : (
+                <FavouriteButton
+                  handleFavourite={handleFavourite}
+                  isFavourite={isFavourite}
                 />
-              }
-            />
-          ) : (
-            <IconButton
-              colorScheme='whiteAlpha'
-              icon={
-                <FontAwesomeIcon
-                  color='#ebeb05'
-                  fontSize={22}
-                  icon={isFavourite ? faStarSolid : faStarReg}
-                />
-              }
-              onClick={handleFavourite}
-            />
-          )}
+              )}
+            </>
+          ) : null}
           <Text
             noOfLines={1}
             color='#392467'
@@ -107,14 +126,26 @@ export default function ListBookCard({
             fontWeight='semibold'
             _hover={{ textDecoration: 'underline' }}
           >
-            <Link to={`${PATH.book.detail}/${id}`}>
-              {title}
-            </Link>
+            <Link to={`${PATH.book.detail}/${id}`}>{title}</Link>
           </Text>
         </Flex>
-        <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
-          {isPublic ? 'Publik' : 'Privat'}
-        </Badge>
+        {isShowcase ? (
+          <Box>
+            <Tooltip label={`Total dilihat: ${views} orang`}>
+              <FontAwesomeIcon
+                icon={faEye}
+                size='xl'
+                color='#444'
+                cursor='pointer'
+              />
+            </Tooltip>
+            <Text fontWeight='semibold'>{views}</Text>
+          </Box>
+        ) : (
+          <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
+            {isPublic ? 'Publik' : 'Privat'}
+          </Badge>
+        )}
       </Flex>
       <Text>Kategori: {category || '-'}</Text>
       <Text>Penulis: {writer}</Text>
@@ -162,6 +193,11 @@ export default function ListBookCard({
   );
 }
 
+FavouriteButton.propTypes = {
+  isFavourite: PropTypes.bool.isRequired,
+  handleFavourite: PropTypes.func.isRequired
+};
+
 ListBookCard.propTypes = {
   id: PropTypes.string.isRequired,
   isShowcase: PropTypes.bool.isRequired,
@@ -172,5 +208,6 @@ ListBookCard.propTypes = {
   writer: PropTypes.string.isRequired,
   yearPublished: PropTypes.number.isRequired,
   isFavourite: PropTypes.bool.isRequired,
-  isWishlist: PropTypes.bool.isRequired
+  isWishlist: PropTypes.bool.isRequired,
+  views: PropTypes.number.isRequired
 };

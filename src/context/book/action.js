@@ -39,11 +39,15 @@ export const ACTIONS = {
 
 export default function bookActionCreator(dispatch) {
   return {
-    setBooksDispatcher: (uid) => {
+    setBooksDispatcher: (uid, isShowcase) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
+      const queryBaseOnIsShowcase = isShowcase
+        ? where('isPublic', '==', true)
+        : where('isPublic', 'in', [true, false]);
       const dataQuery = query(
         collection(Firestore, 'books'),
-        where('userId', '==', uid)
+        where('userId', '==', uid),
+        queryBaseOnIsShowcase
       );
       return onSnapshot(dataQuery, (querySnapshot) => {
         const result = [];
