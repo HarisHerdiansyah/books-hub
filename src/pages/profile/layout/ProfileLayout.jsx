@@ -43,6 +43,7 @@ export default function ProfileLayout() {
             text={nav.text}
             path={nav.path}
             className='navigation'
+            params={showcaseUserId || ''}
           />
         ))}
       </Flex>
