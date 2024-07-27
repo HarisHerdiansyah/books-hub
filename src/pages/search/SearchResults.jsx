@@ -7,11 +7,11 @@ import { Context } from '../../constants';
 export default function SearchResults() {
   const [searchParams] = useSearchParams();
   const { state, action } = useContext(Context);
-  const { user, book } = state;
+  const { book } = state;
 
   useEffect(() => {
-    action.searchBookDispatcher(searchParams.get('q'), user.authState.uid);
-  }, [searchParams, user.authState.uid, action]);
+    action.searchBookDispatcher(searchParams.get('q'));
+  }, [searchParams, action]);
 
   return (
     <Container maxW={1000}>

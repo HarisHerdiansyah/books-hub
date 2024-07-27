@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faStarReg } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { GlobalComponent } from '../../../components';
-import { utils, Context } from '../../../constants';
+import { utils, Context, functions } from '../../../constants';
 
 export default function BookForm() {
   const toast = useToast();
@@ -29,6 +29,7 @@ export default function BookForm() {
   );
   const [rating, setRating] = useState(initialBook.rating);
 
+  const { username } = JSON.parse(window.sessionStorage.getItem('userData'));
   const isEdit = pathname.includes('edit');
   const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
   const ratingIcon = {
@@ -73,12 +74,19 @@ export default function BookForm() {
     let dataBook = {};
 
     if (!isEdit) {
+      const { title, writer } = initialBook;
+      const keywords = functions.keywordBuilder({
+        title,
+        writer,
+        username
+      });
       dataBook = {
         ...initialBook,
         id: uuid(),
         createdAt: DateTime.utc().toISO(),
         isPublic: visibility === 'Publik',
-        userId: user.userData.uid
+        userId: user.authState.uid,
+        searchKeywords: keywords
       };
       action.addBookDispatcher(dataBook, (data) => {
         toast(data);

@@ -16,7 +16,8 @@ export const bookObjectDefault = {
   userId: '',
   rating: 0,
   descAndReview: '',
-  views: 0
+  views: 0,
+  searchKeywords: []
 };
 
 export const bookState = {

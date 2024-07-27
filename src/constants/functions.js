@@ -1,21 +1,18 @@
-import {
-  getStorage,
-  getDownloadURL,
-  uploadBytesResumable,
-  ref
-} from 'firebase/storage';
-import app from '../service/app';
+export function keywordBuilder(fields) {
+  const splitField = [
+    ...fields.username.toLowerCase().split(' '),
+    ...fields.title.toLowerCase().split(' '),
+    ...fields.writer.toLowerCase().split(' ')
+  ];
 
-const Storage = getStorage(app);
+  const keywords = [];
+  splitField.forEach((field) => {
+    let key = '';
+    field.split('').forEach((f) => {
+      key += f;
+      keywords.push(key);
+    });
+  });
 
-export function logError(action, error) {
-  console.error(`Error ${action.toUpperCase()}`, error?.code, error?.message);
-}
-
-export function getFileURL(fileRef) {
-  return getDownloadURL(fileRef);
-}
-
-export function uploadFile(file, path) {
-  return uploadBytesResumable(ref(Storage, path), file);
+  return keywords;
 }

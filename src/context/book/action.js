@@ -11,9 +11,11 @@ import {
   writeBatch,
   onSnapshot
 } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import app from '../../service/app';
 import { functions } from '../../constants';
 
+const Auth = getAuth(app);
 const Firestore = getFirestore(app);
 
 const popUpUpdateDesc = {
@@ -174,15 +176,20 @@ export default function bookActionCreator(dispatch) {
         dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: false });
       }
     },
-    searchBookDispatcher: async (searchInput, uid) => {
+    searchBookDispatcher: async (searchInput) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
       try {
         const dataQuery = query(
           collection(Firestore, 'books'),
-          where('userId', '!=', uid),
-          where('searchKeyword', 'array-contains-any', searchInput.split(' ')),
+          where('userId', '!=', Auth.currentUser.uid),
+          where(
+            'searchKeywords',
+            'array-contains-any',
+            searchInput.toLowerCase().split(' ')
+          ),
           where('isPublic', '==', true),
-          where('isDone', '==', true)
+          where('isDone', '==', true),
+          where('isWishlist', '==', false)
         );
         const result = [];
         const snapshots = await getDocs(dataQuery);
