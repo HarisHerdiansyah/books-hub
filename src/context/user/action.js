@@ -7,7 +7,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
-  updatePassword
+  updatePassword,
+  setPersistence,
+  browserSessionPersistence
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -41,6 +43,7 @@ export default function userActionCreator(dispatch) {
       dispatch({ type: ACTIONS.LOAD_AUTH_PROCESS, payload: true });
       const { email, password } = credentials;
       try {
+        await setPersistence(Auth, browserSessionPersistence);
         const response = await signInWithEmailAndPassword(
           Auth,
           email,
