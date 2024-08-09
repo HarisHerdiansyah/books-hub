@@ -18,5 +18,8 @@ export function keywordBuilder(fields) {
 }
 
 export function logError(action, error) {
-  console.error(`Error ${action.toUpperCase()}`, error?.code, error?.message);
+  if (import.meta.env.MODE === 'development') {
+    // eslint-disable-next-line no-console
+    console.error(`Error ${action.toUpperCase()}`, error?.code, error?.message);
+  }
 }
