@@ -62,7 +62,7 @@ export default function bookReducer(state, payload) {
       }
     }),
     [ACTIONS.SELECT_BOOK]: () => {
-      const selectedBook = state.book.lists.find((b) => b.id === payload);
+      const selectedBook = state.book.lists.data.find((b) => b.id === payload);
       return {
         ...state,
         book: {

@@ -189,10 +189,12 @@ export default function BookForm() {
               id='descAndReview'
               label='Deskripsi dan Review'
               value={initialBook.descAndReview}
+              currentCountChar={initialBook.descAndReview.length}
+              limitChar={300}
             />
           </>
         ) : null}
-        <Flex align='center' justify='space-between' mt={12}>
+        <Flex align='center' justify='space-between' my={12}>
           <Button colorScheme='red' variant='outline' onClick={handleBack}>
             Batalkan
           </Button>
