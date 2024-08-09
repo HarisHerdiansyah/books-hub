@@ -1,13 +1,34 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Text, Grid, GridItem } from '@chakra-ui/react';
-import { SearchComponent } from '../../components';
+import { GlobalComponent, SearchComponent } from '../../components';
 import { Context } from '../../constants';
 
 export default function SearchResults() {
   const [searchParams] = useSearchParams();
   const { state, action } = useContext(Context);
+  const [currentPage, setCurrentPage] = useState(1);
   const { book } = state;
+  const totalPage = Math.ceil(book.lists.total / 10);
+  console.log(book.lists.total);
+
+  const handlePrevPage = () => {
+    setCurrentPage((page) => page - 1);
+    action.handlePaginateDataDispatcher({
+      direction: 'prev',
+      cursor: book.lists.firstDoc,
+      searchInput: searchParams.get('q')
+    });
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((page) => page + 1);
+    action.handlePaginateDataDispatcher({
+      direction: 'next',
+      cursor: book.lists.lastDoc,
+      searchInput: searchParams.get('q')
+    });
+  };
 
   useEffect(() => {
     action.searchBookDispatcher(searchParams.get('q'));
@@ -20,7 +41,7 @@ export default function SearchResults() {
       </Text>
       <Grid templateColumns='repeat(2, 1fr)' gap={6} my={6}>
         {!state.isLoading &&
-          book.searchResults.map((b) => (
+          book.lists.data.map((b) => (
             <GridItem key={b.id}>
               <SearchComponent.ResultCard
                 id={b.id}
@@ -36,6 +57,12 @@ export default function SearchResults() {
             </GridItem>
           ))}
       </Grid>
+      <GlobalComponent.Pagination
+        currentPage={currentPage}
+        totalPage={totalPage}
+        handlePrevPage={handlePrevPage}
+        handleNextPage={handleNextPage}
+      />
     </Container>
   );
 }

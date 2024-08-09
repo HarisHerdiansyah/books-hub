@@ -23,7 +23,7 @@ export default function Overview() {
   const { pathname } = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { book } = state;
-  const pinnedBooks = book.lists.filter((book) => book.isPinned);
+  const pinnedBooks = book.lists.data.filter((book) => book.isPinned);
   const [dataPin, setDataPin] = useState({ lists: [], passedData: [] });
 
   const isShowcase = pathname.includes('showcase');

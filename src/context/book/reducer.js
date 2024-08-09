@@ -21,8 +21,12 @@ export const bookObjectDefault = {
 };
 
 export const bookState = {
-  searchResults: [],
-  lists: [],
+  lists: {
+    data: [],
+    total: 0,
+    firstDoc: null,
+    lastDoc: null
+  },
   selectedBook: bookObjectDefault,
   loadBook: false,
   error: {
@@ -51,7 +55,10 @@ export default function bookReducer(state, payload) {
       isLoading: false,
       book: {
         ...state.book,
-        lists: payload
+        lists: {
+          ...state.book.lists,
+          ...payload
+        }
       }
     }),
     [ACTIONS.SELECT_BOOK]: () => {
@@ -86,14 +93,14 @@ export default function bookReducer(state, payload) {
     [ACTIONS.WRITE_OR_DELETE_BOOK]: () => ({
       ...state,
       isLoading: payload
-    }),
-    [ACTIONS.STORE_SEARCH_RESULTS]: () => ({
-      ...state,
-      isLoading: false,
-      book: {
-        ...state.book,
-        searchResults: payload
-      }
     })
+    // [ACTIONS.STORE_SEARCH_RESULTS]: () => ({
+    //   ...state,
+    //   isLoading: false,
+    //   book: {
+    //     ...state.book,
+    //     searchResults: payload
+    //   }
+    // })
   };
 }

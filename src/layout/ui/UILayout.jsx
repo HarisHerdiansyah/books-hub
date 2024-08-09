@@ -35,6 +35,8 @@ export default function UILayout() {
     onClose();
   };
 
+  const handleBackToHome = () => navigate(PATH.profile.overview);
+
   const handleSearchAction = (e) => {
     e.preventDefault();
     handleClose();
@@ -51,7 +53,13 @@ export default function UILayout() {
       <Box bg='#392467' py={4} px={20}>
         <Flex align='center' justify='space-between'>
           <Flex align='center' gap={6}>
-            <FontAwesomeIcon icon={faBook} color='white' size='2xl' />
+            <FontAwesomeIcon
+              icon={faBook}
+              color='white'
+              size='2xl'
+              cursor='pointer'
+              onClick={handleBackToHome}
+            />
             {isLoggedIn ? (
               <Flex
                 onClick={onOpen}
