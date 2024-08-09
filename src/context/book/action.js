@@ -206,7 +206,7 @@ export default function bookActionCreator(dispatch) {
         let dataQuery = searchDataBookQuery(searchInput);
         const result = [];
         const snapshots = await getDocs(query(dataQuery, limit(10)));
-        const total = await getCountFromServer(dataQuery);
+        const total = (await getCountFromServer(dataQuery)).data().count;
         snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
         dispatch({
           type: ACTIONS.SET_BOOKS,
@@ -228,18 +228,20 @@ export default function bookActionCreator(dispatch) {
     handlePaginateDataDispatcher: async (params) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
       try {
-        const { mode, uid, isShowcase, searchInput, direction, cursor } =
-          params;
+        const { isShowcase, searchInput, direction, cursor } = params;
 
         const queryCursor =
           direction === 'next' ? startAfter(cursor) : endAt(cursor);
-        let dataQuery =
-          mode === 'regular'
-            ? query(userDataBookQuery(uid, isShowcase), limit(6), queryCursor)
-            : query(searchDataBookQuery(searchInput), limit(10), queryCursor);
+        let dataQuery = !searchInput
+          ? query(
+              userDataBookQuery(Auth.currentUser.uid, isShowcase),
+              limit(6),
+              queryCursor
+            )
+          : query(searchDataBookQuery(searchInput), limit(10), queryCursor);
         const result = [];
         const snapshots = await getDocs(dataQuery);
-        snapshots.forEach((snapDoc) => result.push(snapDoc));
+        snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
         dispatch({
           type: ACTIONS.SET_BOOKS,
           payload: {
