@@ -10,7 +10,6 @@ export default function SearchResults() {
   const [currentPage, setCurrentPage] = useState(1);
   const { book } = state;
   const totalPage = Math.ceil(book.lists.total / 10);
-  console.log(book.lists.total);
 
   const handlePrevPage = () => {
     setCurrentPage((page) => page - 1);
