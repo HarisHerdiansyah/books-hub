@@ -1,19 +1,15 @@
 import { useContext } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Container, Text, Flex, Button } from '@chakra-ui/react';
 import { utils, Context } from '../../../constants';
 
 export default function BookDetail() {
-  const [searchParams] = useSearchParams();
   const { state } = useContext(Context);
   const { bookId } = useParams();
   const navigate = useNavigate();
 
   const { book } = state;
-  const isFromSearch = searchParams.get('fromSearch');
-  const bookDetail = isFromSearch
-    ? book.searchResults.find((book) => book.id === bookId)
-    : book.lists.find((book) => book.id === bookId);
+  const bookDetail = book.lists.data.find((book) => book.id === bookId);
 
   const handleBack = () => navigate(-1);
 

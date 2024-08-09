@@ -11,20 +11,40 @@ import {
   FormLabel,
   Select
 } from '@chakra-ui/react';
-import { ProfileComponent } from '../../../components';
+import { GlobalComponent, ProfileComponent } from '../../../components';
 
 export default function ListBook() {
   const [filter, setFilter] = useState(utils.listBookDropdownValue.all);
-  const { state } = useContext(Context);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { state, action } = useContext(Context);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const { book } = state;
   const isShowcase = pathname.includes('showcase');
+  const totalPage = Math.ceil(book.lists.total / 6);
 
   const handleAddNavigate = () => navigate(PATH.book.add);
 
   const handleFilter = (e) => setFilter(e.target.value);
+
+  const handlePrevPage = () => {
+    setCurrentPage((page) => page - 1);
+    action.handlePaginateDataDispatcher({
+      isShowcase,
+      direction: 'prev',
+      cursor: book.lists.firstDoc
+    });
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((page) => page + 1);
+    action.handlePaginateDataDispatcher({
+      isShowcase,
+      direction: 'next',
+      cursor: book.lists.lastDoc
+    });
+  };
 
   return (
     <Box w='100%'>
@@ -55,9 +75,9 @@ export default function ListBook() {
           </Flex>
         </Flex>
       )}
-      {book.lists.length > 0 ? (
+      {book.lists.data.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
-          {book.lists
+          {book.lists.data
             .filter((book) => {
               const { done, progress, wishlist, favourite, isPublic } =
                 utils.listBookDropdownValue;
@@ -82,6 +102,12 @@ export default function ListBook() {
           <Text fontSize='xl'>-- Daftar buku kosong --</Text>
         </Flex>
       )}
+      <GlobalComponent.Pagination
+        currentPage={currentPage}
+        totalPage={totalPage}
+        handlePrevPage={handlePrevPage}
+        handleNextPage={handleNextPage}
+      />
     </Box>
   );
 }
