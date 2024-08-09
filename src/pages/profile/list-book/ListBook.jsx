@@ -26,6 +26,8 @@ export default function ListBook() {
 
   const handleFilter = (e) => setFilter(e.target.value);
 
+  console.log(book.lists.total);
+
   return (
     <Box w='100%'>
       <Text fontSize='3xl' fontWeight='normal' mb={6}>
@@ -55,9 +57,9 @@ export default function ListBook() {
           </Flex>
         </Flex>
       )}
-      {book.lists.length > 0 ? (
+      {book.lists.data.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
-          {book.lists
+          {book.lists.data
             .filter((book) => {
               const { done, progress, wishlist, favourite, isPublic } =
                 utils.listBookDropdownValue;

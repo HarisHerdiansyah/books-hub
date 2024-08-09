@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { DateTime } from 'luxon';
 import numbro from 'numbro';
 import { Card, Flex, Tooltip, Avatar, Box, Text } from '@chakra-ui/react';
@@ -33,12 +33,7 @@ export default function ResultCard({
   const handleViewBook = () => {
     action.updateBookDispatcher({ id, views: views + 1 });
 
-    navigate({
-      pathname: `${PATH.book.detail}/${id}`,
-      search: createSearchParams({
-        fromSearch: true
-      }).toString()
-    });
+    navigate(`${PATH.book.detail}/${id}`);
   };
 
   return (

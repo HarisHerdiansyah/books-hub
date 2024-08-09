@@ -9,7 +9,11 @@ import {
   updateDoc,
   deleteDoc,
   writeBatch,
-  onSnapshot
+  onSnapshot,
+  getCountFromServer,
+  limit,
+  startAfter,
+  endAt
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import app from '../../service/app';
@@ -37,42 +41,58 @@ export const ACTIONS = {
   STORE_SEARCH_RESULTS: 'STORE_SEARCH_RESULTS'
 };
 
+function userDataBookQuery(...args) {
+  const [uid, isShowcase] = args;
+
+  const queryBaseOnIsShowcase = isShowcase
+    ? where('isPublic', '==', true)
+    : where('isPublic', 'in', [true, false]);
+
+  const q = query(
+    collection(Firestore, 'books'),
+    where('userId', '==', uid),
+    queryBaseOnIsShowcase
+  );
+
+  return q;
+}
+
+function searchDataBookQuery(...args) {
+  const [searchInput] = args;
+  const q = query(
+    collection(Firestore, 'books'),
+    where('userId', '!=', Auth.currentUser.uid),
+    where(
+      'searchKeywords',
+      'array-contains-any',
+      searchInput.toLowerCase().split(' ')
+    ),
+    where('isPublic', '==', true),
+    where('isDone', '==', true),
+    where('isWishlist', '==', false)
+  );
+  return q;
+}
+
 export default function bookActionCreator(dispatch) {
   return {
     setBooksDispatcher: (uid, isShowcase) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
-      const queryBaseOnIsShowcase = isShowcase
-        ? where('isPublic', '==', true)
-        : where('isPublic', 'in', [true, false]);
-      const dataQuery = query(
-        collection(Firestore, 'books'),
-        where('userId', '==', uid),
-        queryBaseOnIsShowcase
-      );
-      return onSnapshot(dataQuery, (querySnapshot) => {
+      let dataQuery = userDataBookQuery(uid, isShowcase);
+      return onSnapshot(query(dataQuery, limit(6)), async (querySnapshot) => {
+        const total = (await getCountFromServer(dataQuery)).data().count;
         const result = [];
         querySnapshot.forEach((snapshot) => result.push(snapshot.data()));
-        dispatch({ type: ACTIONS.SET_BOOKS, payload: result });
-      });
-    },
-    getBooksDispatcher: async (uid) => {
-      dispatch({ type: ACTIONS.LOAD_BOOKS });
-      const dataQuery = query(
-        collection(Firestore, 'books'),
-        where('userId', '==', uid)
-      );
-      try {
-        const result = [];
-        const snapshots = await getDocs(dataQuery);
-        snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
-        dispatch({ type: ACTIONS.SET_BOOKS, payload: result });
-      } catch (e) {
         dispatch({
-          type: ACTIONS.LOAD_BOOKS_ERROR,
-          payload: { title: 'Gagal memuat buku', msg: e?.message }
+          type: ACTIONS.SET_BOOKS,
+          payload: {
+            data: result,
+            total,
+            firstDoc: querySnapshot.docs[0],
+            lastDoc: querySnapshot.docs[querySnapshot.docs.length - 1]
+          }
         });
-        functions.logError('get books', e);
-      }
+      });
     },
     addBookDispatcher: async (payload, popUpCb) => {
       dispatch({ type: ACTIONS.WRITE_OR_DELETE_BOOK, payload: true });
@@ -183,28 +203,57 @@ export default function bookActionCreator(dispatch) {
     searchBookDispatcher: async (searchInput) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
       try {
-        const dataQuery = query(
-          collection(Firestore, 'books'),
-          where('userId', '!=', Auth.currentUser.uid),
-          where(
-            'searchKeywords',
-            'array-contains-any',
-            searchInput.toLowerCase().split(' ')
-          ),
-          where('isPublic', '==', true),
-          where('isDone', '==', true),
-          where('isWishlist', '==', false)
-        );
+        let dataQuery = searchDataBookQuery(searchInput);
         const result = [];
-        const snapshots = await getDocs(dataQuery);
+        const snapshots = await getDocs(query(dataQuery, limit(10)));
+        const total = await getCountFromServer(dataQuery);
         snapshots.forEach((snapDoc) => result.push(snapDoc.data()));
-        dispatch({ type: ACTIONS.STORE_SEARCH_RESULTS, payload: result });
+        dispatch({
+          type: ACTIONS.SET_BOOKS,
+          payload: {
+            data: result,
+            total,
+            firstDoc: snapshots.docs[0],
+            lastDoc: snapshots.docs[snapshots.docs.length - 1]
+          }
+        });
       } catch (e) {
         dispatch({
           type: ACTIONS.LOAD_BOOKS_ERROR,
           payload: { title: 'Gagal memuat buku', msg: e?.message }
         });
         functions.logError('search book', e);
+      }
+    },
+    handlePaginateDataDispatcher: async (params) => {
+      dispatch({ type: ACTIONS.LOAD_BOOKS });
+      try {
+        const { mode, uid, isShowcase, searchInput, direction, cursor } =
+          params;
+
+        const queryCursor =
+          direction === 'next' ? startAfter(cursor) : endAt(cursor);
+        let dataQuery =
+          mode === 'regular'
+            ? query(userDataBookQuery(uid, isShowcase), limit(6), queryCursor)
+            : query(searchDataBookQuery(searchInput), limit(10), queryCursor);
+        const result = [];
+        const snapshots = await getDocs(dataQuery);
+        snapshots.forEach((snapDoc) => result.push(snapDoc));
+        dispatch({
+          type: ACTIONS.SET_BOOKS,
+          payload: {
+            data: result,
+            firstDoc: snapshots.docs[0],
+            lastDoc: snapshots.docs[snapshots.docs.length - 1]
+          }
+        });
+      } catch (e) {
+        dispatch({
+          type: ACTIONS.LOAD_BOOKS_ERROR,
+          payload: { title: 'Gagal memuat buku', msg: e?.message }
+        });
+        functions.logError('paginate book', e);
       }
     }
   };

@@ -20,7 +20,7 @@ export default function SearchResults() {
       </Text>
       <Grid templateColumns='repeat(2, 1fr)' gap={6} my={6}>
         {!state.isLoading &&
-          book.searchResults.map((b) => (
+          book.lists.data.map((b) => (
             <GridItem key={b.id}>
               <SearchComponent.ResultCard
                 id={b.id}
