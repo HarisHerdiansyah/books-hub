@@ -16,3 +16,7 @@ export function keywordBuilder(fields) {
 
   return keywords;
 }
+
+export function logError(action, error) {
+  console.error(`Error ${action.toUpperCase()}`, error?.code, error?.message);
+}
