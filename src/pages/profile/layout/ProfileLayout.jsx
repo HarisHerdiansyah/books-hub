@@ -1,62 +1,81 @@
-import { Outlet } from 'react-router-dom';
-import { Navigation } from '../../../components/profile';
-import { Box, Flex, Text, Card, CardBody, CardHeader } from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
-import { profileNavLink } from '../../../constants';
-import './ProfileLayout.css';
+import { useContext, useEffect } from 'react';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
+import { ProfileComponent } from '../../../components';
+import {
+  Box,
+  Flex,
+  Text,
+  Card,
+  CardBody,
+  CardHeader,
+  Image
+} from '@chakra-ui/react';
+import { Context, utils } from '../../../constants';
 
 export default function ProfileLayout() {
+  const { state, action } = useContext(Context);
+  const { user } = state;
+  const { showcaseUserId } = useParams();
+  const { pathname } = useLocation();
+  const isShowcase = pathname.includes('showcase');
+  const navlink = isShowcase ? utils.showcaseNavLink : utils.profileNavLink;
+  const userData = JSON.parse(window.sessionStorage.getItem('userData'));
+  const profileData = isShowcase ? user.ownerData : userData;
+
+  useEffect(() => {
+    const targetUser = isShowcase ? showcaseUserId : user.authState?.uid;
+    const unsubscribe = action.setBooksDispatcher(targetUser, isShowcase);
+    return () => unsubscribe();
+  }, [action, user.authState?.uid, isShowcase, showcaseUserId]);
+
+  useEffect(() => {
+    if (isShowcase) {
+      action.setOwnerDataDispatcher(showcaseUserId);
+    }
+  }, [isShowcase, action, showcaseUserId]);
+
   return (
-    <>
-      <Box bg='#392467' py={4} px={20}>
-        <Flex align='center' gap={3}>
-          <FontAwesomeIcon icon={faBook} color='white' size='xl' />
-          <Text color='white' fontSize='2xl'>
-            Book Hub / Maya Astuti
-          </Text>
-        </Flex>
-      </Box>
-      <Box py={4} px={20}>
-        <Flex justify='flex-end' gap={6}>
-          {profileNavLink.map((nav, i) => (
-            <Navigation
-              key={i}
-              text={nav.text}
-              path={nav.path}
-              className='navigation'
-            />
-          ))}
-        </Flex>
-        <Flex my={8} gap={8}>
-          <Box w={350}>
-            <Card variant='outline' py={4} w={350}>
-              <Box
-                w={225}
-                h={225}
-                border={'1px solid black'}
-                m='auto'
-                borderRadius={150}
-              ></Box>
-              <CardHeader>
-                <Text fontSize='3xl' fontWeight='semibold' color='#392467'>
-                  Maya Astuti
-                </Text>
-                <Text fontSize='2xl'>@mayaa</Text>
-              </CardHeader>
-              <CardBody>
-                <Text>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Repellat fuga, velit atque earum consequatur veritatis! At
-                  ullam aperiam alias asperiores, nostrum culpa quos. Porro aut,
-                  voluptates magni at nam minus.
-                </Text>
-              </CardBody>
-            </Card>
-          </Box>
-          <Outlet />
-        </Flex>
-      </Box>
-    </>
+    <Box py={4} px={20}>
+      <Flex justify='flex-end' gap={6}>
+        {navlink.map((nav, i) => (
+          <ProfileComponent.Navigation
+            key={i}
+            text={nav.text}
+            path={nav.path}
+            className='navigation'
+            params={showcaseUserId || ''}
+          />
+        ))}
+      </Flex>
+      <Flex my={8} gap={8}>
+        <Box w={350}>
+          <Card pt={10} pb={8} w={350} h={700} color='white' bg='#392467'>
+            <Box m='auto'>
+              <Image
+                name={`${profileData.firstName} ${profileData.lastName}`}
+                src={profileData.profilePhotoURL}
+                boxSize='220px'
+                objectFit='cover'
+                borderRadius='full'
+              />
+            </Box>
+            <CardHeader>
+              <Text fontSize='2xl' fontWeight='semibold'>
+                {profileData.firstName}
+              </Text>
+              <Text fontSize='lg'>@{profileData.username}</Text>
+              <Text fontSize='md'>{profileData.bio}</Text>
+            </CardHeader>
+            <CardBody>
+              <Text fontSize='lg' fontWeight='semibold' mb={3}>
+                About Me:
+              </Text>
+              <Text align='justify'>{profileData.about}</Text>
+            </CardBody>
+          </Card>
+        </Box>
+        <Outlet />
+      </Flex>
+    </Box>
   );
 }
