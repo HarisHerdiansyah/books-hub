@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import numbro from 'numbro';
 import { PATH, Context } from '../../constants';
 import {
   Badge,
@@ -11,7 +12,6 @@ import {
   IconButton,
   useToast,
   Button,
-  Box,
   Tooltip
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -69,6 +69,10 @@ export default function ListBookCard({
   const toast = useToast();
   const navigate = useNavigate();
   const { action } = useContext(Context);
+  const formattedViews =
+    views > 999
+      ? numbro(views).format({ average: true, mantissa: 2 }).toUpperCase()
+      : views;
 
   const handleEditNavigate = () => {
     action.selectBookDispatcher(id);
@@ -103,9 +107,16 @@ export default function ListBookCard({
     );
   };
 
+  const handleViewBook = () => {
+    if (!isShowcase || isDone) {
+      navigate(`${PATH.book.detail}/${id}`);
+      return;
+    }
+  };
+
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
-      <Flex align='center' justify='space-between'>
+      <Flex align='flex-start' justify='space-between'>
         <Flex align='center' justify='flex-start' gap={2}>
           {!isShowcase ? (
             <>
@@ -124,13 +135,15 @@ export default function ListBookCard({
             color='#392467'
             fontSize='xl'
             fontWeight='semibold'
+            cursor='pointer'
+            onClick={handleViewBook}
             _hover={{ textDecoration: 'underline' }}
           >
-            <Link to={`${PATH.book.detail}/${id}`}>{title}</Link>
+            {title}
           </Text>
         </Flex>
         {isShowcase ? (
-          <Box>
+          <Flex direction='column' align='center'>
             <Tooltip label={`Total dilihat: ${views} orang`}>
               <FontAwesomeIcon
                 icon={faEye}
@@ -139,8 +152,8 @@ export default function ListBookCard({
                 cursor='pointer'
               />
             </Tooltip>
-            <Text fontWeight='semibold'>{views}</Text>
-          </Box>
+            <Text fontWeight='semibold'>{formattedViews}</Text>
+          </Flex>
         ) : (
           <Badge colorScheme={isPublic ? 'blue' : 'gray'}>
             {isPublic ? 'Publik' : 'Privat'}
@@ -150,21 +163,27 @@ export default function ListBookCard({
       <Text>Kategori: {category || '-'}</Text>
       <Text>Penulis: {writer}</Text>
       <Text>Tahun: {yearPublished}</Text>
-      {!isShowcase && (
-        <Flex align='center' justify='space-between' mt={6}>
-          {!isWishlist ? (
-            <Badge colorScheme={isDone ? 'green' : 'orange'}>
-              {isDone ? 'Selesai' : 'Belum selesai'}
-            </Badge>
-          ) : (
-            <Button
-              variant='link'
-              color='darkblue'
-              onClick={handleUpdateWishlist}
-            >
-              Pindahkan ke daftar baca
-            </Button>
-          )}
+      <Flex align='center' justify='space-between' mt={6}>
+        {!isWishlist ? (
+          <Badge colorScheme={isDone ? 'green' : 'orange'}>
+            {isDone ? 'Selesai' : 'Belum selesai'}
+          </Badge>
+        ) : (
+          <>
+            {isShowcase ? (
+              <Badge colorScheme='blue'>Wishlist</Badge>
+            ) : (
+              <Button
+                variant='link'
+                color='darkblue'
+                onClick={handleUpdateWishlist}
+              >
+                Pindahkan ke daftar baca
+              </Button>
+            )}
+          </>
+        )}
+        {!isShowcase && (
           <ButtonGroup>
             <IconButton
               size='lg'
@@ -187,8 +206,8 @@ export default function ListBookCard({
               />
             )}
           </ButtonGroup>
-        </Flex>
-      )}
+        )}
+      </Flex>
     </Card>
   );
 }

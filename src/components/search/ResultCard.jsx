@@ -1,10 +1,12 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { DateTime } from 'luxon';
+import numbro from 'numbro';
 import { Card, Flex, Tooltip, Avatar, Box, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { PATH } from '../../constants';
+import { PATH, Context } from '../../constants';
 
 export default function ResultCard({
   id,
@@ -14,25 +16,53 @@ export default function ResultCard({
   views,
   category,
   writer,
-  yearPublished
+  yearPublished,
+  userId
 }) {
+  const { action } = useContext(Context);
+
+  const navigate = useNavigate();
+  const formattedViews =
+    views > 999
+      ? numbro(views).format({ average: true, mantissa: 2 }).toUpperCase()
+      : views;
+
+  const handleViewProfile = () =>
+    navigate(`${PATH.showcase.overview}/${userId}`);
+
+  const handleViewBook = () => {
+    action.updateBookDispatcher({ id, views: views + 1 });
+
+    navigate({
+      pathname: `${PATH.book.detail}/${id}`,
+      search: createSearchParams({
+        fromSearch: true
+      }).toString()
+    });
+  };
+
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
       <Flex align='center' justify='space-between'>
         <Flex align='center' gap={3} mb={4}>
           <Tooltip label='Lihat Profil'>
-            <Avatar name={username} size='md' cursor='pointer' />
+            <Avatar
+              name={username}
+              size='md'
+              cursor='pointer'
+              onClick={handleViewProfile}
+            />
           </Tooltip>
           <Box>
             <Text
               noOfLines={1}
               fontSize='xl'
               fontWeight='semibold'
+              cursor='pointer'
+              onClick={handleViewBook}
               _hover={{ textDecoration: 'underline' }}
             >
-              <Link to={`${PATH.book.detail}/${id}?fromSearch=true`}>
-                @{username}/{title}
-              </Link>
+              @{username}/{title}
             </Text>
             <Text fontSize='sm' color='#444'>
               Terakhir diperbarui{' '}
@@ -40,7 +70,7 @@ export default function ResultCard({
             </Text>
           </Box>
         </Flex>
-        <Box>
+        <Flex direction='column'>
           <Tooltip label={`Total dilihat: ${views} orang`}>
             <FontAwesomeIcon
               icon={faEye}
@@ -49,8 +79,8 @@ export default function ResultCard({
               cursor='pointer'
             />
           </Tooltip>
-          <Text fontWeight='semibold'>{views}</Text>
-        </Box>
+          <Text fontWeight='semibold'>{formattedViews}</Text>
+        </Flex>
       </Flex>
       <Text>Kategori: {category}</Text>
       <Text>Penulis: {writer} </Text>
@@ -68,5 +98,6 @@ ResultCard.propTypes = {
   views: PropTypes.number,
   category: PropTypes.string,
   writer: PropTypes.string,
-  yearPublished: PropTypes.number
+  yearPublished: PropTypes.number,
+  userId: PropTypes.string
 };

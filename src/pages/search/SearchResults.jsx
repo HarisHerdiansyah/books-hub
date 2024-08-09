@@ -31,6 +31,7 @@ export default function SearchResults() {
                 category={b.category}
                 writer={b.writer}
                 yearPublished={b.yearPublished}
+                userId={b.userId}
               />
             </GridItem>
           ))}
