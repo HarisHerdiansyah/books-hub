@@ -10,10 +10,11 @@ export default function Pagination({
   currentPage,
   totalPage,
   handlePrevPage,
-  handleNextPage
+  handleNextPage,
+  ...props
 }) {
   return totalPage > 1 ? (
-    <Flex align='center' justify='space-between'>
+    <Flex align='center' justify='space-between' {...props}>
       <Button
         colorScheme='teal'
         leftIcon={<FontAwesomeIcon icon={faChevronLeft} />}

@@ -13,6 +13,7 @@ export default function ResultCard({
   username,
   title,
   updatedAt,
+  createdAt,
   views,
   category,
   writer,
@@ -38,7 +39,7 @@ export default function ResultCard({
 
   return (
     <Card w='100%' variant='outline' py={4} px={5}>
-      <Flex align='center' justify='space-between'>
+      <Flex align='flex-start' justify='space-between'>
         <Flex align='center' gap={3} mb={4}>
           <Tooltip label='Lihat Profil'>
             <Avatar
@@ -61,11 +62,13 @@ export default function ResultCard({
             </Text>
             <Text fontSize='sm' color='#444'>
               Terakhir diperbarui{' '}
-              {DateTime.fromISO(updatedAt).setLocale('id').toRelativeCalendar()}
+              {DateTime.fromISO(updatedAt || createdAt)
+                .setLocale('id')
+                .toRelativeCalendar()}
             </Text>
           </Box>
         </Flex>
-        <Flex direction='column'>
+        <Flex direction='column' align='center'>
           <Tooltip label={`Total dilihat: ${views} orang`}>
             <FontAwesomeIcon
               icon={faEye}
@@ -90,6 +93,7 @@ ResultCard.propTypes = {
   username: PropTypes.string,
   title: PropTypes.string,
   updatedAt: PropTypes.string,
+  createdAt: PropTypes.string,
   views: PropTypes.number,
   category: PropTypes.string,
   writer: PropTypes.string,
