@@ -47,6 +47,7 @@ export default function SearchResults() {
                 username={b.username}
                 title={b.title}
                 updatedAt={b.updatedAt}
+                createdAt={b.createdAt}
                 views={b.views}
                 category={b.category}
                 writer={b.writer}
@@ -57,6 +58,7 @@ export default function SearchResults() {
           ))}
       </Grid>
       <GlobalComponent.Pagination
+        mb={20}
         currentPage={currentPage}
         totalPage={totalPage}
         handlePrevPage={handlePrevPage}

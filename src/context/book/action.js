@@ -78,18 +78,23 @@ export default function bookActionCreator(dispatch) {
   return {
     setBooksDispatcher: (uid, isShowcase) => {
       dispatch({ type: ACTIONS.LOAD_BOOKS });
-      let dataQuery = userDataBookQuery(uid, isShowcase);
-      return onSnapshot(query(dataQuery, limit(6)), async (querySnapshot) => {
-        const total = (await getCountFromServer(dataQuery)).data().count;
+      const queryBaseOnIsShowcase = isShowcase
+        ? where('isPublic', '==', true)
+        : where('isPublic', 'in', [true, false]);
+
+      const dataQuery = query(
+        collection(Firestore, 'books'),
+        where('userId', '==', uid),
+        queryBaseOnIsShowcase
+      );
+      return onSnapshot(dataQuery, async (querySnapshot) => {
         const result = [];
         querySnapshot.forEach((snapshot) => result.push(snapshot.data()));
         dispatch({
           type: ACTIONS.SET_BOOKS,
           payload: {
             data: result,
-            total,
-            firstDoc: querySnapshot.docs[0],
-            lastDoc: querySnapshot.docs[querySnapshot.docs.length - 1]
+            total: result.length
           }
         });
       });
