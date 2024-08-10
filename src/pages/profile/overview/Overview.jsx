@@ -31,7 +31,7 @@ export default function Overview() {
   const handleOpenModal = () => {
     setDataPin((pin) => ({
       ...pin,
-      lists: book.lists.map(({ id, title, isPinned }) => ({
+      lists: book.lists.data.map(({ id, title, isPinned }) => ({
         id,
         title,
         isPinned

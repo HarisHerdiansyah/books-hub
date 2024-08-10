@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Context, PATH, utils } from '../../../constants';
 import {
@@ -16,34 +16,42 @@ import { GlobalComponent, ProfileComponent } from '../../../components';
 export default function ListBook() {
   const [filter, setFilter] = useState(utils.listBookDropdownValue.all);
   const [currentPage, setCurrentPage] = useState(1);
-  const { state, action } = useContext(Context);
+  const { state } = useContext(Context);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const { book } = state;
   const isShowcase = pathname.includes('showcase');
-  const totalPage = Math.ceil(book.lists.total / 6);
+
+  const listBook = useMemo(() => {
+    const filteredBook = book.lists.data.filter((book) => {
+      const { done, progress, wishlist, favourite, isPublic } =
+        utils.listBookDropdownValue;
+      if (filter === done) return book.isDone;
+      if (filter === progress) return !book.isDone;
+      if (filter === wishlist) return book.isWishlist;
+      if (filter === favourite) return book.isFavourite;
+      if (filter === isPublic) return book.isPublic;
+      return book;
+    });
+    const total = Math.ceil(filteredBook.length / 6);
+    const data = filteredBook.slice((currentPage - 1) * 6, currentPage * 6);
+    return { data, total };
+  }, [book.lists.data, currentPage, filter]);
 
   const handleAddNavigate = () => navigate(PATH.book.add);
 
-  const handleFilter = (e) => setFilter(e.target.value);
+  const handleFilter = (e) => {
+    setFilter(e.target.value);
+    setCurrentPage(1);
+  };
 
   const handlePrevPage = () => {
     setCurrentPage((page) => page - 1);
-    action.handlePaginateDataDispatcher({
-      isShowcase,
-      direction: 'prev',
-      cursor: book.lists.firstDoc
-    });
   };
 
   const handleNextPage = () => {
     setCurrentPage((page) => page + 1);
-    action.handlePaginateDataDispatcher({
-      isShowcase,
-      direction: 'next',
-      cursor: book.lists.lastDoc
-    });
   };
 
   return (
@@ -75,27 +83,16 @@ export default function ListBook() {
           </Flex>
         </Flex>
       )}
-      {book.lists.data.length > 0 ? (
+      {listBook.data.length > 0 ? (
         <Grid templateColumns='repeat(2, 1fr)' gap={8} my={8}>
-          {book.lists.data
-            .filter((book) => {
-              const { done, progress, wishlist, favourite, isPublic } =
-                utils.listBookDropdownValue;
-              if (filter === done) return book.isDone;
-              if (filter === progress) return !book.isDone;
-              if (filter === wishlist) return book.isWishlist;
-              if (filter === favourite) return book.isFavourite;
-              if (filter === isPublic) return book.isPublic;
-              return book;
-            })
-            .map((book) => (
-              <GridItem w='100%' key={book.id}>
-                <ProfileComponent.ListBookCard
-                  isShowcase={isShowcase}
-                  {...book}
-                />
-              </GridItem>
-            ))}
+          {listBook.data.map((book) => (
+            <GridItem w='100%' key={book.id}>
+              <ProfileComponent.ListBookCard
+                isShowcase={isShowcase}
+                {...book}
+              />
+            </GridItem>
+          ))}
         </Grid>
       ) : (
         <Flex justify='center' mt={12}>
@@ -104,7 +101,7 @@ export default function ListBook() {
       )}
       <GlobalComponent.Pagination
         currentPage={currentPage}
-        totalPage={totalPage}
+        totalPage={listBook.total}
         handlePrevPage={handlePrevPage}
         handleNextPage={handleNextPage}
       />

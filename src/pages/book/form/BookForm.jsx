@@ -29,7 +29,9 @@ export default function BookForm() {
   );
   const [rating, setRating] = useState(initialBook.rating);
 
-  const { username } = JSON.parse(window.sessionStorage.getItem('userData'));
+  const { username, profilePhotoURL } = JSON.parse(
+    window.sessionStorage.getItem('userData')
+  );
   const isEdit = pathname.includes('edit');
   const currentAction = isEdit ? 'Perbarui Buku' : 'Tambah Buku';
   const ratingIcon = {
@@ -86,7 +88,9 @@ export default function BookForm() {
         createdAt: DateTime.utc().toISO(),
         isPublic: visibility === 'Publik',
         userId: user.authState.uid,
-        searchKeywords: keywords
+        searchKeywords: keywords,
+        username,
+        profilePhotoURL
       };
       action.addBookDispatcher(dataBook, (data) => {
         toast(data);
