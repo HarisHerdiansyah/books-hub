@@ -89,7 +89,6 @@ export default function userActionCreator(dispatch) {
         await signOut(Auth);
         popUpCb({
           title: 'Registrasi berhasil!',
-          description: 'Periksa email anda dan segera verifikasi',
           status: 'success'
         });
       } catch (e) {
@@ -144,7 +143,7 @@ export default function userActionCreator(dispatch) {
         popUpCb({
           title: 'Berhasil memperbarui data!',
           status: 'success'
-        });
+        }, true);
       } catch (e) {
         popUpCb({
           title: 'Gagal memperbarui data!',
