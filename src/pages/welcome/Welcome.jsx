@@ -54,7 +54,7 @@ export default function Welcome() {
         updatedAt: DateTime.utc().toISO(),
         firstLogin: false
       },
-      (isSuccess, data) => {
+      (data, isSuccess) => {
         toast(data);
         if (isSuccess) {
           navigate(PATH.profile.overview);
